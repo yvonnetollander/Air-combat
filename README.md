@@ -29,6 +29,7 @@ This project was buil for the Aalto University course ELEC-A7151 Object Oriented
 - Clone repo
 - Make sure prerequisites are in order
 - In base dir, use the following commands:
+
 ```
 make / make br
 ```
