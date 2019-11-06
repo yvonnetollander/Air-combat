@@ -1,5 +1,8 @@
 #include "GameEntity.hpp"
 
+/* MovingEntity is an abstract class tat  represents a game objects (GameEntity)
+   that can also move according to some internal logic.
+   All moving game objects inherit this class. */
 class MovingEntity : public GameEntity {
 public:
     MovingEntity();

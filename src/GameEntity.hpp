@@ -1,5 +1,7 @@
 #include <SFML/Graphics.hpp>
 
+/* GameEntity represents a game object with a position, rotation, sprite and status.
+   All game objects inherit this class. */
 class GameEntity {
 public:
     GameEntity();
