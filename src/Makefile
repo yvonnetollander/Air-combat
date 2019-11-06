@@ -50,7 +50,7 @@ linux: build-linux
 	$(BUILD_DIR)/game
 
 run-linux:
-	$(BUILD_DIR)/game
+	(cd $(LIB_DIR)/bin ; $(BUILD_DIR)/game)
 
 build-wsl:
 	mkdir -p $(BUILD_DIR)
