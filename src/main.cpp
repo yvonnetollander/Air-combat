@@ -1,8 +1,11 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include "Engine.hpp"
+#include "Engine.cpp"
 
 int main()
 {
+    /*
     std::cout << "Hello world!\nBehold this spinning cross." << std::endl;
 
     sf::RectangleShape r1(sf::Vector2f(150, 50));
@@ -36,7 +39,11 @@ int main()
         window.draw(r2);
 
         window.display();
-    }
+    }*/
+
+    Engine engine;
+    engine.Start();
+    
 
     return 0;
 }
