@@ -10,12 +10,17 @@ Engine::Engine() {
 */
     window_.create(sf::VideoMode(800, 600), "Test");
 
-    if (!background_texture_.loadFromFile("background.png")) {
-        std::cout << "error" << std::endl;
+    if (!background_texture_.loadFromFile("../../../src/background.png")) {
+        std::cout << background_texture_.getMaximumSize() << std::endl;
     }
+    sf::Vector2u TextureSize = background_texture_.getSize(); //Get size of texture.
+    sf::Vector2u WindowSize = window_.getSize();             //Get size of window.
 
-    
+    float ScaleX = (float) WindowSize.x / TextureSize.x;
+    float ScaleY = (float) WindowSize.y / TextureSize.y;     //Calculate scale.
+
     background_sprite_.setTexture(background_texture_);
+    background_sprite_.setScale(ScaleX, ScaleY); 
     
 }
 
