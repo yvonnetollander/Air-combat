@@ -2,6 +2,8 @@
 SRC = main.cpp
 # build/binary dir
 BUILD_DIR = ../build
+# build/binary dir from the library include path
+LIB_BUILD_DIR = ../../$(BUILD_DIR)
  # library dir
 LIB_DIR = ../lib/SFML-2.5.1
 # library dir with backslashes for windows workdir trickery
@@ -47,10 +49,10 @@ build-linux: $(SRC)
 	$(CXX) $(SRC) $(CXXFLAGS) -o $(BUILD_DIR)/game $(LDLIBS)
 
 linux: build-linux
-	$(BUILD_DIR)/game
+	(cd $(LIB_DIR)/bin && exec $(LIB_BUILD_DIR)/game)
 
 run-linux:
-	(cd $(LIB_DIR)/bin ; $(BUILD_DIR)/game)
+	(cd $(LIB_DIR)/bin && exec $(LIB_BUILD_DIR)/game)
 
 build-wsl:
 	mkdir -p $(BUILD_DIR)
