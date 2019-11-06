@@ -10,9 +10,10 @@ Engine::Engine() {
 */
     window_.create(sf::VideoMode(800, 600), "Test");
 
-    if (!background_texture_.loadFromFile("background.png")) {
-        std::cout << "error" << std::endl;
+    if (!background_texture_.loadFromFile("../../../src/background.png")) {
+        std::cout << background_texture_.getMaximumSize() << std::endl;
     }
+    
 
     
     background_sprite_.setTexture(background_texture_);
