@@ -10,7 +10,7 @@ Engine::Engine() {
 */
     window_.create(sf::VideoMode(800, 600), "Test");
 
-    if (!background_texture_.loadFromFile("../../../src/background.png")) {
+    if (!background_texture_.loadFromFile("../../../res/background.png")) {
         std::cout << background_texture_.getMaximumSize() << std::endl;
     }
     sf::Vector2u TextureSize = background_texture_.getSize(); //Get size of texture.
