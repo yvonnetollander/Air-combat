@@ -11,3 +11,7 @@ void GameEntity::SetPos(const sf::Vector3f& p) {
 const bool GameEntity::isDead() const {
     return dead_;
 }
+
+void GameEntity::kill() {
+    dead_ = true;
+}
