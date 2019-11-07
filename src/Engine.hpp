@@ -5,15 +5,16 @@
 *  Start the engine calling the Start() method.
 */
 class Engine {
+public:
+    Engine();
+    void Start();
+
 private:
     sf::RenderWindow window_;
     sf::Sprite background_sprite_;
     sf::Texture background_texture_;
 
-    // void update(float dt);
+    void Update(float dt);
     void Draw();
-
-public:
-    Engine();
-    void Start();
+    void Input(sf::Event& event);
 };
