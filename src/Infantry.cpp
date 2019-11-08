@@ -31,3 +31,7 @@ void Infantry::pickTarget() {
     // Currently only moves on the x-axis
     targetPos_ = sf::Vector3f(2.0f * (random - 0.5f) * wanderRadius_, 0 ,0);
 }
+
+void Infantry::fire() {
+    // pew pew
+}

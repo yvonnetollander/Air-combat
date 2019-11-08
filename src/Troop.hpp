@@ -1,12 +1,12 @@
 #include "MovingEntity.hpp"
 
-/* Troop represents an infantry soldier that runs around the terrain */
+/* Troop represents any moving unit that has hitpoints and can fire */
 class Troop : public MovingEntity {
 public:
     Troop();
     Troop(const sf::Vector3f& p, const sf::Texture& t, const float r, const bool d, const unsigned hp);
-    void act(float dt) = 0;
+    virtual void act(float dt) = 0;
 private:
-    void fire();
+    virtual void fire() = 0;
     unsigned hp_;
 };
