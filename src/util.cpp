@@ -5,7 +5,7 @@
 // Returns the length of a given vector
 template <typename T>
 float len(const T& vec) {
-    return std::sqrt(T.x*T.x + T.y*T.y + T.z*T.z);
+    return std::sqrt(T.x*T.x + T.y*T.y);
 }
 
 // Return a normalized version of a given vector
