@@ -2,20 +2,28 @@
 #include <iostream>
 
 Engine::Engine() {
-    sf::VideoMode desktop = sf::VideoMode().getDesktopMode();   // Fullscreen mode.
+    // Init window to current desktop size
+    sf::VideoMode desktop = sf::VideoMode().getDesktopMode();
     window_.create(desktop, "Air Combat Game");
 
-    if (!background_texture_.loadFromFile("../../../res/background.png")) {
+    if (!background_texture_.loadFromFile("../../../res/background.png"))
         std::cout << background_texture_.getMaximumSize() << std::endl;
-    }
-    sf::Vector2u TextureSize = background_texture_.getSize(); //Get size of texture.
-    sf::Vector2u WindowSize = window_.getSize();             //Get size of window.
+    
+    sf::Vector2u tecture_size = background_texture_.getSize();
+    sf::Vector2u window_size = window_.getSize();
 
-    float ScaleX = (float) WindowSize.x / TextureSize.x;
-    float ScaleY = (float) WindowSize.y / TextureSize.y;     //Calculate scale.
+    float scale_x = (float) window_size.x / tecture_size.x;
+    float scale_y = (float) window_size.y / tecture_size.y;
 
     background_sprite_.setTexture(background_texture_);
-    background_sprite_.setScale(ScaleX, ScaleY);
+    background_sprite_.setScale(scale_x, scale_y);
+}
+
+Engine::~Engine() {
+    for (auto entity : moving_entities_)
+        delete entity;
+    for (auto entity : static_entities_)
+        delete entity;
 }
 
 void Engine::Start() {
@@ -32,6 +40,14 @@ void Engine::Start() {
         Update(dt);
         Draw();
     }
+}
+
+void Engine::AddMoving(MovingEntity* entity) {
+    moving_entities_.push_back(entity);
+}
+
+void Engine::AddMoving(MovingEntity* entity) {
+    static_entities_.push_back(entity);
 }
 
 void Engine::Input(sf::Event& event) {
@@ -61,7 +77,8 @@ void Engine::Input(sf::Event& event) {
 }
 
 void Engine::Update(float dt) {
-    // Update locations...
+    for (auto entity : moving_entities_)
+        entity->act(dt);
 }
 
 void Engine::Draw() {
