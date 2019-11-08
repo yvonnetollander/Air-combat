@@ -1,5 +1,5 @@
-#include "Engine.hpp"
 #include <iostream>
+#include "Engine.hpp"
 
 Engine::Engine() {
     // Init window to current desktop size
@@ -46,7 +46,7 @@ void Engine::AddMoving(MovingEntity* entity) {
     moving_entities_.push_back(entity);
 }
 
-void Engine::AddMoving(MovingEntity* entity) {
+void Engine::AddStatic(GameEntity* entity) {
     static_entities_.push_back(entity);
 }
 

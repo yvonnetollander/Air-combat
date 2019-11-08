@@ -1,3 +1,5 @@
+#pragma once
+
 #include "GameEntity.hpp"
 
 /* MovingEntity is an abstract class tat  represents a game objects (GameEntity)

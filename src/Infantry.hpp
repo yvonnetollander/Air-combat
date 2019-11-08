@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Troop.hpp"
 
 /* Troop represents an infantry soldier that runs around the terrain */

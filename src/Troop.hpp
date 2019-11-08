@@ -1,3 +1,5 @@
+#pragma once
+
 #include "MovingEntity.hpp"
 
 /* Troop represents any moving unit that has hitpoints and can fire */

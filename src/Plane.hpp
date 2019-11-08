@@ -1,4 +1,6 @@
-#include <Troop.hpp>
+#pragma once
+
+#include "Troop.hpp"
 
 class Plane : public Troop {
 public:

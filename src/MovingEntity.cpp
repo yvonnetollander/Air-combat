@@ -1,4 +1,4 @@
-#include <MovingEntity.hpp>
+#include "MovingEntity.hpp"
 
 MovingEntity::MovingEntity() :
     GameEntity() {}

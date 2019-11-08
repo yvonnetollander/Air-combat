@@ -17,7 +17,8 @@ LDFLAGS = -I$(LIB_DIR)/include -L$(LIB_DIR)/bin
 # lib link flags
 LDLIBS = -lsfml-graphics -lsfml-audio -lsfml-window -lsfml-system
 LDLIBS_LOCAL = -lsfml-graphics-2 -lsfml-audio-2 -lsfml-window-2 -lsfml-system-2 
-
+# mingw flags (to statically link C and C++ standard libs)
+MINGW_FLAGS = -static-libgcc -static-libstdc++
 .DEFAULT_GOAL := br
 
 # Figure out what kind of env we're in
@@ -56,7 +57,7 @@ run-linux:
 
 build-wsl:
 	mkdir -p $(BUILD_DIR)
-	$(CXX_WSL) $(SRC) $(LDFLAGS) -o $(BUILD_DIR)/game.exe $(LDLIBS_LOCAL)
+	$(CXX_WSL) $(MINGW_FLAGS) $(SRC) $(LDFLAGS) -o $(BUILD_DIR)/game.exe $(LDLIBS_LOCAL)
 
 wsl: build-wsl
 	CMD.exe /C "START /D $(LIB_DIR_WIN)\bin $(BUILD_DIR)\game.exe"

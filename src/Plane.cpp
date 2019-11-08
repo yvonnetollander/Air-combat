@@ -1,5 +1,5 @@
-#include <Plane.hpp>
 #include <util.cpp>
+#include "Plane.hpp"
 
 Plane::Plane()
     : Troop(), thrust_(false), drag_(0.0f), inverted_(false), velocity_() {}

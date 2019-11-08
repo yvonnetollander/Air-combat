@@ -1,3 +1,5 @@
+#pragma once
+
 #include <SFML/Graphics.hpp>
 
 /* GameEntity represents a game object with a position, rotation, sprite and status.

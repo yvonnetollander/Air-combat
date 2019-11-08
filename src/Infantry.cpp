@@ -1,7 +1,7 @@
-#include "Infantry.hpp"
-#include "util.cpp"
 #include <stdlib.h>
 #include <algorithm>
+#include "Infantry.hpp"
+#include "util.cpp"
 
 Infantry::Infantry() :
     Troop(), velocity_(0), targetPos_(), wanderRadius_(0), idle_(0) { pickTarget(); }

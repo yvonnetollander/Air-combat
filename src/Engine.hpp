@@ -1,8 +1,8 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include <GameEntity.hpp>
-#include <MovingEntity.hpp>
+#include "GameEntity.hpp"
+#include "MovingEntity.hpp"
 
 /* A simple class for the game engine.
 *  Contains all the game entities and handles the refresh, draw and input loops.
