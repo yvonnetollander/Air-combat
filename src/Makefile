@@ -10,7 +10,7 @@ LIB_DIR = ../lib/SFML-2.5.1
 LIB_DIR_WIN = ..\lib\SFML-2.5.1
 # compilers
 CXX = g++
-CXX_WSL = x86_64-w64-mingw32-g++
+CXX_WSL = i686-w64-mingw32-g++
 # compiler & linker flags
 CXXFLAGS = -Wall -std=c++11
 LDFLAGS = -I$(LIB_DIR)/include -L$(LIB_DIR)/bin
@@ -57,7 +57,7 @@ run-linux:
 
 build-wsl:
 	mkdir -p $(BUILD_DIR)
-	$(CXX_WSL) $(MINGW_FLAGS) $(SRC) $(LDFLAGS) -o $(BUILD_DIR)/game.exe $(LDLIBS_LOCAL)
+	$(CXX_WSL) $(SRC) $(LDFLAGS) -o $(BUILD_DIR)/game.exe $(MINGW_FLAGS) $(LDLIBS_LOCAL)
 
 wsl: build-wsl
 	CMD.exe /C "START /D $(LIB_DIR_WIN)\bin $(BUILD_DIR)\game.exe"
