@@ -37,7 +37,7 @@ endif
 
 build-win: $(SRC)
 	if not exist "$(BUILD_DIR)" mkdir $(BUILD_DIR)
-	$(CXX) $(SRC) $(CXXFLAGS) $(LDFLAGS) -o $(BUILD_DIR)\game.exe $(LDLIBS_LOCAL)
+	$(CXX_WSL) $(SRC) $(CXXFLAGS) $(LDFLAGS) -o $(BUILD_DIR)\game.exe $(LDLIBS_LOCAL)
 
 win: build-win
 	CMD /C "START /D $(LIB_DIR_WIN)\bin $(BUILD_DIR)\game.exe"
@@ -57,7 +57,7 @@ run-linux:
 
 build-wsl:
 	mkdir -p $(BUILD_DIR)
-	$(CXX_WSL) $(SRC) $(LDFLAGS) -o $(BUILD_DIR)/game.exe $(MINGW_FLAGS) $(LDLIBS_LOCAL)
+	$(CXX_WSL) $(SRC) $(CXXFLAGS) $(LDFLAGS) -o $(BUILD_DIR)/game.exe $(MINGW_FLAGS) $(LDLIBS_LOCAL)
 
 wsl: build-wsl
 	CMD.exe /C "START /D $(LIB_DIR_WIN)\bin $(BUILD_DIR)\game.exe"
