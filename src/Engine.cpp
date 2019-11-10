@@ -6,6 +6,7 @@ Engine::Engine() {
     sf::VideoMode desktop = sf::VideoMode().getDesktopMode();
     window_.create(desktop, "Air Combat Game");
 
+    /* TODO: scale the original backgound picture to screen size and remove scaling below */
     if (!background_texture_.loadFromFile("../../../res/background.png"))
         std::cout << background_texture_.getMaximumSize() << std::endl;
     
@@ -66,8 +67,17 @@ void Engine::Input(sf::Event& event) {
                     case sf::Keyboard::Key::Left:
                         std::cout << "Left" << std::endl;
                         break;
+                    case sf::Keyboard::Key::Right:
+                        std::cout << "Right" << std::endl;
+                        break;
+                    case sf::Keyboard::Key::Up:
+                        std::cout << "Up" << std::endl;
+                        break;
+                    case sf::Keyboard::Key::Down:
+                        std::cout << "Down" << std::endl;
+                        break;
                     default:
-                    break;
+                        break;
                 }
             // We don't process other types of events.
             default:
