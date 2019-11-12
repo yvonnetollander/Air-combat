@@ -1,11 +1,11 @@
-#include <util.cpp>
+#include "util.hpp"
 #include "Plane.hpp"
 
 Plane::Plane()
-    : Troop(), thrust_(false), drag_(0.0f), inverted_(false), velocity_() {}
+    : Troop(), thrust_(false), inverted_(false), drag_(0.0f), velocity_() {}
 
 Plane::Plane(const sf::Vector2f& p, const sf::Texture& t, const float r, const bool d, const unsigned hp, float drag)
-    : Troop(p,t,r,d,hp), thrust_(false), drag_(drag), inverted_(false), velocity_() {}
+    : Troop(p,t,r,d,hp), thrust_(false), inverted_(false), drag_(drag), velocity_() {}
 
 void Plane::act(float dt, bool left, bool right, bool down, bool up) {
     // These will need some mechanic to not just spasm out on button hold

@@ -1,6 +1,8 @@
 #include <iostream>
 #include "Engine.hpp"
 
+extern std::string ROOTDIR;
+
 Engine::Engine() {
     // Init window to current desktop size
     sf::VideoMode desktop = sf::VideoMode().getDesktopMode();

@@ -1,5 +1,5 @@
 # source files to compile
-SRC = main.cpp
+SRC = main.cpp Engine.cpp GameEntity.cpp Infantry.cpp MovingEntity.cpp Plane.cpp Troop.cpp util.cpp
 # build/binary dir
 BUILD_DIR = ../build
 # build/binary dir from the library include path

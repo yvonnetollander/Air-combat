@@ -9,6 +9,7 @@
 class MovingEntity : public GameEntity {
 public:
     MovingEntity();
+    virtual ~MovingEntity() {}
     MovingEntity(const sf::Vector2f& p, const sf::Texture& t, const float r, const bool d);
     virtual void act(float dt) = 0;
 };

@@ -1,27 +1,21 @@
 #include <cmath>
 #include <stdlib.h>
-#include <Graphics.hpp>
+#include <SFML/Graphics.hpp>
 
-// Returns the length of a given vector
-template <typename T>
-float len(const T& vec) {
-    return std::sqrt(T.x*T.x + T.y*T.y);
+float len(const sf::Vector2f& vec) {
+    return std::sqrt(vec.x*vec.x + vec.y*vec.y);
 }
 
-// Return a normalized version of a given vector
-template <typename T>
-T normalize(const T& vec) {
-    return T / len(T);
+sf::Vector2f normalize(const sf::Vector2f& vec) {
+    return vec / len(vec);
 }
 
-template <typename T>
-T rotate(const T& vec, float rad) {
+sf::Vector2f rotate(const sf::Vector2f& vec, float rad) {
     float sn = std::sin(rad);
     float cs = std::cos(rad);
-    return T(vec.x * cs - vec.y * sn, vec.y * cs + vec.x * sn);
+    return sf::Vector2f(vec.x * cs - vec.y * sn, vec.y * cs + vec.x * sn);
 }
 
-// Returns a random floating point number between 0 and 1
 float randFloat() {
-    float random = ((float) rand()) / (float) RAND_MAX;
+    return ((float) rand()) / (float) RAND_MAX;
 }
