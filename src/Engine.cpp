@@ -9,7 +9,7 @@ Engine::Engine() {
     window_.create(desktop, "Air Combat Game");
 
     /* TODO: scale the original backgound picture to screen size and remove scaling below */
-    if (!background_texture_.loadFromFile("../../../res/background.png"))
+    if (!background_texture_.loadFromFile(ROOTDIR + "/res/background.png"))
         std::cout << background_texture_.getMaximumSize() << std::endl;
     
     sf::Vector2u tecture_size = background_texture_.getSize();
