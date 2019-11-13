@@ -67,16 +67,33 @@ void Engine::Input(sf::Event& event) {
                         window_.close();
                         break;
                     case sf::Keyboard::Key::Left:
-                        std::cout << "Left" << std::endl;
+                        keys_pressed_.left = true;
                         break;
                     case sf::Keyboard::Key::Right:
-                        std::cout << "Right" << std::endl;
+                        keys_pressed_.right = true;
                         break;
                     case sf::Keyboard::Key::Up:
-                        std::cout << "Up" << std::endl;
+                        keys_pressed_.up = true;
                         break;
                     case sf::Keyboard::Key::Down:
-                        std::cout << "Down" << std::endl;
+                        keys_pressed_.down = true;
+                        break;
+                    default:
+                        break;
+                }
+            case sf::Event::KeyReleased:
+                switch (event.key.code) {
+                    case sf::Keyboard::Key::Left:
+                        keys_pressed_.left = false;
+                        break;
+                    case sf::Keyboard::Key::Right:
+                        keys_pressed_.right = false;
+                        break;
+                    case sf::Keyboard::Key::Up:
+                        keys_pressed_.up = false;
+                        break;
+                    case sf::Keyboard::Key::Down:
+                        keys_pressed_.down = false;
                         break;
                     default:
                         break;
