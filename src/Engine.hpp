@@ -9,7 +9,7 @@ struct Keys {
     bool down = false;
     bool left = false;
     bool right = false;
-}
+};
 
 /* A simple class for the game engine.
 *  Contains all the game entities and handles the refresh, draw and input loops.
@@ -29,7 +29,7 @@ private:
     sf::Texture background_texture_;
     std::vector<GameEntity*> static_entities_;
     std::vector<MovingEntity*> moving_entities_;
-    std::
+    Keys keys_pressed_;
 
     void Update(float dt);
     void Draw();
