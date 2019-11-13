@@ -78,9 +78,12 @@ void Engine::Input(sf::Event& event) {
                     case sf::Keyboard::Key::Down:
                         keys_pressed_.down = true;
                         break;
+                    case sf::Keyboard::Key::P:
+                        std::cout << "Left: " << keys_pressed_.left << "Right: " << keys_pressed_.right << "Up: " << keys_pressed_.up << "Down: " << keys_pressed_.down << std::endl;
                     default:
                         break;
                 }
+                break;
             case sf::Event::KeyReleased:
                 switch (event.key.code) {
                     case sf::Keyboard::Key::Left:
@@ -98,6 +101,7 @@ void Engine::Input(sf::Event& event) {
                     default:
                         break;
                 }
+                break;
             // We don't process other types of events.
             default:
                 break;
