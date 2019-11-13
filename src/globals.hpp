@@ -2,4 +2,5 @@
 
 #include <string>
 
-std::string ROOTDIR;
+// Define global variable for project root directory
+extern std::string ROOTDIR;

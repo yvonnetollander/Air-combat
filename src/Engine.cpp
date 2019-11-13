@@ -1,12 +1,14 @@
 #include <iostream>
 #include "Engine.hpp"
 #include "util.hpp"
-
-extern std::string ROOTDIR;
+#include "globals.hpp"
 
 Engine::Engine() {
-    // Init window to current desktop size
-    window_.create(sf::VideoMode().getDesktopMode(), "Air Combat Game");
+    // Initialize window to 0.7 x screen height at target aspect ratio
+    auto video = sf::VideoMode().getDesktopMode();
+    video.height *= 0.7f;
+    video.width = video.height * target_aspect_ratio_;
+    window_.create(video, "Air Combat Game");
 
     // Load background
     if (!background_texture_.loadFromFile(ROOTDIR + "/res/background.png"))
@@ -126,6 +128,7 @@ void Engine::Input(sf::Event& event) {
 
 void Engine::Update(float dt) {
     player_->press_keys(keys_pressed_);
+    bg_.update(sf::Vector2f(1,1), 0.5f);
     for (auto entity : moving_entities_)
         entity->act(dt, moving_entities_);
 }
@@ -136,6 +139,10 @@ void Engine::Draw() {
 
     // Draw background.
     window_.draw(background_sprite_);
+
+    const auto t = bg_.GetTexture();
+    const auto s = sf::Sprite(t);
+    window_.draw(s);
 
     // Draw static entities
     for(auto& entity : static_entities_)

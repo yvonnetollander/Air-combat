@@ -6,6 +6,7 @@
 #include "Plane.hpp"
 #include <map>
 #include "util.hpp"
+#include "Background.hpp"
 
 /* A simple class for the game engine.
 *  Contains all the game entities and handles the refresh, draw and input loops.
@@ -31,6 +32,7 @@ private:
     PlayerPlane* player_;
 
     Keys keys_pressed_;
+    Background bg_;
 
     void Update(float dt);
     void Draw();
