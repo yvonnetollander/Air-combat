@@ -90,7 +90,7 @@ void Engine::Input(sf::Event& event) {
 
 void Engine::Update(float dt) {
     for (auto entity : moving_entities_)
-        entity->act(dt);
+        entity->act(dt, moving_entities_);
 }
 
 void Engine::Draw() {

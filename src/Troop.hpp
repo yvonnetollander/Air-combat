@@ -7,7 +7,7 @@ class Troop : public MovingEntity {
 public:
     Troop();
     Troop(const sf::Vector2f& p, const sf::Texture& t, const float r, const bool d, const unsigned hp);
-    virtual void act(float dt) = 0;
+    virtual void act(float dt, std::vector<MovingEntity*> moving_entities) = 0;
 private:
     virtual void fire() = 0;
     unsigned hp_;
