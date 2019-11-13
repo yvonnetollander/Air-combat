@@ -4,6 +4,14 @@
 #include "GameEntity.hpp"
 #include "MovingEntity.hpp"
 
+struct Keys {
+    bool up = false;    // flip
+    bool down = false;  // stop engine
+    bool left = false;  // rotate
+    bool right = false; // rotate
+    bool d = false;     // shoot
+};
+
 /* A simple class for the game engine.
 *  Contains all the game entities and handles the refresh, draw and input loops.
 *  Start the engine calling the Start() method.
@@ -22,6 +30,7 @@ private:
     sf::Texture background_texture_;
     std::vector<GameEntity*> static_entities_;
     std::vector<MovingEntity*> moving_entities_;
+    Keys keys_pressed_;
 
     void Update(float dt);
     void Draw();
