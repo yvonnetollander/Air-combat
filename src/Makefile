@@ -36,7 +36,6 @@ else
 endif
 
 build-win: $(SRC)
-	if not exist "$(BUILD_DIR)" mkdir $(BUILD_DIR)
 	$(CXX_WSL) $(SRC) $(CXXFLAGS) $(LDFLAGS) -o $(BUILD_DIR)\game.exe $(LDLIBS_LOCAL)
 
 win: build-win
