@@ -5,10 +5,11 @@
 #include "MovingEntity.hpp"
 
 struct Keys {
-    bool up = false;
-    bool down = false;
-    bool left = false;
-    bool right = false;
+    bool up = false;    // flip
+    bool down = false;  // stop engine
+    bool left = false;  // rotate
+    bool right = false; // rotate
+    bool d = false;     // shoot
 };
 
 /* A simple class for the game engine.

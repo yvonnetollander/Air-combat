@@ -78,6 +78,10 @@ void Engine::Input(sf::Event& event) {
                     case sf::Keyboard::Key::Down:
                         keys_pressed_.down = true;
                         break;
+                    case sf::Keyboard::Key::D:
+                        keys_pressed_.d = true;
+                        std::cout << "pew pew" << std::endl;
+                        break;
                     case sf::Keyboard::Key::P:
                         std::cout << "Left: " << keys_pressed_.left << "Right: " << keys_pressed_.right << "Up: " << keys_pressed_.up << "Down: " << keys_pressed_.down << std::endl;
                     default:
@@ -97,6 +101,9 @@ void Engine::Input(sf::Event& event) {
                         break;
                     case sf::Keyboard::Key::Down:
                         keys_pressed_.down = false;
+                        break;
+                    case sf::Keyboard::Key::D:
+                        keys_pressed_.d = false;
                         break;
                     default:
                         break;
