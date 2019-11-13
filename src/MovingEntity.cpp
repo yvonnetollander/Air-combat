@@ -3,5 +3,5 @@
 MovingEntity::MovingEntity() :
     GameEntity() {}
 
-MovingEntity::MovingEntity(const sf::Vector2f& p, const sf::Texture& t, const float r, const bool d) : 
-    GameEntity(p, t, r, d) {}
+MovingEntity::MovingEntity(const sf::Vector2f& p, const std::string spritepath, const float r, const bool d) : 
+    GameEntity(p, spritepath, r, d) {}

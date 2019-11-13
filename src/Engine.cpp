@@ -5,21 +5,17 @@ extern std::string ROOTDIR;
 
 Engine::Engine() {
     // Init window to current desktop size
-    sf::VideoMode desktop = sf::VideoMode().getDesktopMode();
-    window_.create(desktop, "Air Combat Game");
+    window_.create(sf::VideoMode().getDesktopMode(), "Air Combat Game");
 
-    /* TODO: scale the original backgound picture to screen size and remove scaling below */
+    // Load background
     if (!background_texture_.loadFromFile(ROOTDIR + "/res/background.png"))
-        std::cout << background_texture_.getMaximumSize() << std::endl;
-    
-    sf::Vector2u tecture_size = background_texture_.getSize();
-    sf::Vector2u window_size = window_.getSize();
-
-    float scale_x = (float) window_size.x / tecture_size.x;
-    float scale_y = (float) window_size.y / tecture_size.y;
-
+        std::cerr << "Failed to load background" << std::endl;
     background_sprite_.setTexture(background_texture_);
-    background_sprite_.setScale(scale_x, scale_y);
+
+    // Set camera to initial view (for now the entire background)
+    camera_ = sf::View(sf::FloatRect(0.f, 0.f, background_texture_.getSize().x, background_texture_.getSize().y));
+
+    ResetView();
 }
 
 Engine::~Engine() {
@@ -60,6 +56,9 @@ void Engine::Input(sf::Event& event) {
             // window closed
             case sf::Event::Closed:
                 window_.close();
+                break;
+            case sf::Event::Resized:
+                ResetView();
                 break;
             case sf::Event::KeyPressed:
                 switch (event.key.code) {
@@ -122,10 +121,36 @@ void Engine::Update(float dt) {
 }
 
 void Engine::Draw() {
-    // Clear the last frame.
-    window_.clear(sf::Color::White);
-    // Draw the background.
+    // Clear window
+    window_.clear(sf::Color::Black);
+
+    // Draw background.
     window_.draw(background_sprite_);
-    // Show background on the screen.
+
+    // Draw static entities
+    for(auto& entity : static_entities_)
+        window_.draw(entity->getSprite(), sf::RenderStates(entity->getTransform()));
+
+    // Draw moving entities
+    for(auto& entity : moving_entities_)
+        window_.draw(entity->getSprite(), sf::RenderStates(entity->getTransform()));
+
+    // Refresh window
     window_.display();
+}
+
+void Engine::ResetView() {
+    sf::Vector2u window_size = window_.getSize();
+    float window_aspect_ratio = (float) window_size.x / (float) window_size.y;
+
+    // Figure out relative scaling for letterboxing
+    float w = 1.f , h = 1.f;
+    if(target_aspect_ratio_ < window_aspect_ratio)
+        w = ((float) window_size.y * target_aspect_ratio_) / window_size.x;
+    else if(target_aspect_ratio_ > window_aspect_ratio)
+        h = ((float) window_size.x / target_aspect_ratio_) / window_size.y;
+
+    // Reset camera viewport to new letterbox on window
+    camera_.setViewport(sf::FloatRect((1.f - w)/2, (1.f - h)/2, w, h));
+    window_.setView(camera_);
 }

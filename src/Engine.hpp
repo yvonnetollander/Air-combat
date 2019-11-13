@@ -25,9 +25,11 @@ public:
     void AddStatic(GameEntity* entity);
 
 private:
+    float target_aspect_ratio_ = 16.f / 9.f;
     sf::RenderWindow window_;
     sf::Sprite background_sprite_;
     sf::Texture background_texture_;
+    sf::View camera_;
     std::vector<GameEntity*> static_entities_;
     std::vector<MovingEntity*> moving_entities_;
     Keys keys_pressed_;
@@ -35,4 +37,6 @@ private:
     void Update(float dt);
     void Draw();
     void Input(sf::Event& event);
+    // Letterboxes/corrects the camera viewport to match target_aspect_ratio_
+    void ResetView();
 };

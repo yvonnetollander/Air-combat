@@ -7,14 +7,18 @@
 class GameEntity {
 public:
     GameEntity();
-    GameEntity(const sf::Vector2f& p, const sf::Texture& t, const float r, const bool d);
+    GameEntity(const sf::Vector2f& p, const std::string spritepath, const float r, const bool d);
     const sf::Vector2f getPos() const;
+    const sf::Sprite getSprite() const;
+    // Compute and return object-to-world transform
+    const sf::Transform getTransform() const;
     void SetPos(const sf::Vector2f& p);
     const bool isDead() const;
     void kill();
 private:
     sf::Vector2f pos_;
-    sf::Texture sprite_;
+    sf::Texture texture_;
+    sf::Sprite sprite_;
     float rotation_;
     bool dead_;
 };
