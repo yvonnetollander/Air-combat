@@ -2,8 +2,9 @@
 #include "Engine.hpp"
 #include "util.hpp"
 #include "globals.hpp"
+#include "Background.hpp"
 
-Engine::Engine() {
+Engine::Engine() : bg_(duskMountainBackground()) {
     // Initialize window to 0.7 x screen height at target aspect ratio
     auto video = sf::VideoMode().getDesktopMode();
     video.height *= 0.7f;
@@ -128,7 +129,7 @@ void Engine::Input(sf::Event& event) {
 
 void Engine::Update(float dt) {
     player_->press_keys(keys_pressed_);
-    bg_.update(sf::Vector2f(1,1), 0.5f);
+    bg_.update(sf::Vector2f(1,1), dt);
     for (auto entity : moving_entities_)
         entity->act(dt, moving_entities_);
 }
@@ -140,9 +141,10 @@ void Engine::Draw() {
     // Draw background.
     window_.draw(background_sprite_);
 
-    const auto t = bg_.GetTexture();
-    const auto s = sf::Sprite(t);
-    window_.draw(s);
+    // const auto t = bg_.GetTexture();
+    // auto s = sf::Sprite(t);
+    // s.setScale(2,2);
+    window_.draw(bg_.GetTexture());
 
     // Draw static entities
     for(auto& entity : static_entities_)

@@ -18,11 +18,11 @@ void Infantry::act(float dt, std::vector<MovingEntity*> moving_entities) {
  
     else {
         if(len(diff) < movement) {
-            SetPos(targetPos_);
+            setPos(targetPos_);
             idle_ = randFloat() * 5.0f;
         }
         else {
-            SetPos(getPos() + normalize(diff) * movement);
+            setPos(getPos() + normalize(diff) * movement);
         }
     } */
 }

@@ -2,38 +2,45 @@
 
 #include <vector>
 #include <SFML/Graphics.hpp>
+#include "MovingEntity.hpp"
+
+class ScrollingBackdrop : public MovingEntity {
+public:
+    ScrollingBackdrop(const sf::Vector2f& p, const std::string spritepath, const float r, const bool d, const float velocity);
+    void act(float dt, std::vector<MovingEntity*> moving_entities);
+    void setViewVelocity(sf::Vector2f v);
+    void setMovementScale(sf::Vector2f s);
+private:
+    float velocity_;
+    sf::Vector2f view_velocity_;
+    sf::Vector2f movement_scale_;
+};
 
 class Background {
 public:
-    Background();
-    void update(const sf::Vector2f& v, const float& dt);
-    const sf::Texture& GetTexture();
+    Background() {}
+    Background(const Background&);
+    ~Background();
+    void setProportions(sf::Vector2u size, sf::Vector2f scale, sf::Vector2f offset);
+    void setTextureOffset(sf::Vector2f offset);
+    void addBackdrop(ScrollingBackdrop* backdrop);
+    void update(const sf::Vector2f v, const float dt);
+    const sf::Sprite GetTexture();
 private:
-    // Background image
-    sf::Texture sky_tex_;
-    sf::Sprite sky_sprite_;
-    sf::Transform sky_transform_;
-    float sky_scroll_ = 0u;
-    // Background mountain
-    sf::Texture bg_mountain_tex_;
-    sf::Sprite bg_mountain_sprite_;
-    sf::Transform bg_mountain_transform_;
-    float bg_mountain_scroll_ = 0u;
-    // Foreground mountains
-    sf::Texture fg_mountain_tex_;
-    sf::Sprite fg_mountain_sprite_;
-    sf::Transform fg_mountain_transform_;
-    float fg_mountain_scroll_ = 0u;
-    // Background trees
-    sf::Texture bg_tree_tex_;
-    sf::Sprite bg_tree_sprite_;
-    sf::Transform bg_tree_transform_;
-    float bg_tree_scroll_ = 0u;
-    // Foreground trees
-    sf::Texture fg_tree_tex_;
-    sf::Sprite fg_tree_sprite_;
-    sf::Transform fg_tree_transform_;
-    float fg_tree_scroll_ = 0u;
-    // Final canvas texture
-    sf::RenderTexture tx_;
+    // Scrolling textures
+    std::vector<ScrollingBackdrop*> backdrops_;
+    // Texture position offset
+    sf::Vector2f offset_;
+    // Canvas size (in pixels, pre-scaling)
+    sf::Vector2u size_;
+    // Scaling factor
+    sf::Vector2f scale_;
+    // Canvas
+    sf::RenderTexture render_texture_;
+    // Final texture resulting from the canvas
+    sf::Texture texture_;
+    // Final sprite that gets sent as the background
+    sf::Sprite sprite_;
 };
+
+const Background duskMountainBackground();
