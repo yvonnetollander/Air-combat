@@ -18,7 +18,6 @@ Engine::Engine() : bg_(duskMountainBackground()) {
 
     // Set camera to initial view (for now the entire background)
     camera_ = sf::View(sf::FloatRect(0.f, 0.f, background_texture_.getSize().x, background_texture_.getSize().y));
-
     ResetView();
 }
 
@@ -129,7 +128,9 @@ void Engine::Input(sf::Event& event) {
 
 void Engine::Update(float dt) {
     player_->press_keys(keys_pressed_);
+    // Update background state 
     bg_.update(sf::Vector2f(1,1), dt);
+    // Update moving entity states
     for (auto entity : moving_entities_)
         entity->act(dt, moving_entities_);
 }
@@ -140,11 +141,7 @@ void Engine::Draw() {
 
     // Draw background.
     window_.draw(background_sprite_);
-
-    // const auto t = bg_.GetTexture();
-    // auto s = sf::Sprite(t);
-    // s.setScale(2,2);
-    window_.draw(bg_.GetTexture());
+    window_.draw(bg_.getTexture(), bg_.getTransform());
 
     // Draw static entities
     for(auto& entity : static_entities_)

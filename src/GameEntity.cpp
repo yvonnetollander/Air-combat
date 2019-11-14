@@ -44,6 +44,10 @@ void GameEntity::setRepeated(bool val) {
     texture_.setRepeated(val);
 }
 
+void GameEntity::setOrigin(sf::Vector2f origin) {
+    sprite_.setOrigin(origin);
+}
+
  void GameEntity::setTextureRect(sf::IntRect r) {
      sprite_.setTextureRect(r);
  }

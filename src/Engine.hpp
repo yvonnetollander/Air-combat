@@ -27,6 +27,8 @@ private:
     sf::Sprite background_sprite_;
     sf::Texture background_texture_;
     sf::View camera_;
+    sf::RenderTexture foreground_;
+    sf::RenderTexture background_;
     std::vector<GameEntity*> static_entities_;
     std::vector<MovingEntity*> moving_entities_;
     PlayerPlane* player_;

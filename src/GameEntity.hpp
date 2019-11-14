@@ -8,6 +8,7 @@ class GameEntity {
 public:
     GameEntity();
     GameEntity(const sf::Vector2f& p, const std::string spritepath, const float r, const bool d);
+    GameEntity(const sf::Vector2f& p, const std::string spritepath, const float r, const bool d, const bool middle_origin);
     const sf::Vector2f getPos() const;
     const sf::Vector2u getSize() const;
     const sf::Sprite& getSprite() const;
@@ -16,6 +17,7 @@ public:
     void setPos(const sf::Vector2f& p);
     const bool isDead() const;
     void setRepeated(bool set);
+    void setOrigin(sf::Vector2f origin);
     void setTextureRect(sf::IntRect r);
     void kill();
 protected:
