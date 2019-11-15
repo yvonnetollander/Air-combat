@@ -11,7 +11,10 @@ class MovingEntity : public GameEntity {
 public:
     MovingEntity();
     virtual ~MovingEntity() {}
-    MovingEntity(const sf::Vector2f& p, const std::string spritepath, const float r, const bool d);
+    MovingEntity(const sf::Vector2f& p, const sf::Vector2f v, const std::string spritepath, const float r, const bool d);
     virtual void act(float dt, std::vector<MovingEntity*> moving_entities) = 0;
+    void Move(float dt);
+protected:
+    sf::Vector2f velocity_;
 };
 

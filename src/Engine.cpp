@@ -125,8 +125,7 @@ void Engine::Input(sf::Event& event) {
 }
 
 void Engine::Update(float dt) {
- //   player_->press_keys(keys_pressed_);
- //   player_->act(dt);
+    player_->press_keys(keys_pressed_);
     for (auto entity : moving_entities_)
         entity->act(dt, moving_entities_);
 }

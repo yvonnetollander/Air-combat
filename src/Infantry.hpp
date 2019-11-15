@@ -6,7 +6,7 @@
 class Infantry : public Troop {
 public:
     Infantry();
-    Infantry(const sf::Vector2f& p, const std::string spritepath, const float r, const bool d, const unsigned hp, const float v, const float radius);
+    Infantry(const sf::Vector2f& p, const std::string spritepath, const float r, const bool d, const unsigned hp, const float radius);
     virtual void act(float dt, std::vector<MovingEntity*> moving_entities);
 private:
     virtual void fire();
@@ -16,6 +16,5 @@ private:
     void pickTarget();
     // Idle timer between movements
     float idle_;
-    float velocity_;
     float wanderRadius_;
 };

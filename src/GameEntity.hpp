@@ -15,7 +15,7 @@ public:
     void SetPos(const sf::Vector2f& p);
     const bool isDead() const;
     void kill();
-private:
+protected:
     sf::Vector2f pos_;
     sf::Texture texture_;
     sf::Sprite sprite_;

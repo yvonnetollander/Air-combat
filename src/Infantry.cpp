@@ -4,17 +4,18 @@
 #include "util.hpp"
 
 Infantry::Infantry()
-    : Troop(), targetPos_(), idle_(0), velocity_(0), wanderRadius_(0) { pickTarget(); }
+    : Troop(), targetPos_(), idle_(0), wanderRadius_(0) { pickTarget(); }
 
-Infantry::Infantry(const sf::Vector2f& p, const std::string spritepath, const float r, const bool d, const unsigned hp, const float v, const float radius)
-    : Troop(p, spritepath, r, d, hp), targetPos_(), idle_(0), velocity_(v), wanderRadius_(radius) { pickTarget(); }
+Infantry::Infantry(const sf::Vector2f& p, const std::string spritepath, const float r, const bool d, const unsigned hp, const float radius)
+    : Troop(p, sf::Vector2f(0.5f, 0.0f), spritepath, r, d, hp), targetPos_(), idle_(0), wanderRadius_(radius) { pickTarget(); }
 
 void Infantry::act(float dt, std::vector<MovingEntity*> moving_entities) {
-    sf::Vector2f diff = targetPos_ - getPos();
+/*     sf::Vector2f diff = targetPos_ - getPos();
     float movement = velocity_ * dt;
     if(idle_ > 0) {
         idle_ = std::max(0.0f, idle_ - dt);
     }
+ 
     else {
         if(len(diff) < movement) {
             SetPos(targetPos_);
@@ -23,7 +24,7 @@ void Infantry::act(float dt, std::vector<MovingEntity*> moving_entities) {
         else {
             SetPos(getPos() + normalize(diff) * movement);
         }
-    }
+    } */
 }
 
 void Infantry::pickTarget() {
