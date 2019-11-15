@@ -11,16 +11,24 @@ Engine::Engine() : bg_(duskMountainBackground()) {
     video.width = video.height * target_aspect_ratio_;
     window_.create(video, "Air Combat Game");
 
-    // Load background
-    if (!background_texture_.loadFromFile(ROOTDIR + "/res/background.png"))
-        std::cerr << "Failed to load background" << std::endl;
-    background_sprite_.setTexture(background_texture_);
+    // Set up a simpele ground terrain
+    ground_.setSize(sf::Vector2f(1500, 170));
+    ground_.setFillColor(sf::Color(255, 204, 102));
+    ground_.setOutlineColor(sf::Color(204, 102, 0));
+    ground_.setOutlineThickness(10);
+    ground_.setOrigin(0,0);
+
+    AddPlayer(new PlayerPlane(sf::Vector2f(200.f, -200.f), ROOTDIR + "/res/plane007.png", 0.0f, false, 100, 0.0f));
+
+    // Camera starting position
+    sf::Vector2f center = sf::Vector2f(0, 0);
 
     // Set camera to match window
-    ResetView(window_.getSize().x, window_.getSize().y);
-    sf::Vector2f center = sf::Vector2f(0, 50);
+    resetView(window_.getSize().x, window_.getSize().y);
     camera_.setCenter(center);
-    bg_.fitToScreen(center, window_.getSize(), 1.4f, 0);
+
+    // Align background
+    bg_.fitToScreen(center, window_.getSize(), 1.5f, 10.f);
 }
 
 Engine::~Engine() {
@@ -33,8 +41,6 @@ Engine::~Engine() {
 
 void Engine::Start() {
     sf::Clock clock;
-
-    AddPlayer(new PlayerPlane(sf::Vector2f(200.f, 200.f), ROOTDIR + "/res/plane007.png", 0.0f, false, 100, 0.0f));
 
     while (window_.isOpen()) {
         // Restart the clock and save the elapsed time.
@@ -71,7 +77,7 @@ void Engine::Input(sf::Event& event) {
                 window_.close();
                 break;
             case sf::Event::Resized:
-                ResetView(event.size.width, event.size.height);
+                resetView(event.size.width, event.size.height);
                 bg_.resize(event.size.width, event.size.height);
                 break;
             case sf::Event::KeyPressed:
@@ -130,9 +136,14 @@ void Engine::Input(sf::Event& event) {
 }
 
 void Engine::Update(float dt) {
+    camera_.setCenter(player_->getPos());
+
     player_->press_keys(keys_pressed_);
+
     // Update background state 
-    bg_.update(sf::Vector2f(1,1), dt);
+    bg_.update(player_->getVelocity(), dt);
+    bg_.recenter(camera_.getCenter());
+
     // Update moving entity states
     for (auto entity : moving_entities_)
         entity->act(dt, moving_entities_);
@@ -140,14 +151,10 @@ void Engine::Update(float dt) {
     // Simplified camera movements before plane is configured
     if(keys_pressed_.up) camera_.move(0,-1);
     if(keys_pressed_.down) camera_.move(0,1);
-    if(keys_pressed_.left) {
-        camera_.move(-1,0);
-        bg_.move(-1, 0);
-    }
-    if(keys_pressed_.right) {
-        camera_.move(1,0);
-        bg_.move(1, 0);
-    }
+    if(keys_pressed_.left) camera_.move(-1,0);
+    if(keys_pressed_.right) camera_.move(1,0);
+
+    // Refresh view after movement changes
     window_.setView(camera_);
 }
 
@@ -156,8 +163,10 @@ void Engine::Draw() {
     window_.clear(bg_.getBlendColor());
 
     // Draw background
-    window_.draw(background_sprite_);
     window_.draw(bg_.getTexture(), bg_.getTransform());
+
+    // Draw ground
+    window_.draw(ground_);
 
     // Draw static entities
     for(auto& entity : static_entities_)
@@ -171,7 +180,7 @@ void Engine::Draw() {
     window_.display();
 }
 
-void Engine::ResetView(const float w, const float h) {
+void Engine::resetView(const float w, const float h) {
     camera_.setSize(w, h);
     window_.setView(camera_);
 }

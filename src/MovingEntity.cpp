@@ -7,5 +7,9 @@ MovingEntity::MovingEntity(const sf::Vector2f& p, const sf::Vector2f& v, const s
     : GameEntity(p, spritepath, r, d) { velocity_ = v; }
 
 void MovingEntity::Move(float dt) {
-    SetPos(pos_ + velocity_ * dt);
+    setPos(pos_ + velocity_ * dt);
+}
+
+const sf::Vector2f MovingEntity::getVelocity() const {
+    return velocity_;
 }

@@ -47,20 +47,28 @@ public:
     Background(const sf::Vector2u size);
     Background(const Background&);
     ~Background();
-    void setScale(const sf::Vector2f scale);
-    void setRepetition(const unsigned repeats);
-    void matchRepetition();
-    void setBlendColor(const sf::Color color);
-    const sf::Color getBlendColor() const;
+    // Set up correct texture repetition matching current base window/rect
+    void correctRepetition();
+    // Add new backdrop element (drawn in the order added)
     void addBackdrop(ScrollingBackdrop* backdrop);
+    // Configure background for a given base window/rect
+    // And set up the desired scale
     void fitToScreen(const sf::Vector2f camera_center, const sf::Vector2u base_size, const float scale, const float height);
+    // Realign to a new camera center position with the current base window/rect,
+    void recenter(const sf::Vector2f camera_center);
+    // Set up correct texture repetition and align to the bottom with the given offset
     void resize(const float base_width, const float base_height);
+    // Update parallax state
     void update(const sf::Vector2f v, const float dt);
     // Move with the given offset, to keep u with camera/align
     void move(const float w, const float h);
     // Generate and return a new texture based on the current state
     const sf::Sprite getTexture();
     const sf::Transform getTransform() const;
+    void setBlendColor(const sf::Color color);
+    const sf::Color getBlendColor() const;
+    void setScale(const sf::Vector2f scale);
+    void setRepetition(const unsigned repeats);
 private:
     // Scrolling textures
     std::vector<ScrollingBackdrop*> backdrops_;
@@ -74,6 +82,8 @@ private:
     unsigned repeats_;
     // Background position
     sf::Vector2f pos_;
+    // Background vertical offset
+    float height_offset_;
     // Canvas
     sf::RenderTexture render_texture_;
     // Final texture resulting from the canvas

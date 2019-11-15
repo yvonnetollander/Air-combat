@@ -24,8 +24,7 @@ public:
 private:
     float target_aspect_ratio_ = 16.f / 9.f;
     sf::RenderWindow window_;
-    sf::Sprite background_sprite_;
-    sf::Texture background_texture_;
+    sf::RectangleShape ground_;
     sf::View camera_;
     sf::RenderTexture foreground_;
     sf::RenderTexture background_;
@@ -40,5 +39,5 @@ private:
     void Draw();
     void Input(sf::Event& event);
     // Resets camera to given resolution
-    void ResetView(const float w, const float h);
+    void resetView(const float w, const float h);
 };

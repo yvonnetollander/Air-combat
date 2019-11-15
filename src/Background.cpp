@@ -6,7 +6,7 @@
 #include "globals.hpp"
 
 ScrollingBackdrop::ScrollingBackdrop(const std::string spritepath, const float velocity, const float static_velocity = 0.f)
-    : MovingEntity(sf::Vector2f(), spritepath, 0, false), velocity_(velocity), static_velocity_(static_velocity), view_velocity_()
+    : MovingEntity(sf::Vector2f(), sf::Vector2f(), spritepath, 0.f, false), velocity_(velocity), static_velocity_(static_velocity), view_velocity_()
 {
     setOrigin(sf::Vector2f(0, 0));
     // Repeat sprite two times to the right, we will later move one full width
@@ -52,7 +52,7 @@ void Background::setRepetition(unsigned repeats) {
     repeats_ = repeats;
 }
 
-void Background::matchRepetition() {
+void Background::correctRepetition() {
     // Compute the repetitions we need to fit the screen, again taking
     // into account scaling
     unsigned repetitions = ((float) base_size_.x / (float) size_.x / scale_.x) + 1;
@@ -98,7 +98,7 @@ const sf::Sprite Background::getTexture() {
     // Apply repetition
     texture_.setRepeated(true);
     sprite_ = sf::Sprite(texture_);
-    sprite_.setOrigin(size_.x/2, size_.y/2);
+    sprite_.setOrigin(size_.x*scale_.x/2, size_.y*scale_.y);
     sprite_.setTextureRect(sf::IntRect(0, 0, texture_.getSize().x * repeats_, texture_.getSize().y));
 
     return sprite_;
@@ -111,13 +111,14 @@ const sf::Sprite Background::getTexture() {
 
 void Background::fitToScreen(const sf::Vector2f camera_center, const sf::Vector2u base_size, const float scale, const float height = 0.f) {
     base_size_ = base_size;
-    // Align horizontally with camera center
-    move(camera_center.x, 0.f);
-    // Apply height offset
-    move(0.f, -height);
-    // Set scale and repetition
+    height_offset_ = -height;
     setScale(sf::Vector2f(scale, scale));
-    matchRepetition();
+}
+
+void Background::recenter(const sf::Vector2f camera_center) {
+    // Reset position and realign
+    pos_ = sf::Vector2f();
+    move(camera_center.x, height_offset_);
 }
 
 void Background::move(const float w, const float h) {
@@ -127,9 +128,9 @@ void Background::move(const float w, const float h) {
 void Background::resize(const float base_width, const float base_height) {
     base_size_ = sf::Vector2u(base_width, base_height);
     // Recompute needed repetition
-    matchRepetition();
+    correctRepetition();
     // Update transform to center the background on bottom border
-    transform_ = sf::Transform().translate(-1.f * (repeats_ / 2) * size_.x * scale_.x, -0.5f * size_.y * scale_.y);
+    transform_ = sf::Transform().translate(-1.f * (repeats_ / 2) * size_.x * scale_.x,  0);
 }
 
 // Example background
@@ -137,11 +138,11 @@ void Background::resize(const float base_width, const float base_height) {
 // Some were edited mostly to properly loop and fit the same size
 const Background duskMountainBackground() {
     Background bg = Background(sf::Vector2u(272,160));
-    bg.addBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/parallax-mountain-bg.png", 0, -10));
-    bg.addBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/parallax-mountain-montain-far.png", 22));
-    bg.addBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/parallax-mountain-mountains.png", 35));
-    bg.addBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/parallax-mountain-trees.png", 55));
-    bg.addBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/parallax-mountain-foreground-trees.png", 80));
+    bg.addBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/parallax-mountain-bg.png", 0, -5));
+    bg.addBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/parallax-mountain-montain-far.png", 0.20f));
+    bg.addBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/parallax-mountain-mountains.png", 0.33f));
+    bg.addBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/parallax-mountain-trees.png", 0.50f));
+    bg.addBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/parallax-mountain-foreground-trees.png", 0.75f));
     bg.setBlendColor(sf::Color(171, 106, 140));
     return bg;
 }
