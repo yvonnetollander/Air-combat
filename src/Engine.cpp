@@ -16,9 +16,11 @@ Engine::Engine() : bg_(duskMountainBackground()) {
         std::cerr << "Failed to load background" << std::endl;
     background_sprite_.setTexture(background_texture_);
 
-    // Set camera to initial view (for now the entire background)
-    camera_ = sf::View(sf::FloatRect(0.f, 0.f, background_texture_.getSize().x, background_texture_.getSize().y));
-    ResetView();
+    // Set camera to match window
+    ResetView(window_.getSize().x, window_.getSize().y);
+    sf::Vector2f center = sf::Vector2f(0, 50);
+    camera_.setCenter(center);
+    bg_.fitToScreen(center, window_.getSize(), 1.4f, 0);
 }
 
 Engine::~Engine() {
@@ -69,7 +71,8 @@ void Engine::Input(sf::Event& event) {
                 window_.close();
                 break;
             case sf::Event::Resized:
-                ResetView();
+                ResetView(event.size.width, event.size.height);
+                bg_.resize(event.size.width, event.size.height);
                 break;
             case sf::Event::KeyPressed:
                 switch (event.key.code) {
@@ -133,13 +136,26 @@ void Engine::Update(float dt) {
     // Update moving entity states
     for (auto entity : moving_entities_)
         entity->act(dt, moving_entities_);
+
+    // Simplified camera movements before plane is configured
+    if(keys_pressed_.up) camera_.move(0,-1);
+    if(keys_pressed_.down) camera_.move(0,1);
+    if(keys_pressed_.left) {
+        camera_.move(-1,0);
+        bg_.move(-1, 0);
+    }
+    if(keys_pressed_.right) {
+        camera_.move(1,0);
+        bg_.move(1, 0);
+    }
+    window_.setView(camera_);
 }
 
 void Engine::Draw() {
     // Clear window
-    window_.clear(sf::Color::Black);
+    window_.clear(bg_.getBlendColor());
 
-    // Draw background.
+    // Draw background
     window_.draw(background_sprite_);
     window_.draw(bg_.getTexture(), bg_.getTransform());
 
@@ -155,18 +171,7 @@ void Engine::Draw() {
     window_.display();
 }
 
-void Engine::ResetView() {
-    sf::Vector2u window_size = window_.getSize();
-    float window_aspect_ratio = (float) window_size.x / (float) window_size.y;
-
-    // Figure out relative scaling for letterboxing
-    float w = 1.f , h = 1.f;
-    if(target_aspect_ratio_ < window_aspect_ratio)
-        w = ((float) window_size.y * target_aspect_ratio_) / window_size.x;
-    else if(target_aspect_ratio_ > window_aspect_ratio)
-        h = ((float) window_size.x / target_aspect_ratio_) / window_size.y;
-
-    // Reset camera viewport to new letterbox on window
-    camera_.setViewport(sf::FloatRect((1.f - w)/2, (1.f - h)/2, w, h));
+void Engine::ResetView(const float w, const float h) {
+    camera_.setSize(w, h);
     window_.setView(camera_);
 }

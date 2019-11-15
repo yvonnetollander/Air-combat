@@ -39,6 +39,6 @@ private:
     void Update(float dt);
     void Draw();
     void Input(sf::Event& event);
-    // Letterboxes/corrects the camera viewport to match target_aspect_ratio_
-    void ResetView();
+    // Resets camera to given resolution
+    void ResetView(const float w, const float h);
 };

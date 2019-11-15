@@ -52,8 +52,21 @@ void Background::setRepetition(unsigned repeats) {
     repeats_ = repeats;
 }
 
-void Background::setBlendColor(sf::Color color) {
+void Background::matchRepetition() {
+    // Compute the repetitions we need to fit the screen, again taking
+    // into account scaling
+    unsigned repetitions = ((float) base_size_.x / (float) size_.x / scale_.x) + 1;
+    // Round up to an odd number to align things nicely
+    repetitions += (repetitions + 1) % 2;
+    setRepetition(repetitions);
+}
+
+void Background::setBlendColor(const sf::Color color) {
     blend_color_ = color;
+}
+
+const sf::Color Background::getBlendColor() const {
+    return blend_color_;
 }
 
 void Background::addBackdrop(ScrollingBackdrop* backdrop) {
@@ -85,27 +98,41 @@ const sf::Sprite Background::getTexture() {
     // Apply repetition
     texture_.setRepeated(true);
     sprite_ = sf::Sprite(texture_);
+    sprite_.setOrigin(size_.x/2, size_.y/2);
     sprite_.setTextureRect(sf::IntRect(0, 0, texture_.getSize().x * repeats_, texture_.getSize().y));
 
     return sprite_;
 }
 
  const sf::Transform Background::getTransform() const {
-     return transform_;
+     sf::Transform t(transform_);
+     return t.translate(pos_);
  }
 
-void Background::fitToScreen(const sf::Vector2u base_size, const float zoom, const float margin = 0.f) {
-    // Compute the repetitions we need to fit the screen, again taking
-    // into account scaling
-    const unsigned repetitions = ((float) base_size.x / (float) size_.x / zoom) + 1 ;
-    // Apply both
-    setScale(sf::Vector2f(zoom, zoom));
-    setRepetition(repetitions);
-    // Align to bottom
-    transform_ = sf::Transform().translate(0, base_size.y - (size_.y * zoom) - margin);
+void Background::fitToScreen(const sf::Vector2f camera_center, const sf::Vector2u base_size, const float scale, const float height = 0.f) {
+    base_size_ = base_size;
+    // Align horizontally with camera center
+    move(camera_center.x, 0.f);
+    // Apply height offset
+    move(0.f, -height);
+    // Set scale and repetition
+    setScale(sf::Vector2f(scale, scale));
+    matchRepetition();
 }
 
-// Example backgrounds
+void Background::move(const float w, const float h) {
+    pos_ += sf::Vector2f(w, h);
+}
+
+void Background::resize(const float base_width, const float base_height) {
+    base_size_ = sf::Vector2u(base_width, base_height);
+    // Recompute needed repetition
+    matchRepetition();
+    // Update transform to center the background on bottom border
+    transform_ = sf::Transform().translate(-1.f * (repeats_ / 2) * size_.x * scale_.x, -0.5f * size_.y * scale_.y);
+}
+
+// Example background
 // Credits for the original sprites to ansimuz at opengameart :)
 // Some were edited mostly to properly loop and fit the same size
 const Background duskMountainBackground() {
@@ -116,6 +143,5 @@ const Background duskMountainBackground() {
     bg.addBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/parallax-mountain-trees.png", 55));
     bg.addBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/parallax-mountain-foreground-trees.png", 80));
     bg.setBlendColor(sf::Color(171, 106, 140));
-    bg.fitToScreen(sf::Vector2u(2904, 1635), 4);
     return bg;
 }

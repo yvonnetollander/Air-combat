@@ -32,7 +32,7 @@ private:
     serves with getTexture(). The backdrops move relative to the vector v
     given to update().
 
-    Constructor takes in an int vector representing the base image size.
+    Constructor takes in an uint vector representing the base image size.
     ScrollingBackdrops are assumed to be the given size.
 
     Can be scaled and repeated horizontally using setScale() and setRepetition().
@@ -49,10 +49,15 @@ public:
     ~Background();
     void setScale(const sf::Vector2f scale);
     void setRepetition(const unsigned repeats);
+    void matchRepetition();
     void setBlendColor(const sf::Color color);
+    const sf::Color getBlendColor() const;
     void addBackdrop(ScrollingBackdrop* backdrop);
-    void fitToScreen(const sf::Vector2u base_size, const float zoom, const float margin);
+    void fitToScreen(const sf::Vector2f camera_center, const sf::Vector2u base_size, const float scale, const float height);
+    void resize(const float base_width, const float base_height);
     void update(const sf::Vector2f v, const float dt);
+    // Move with the given offset, to keep u with camera/align
+    void move(const float w, const float h);
     // Generate and return a new texture based on the current state
     const sf::Sprite getTexture();
     const sf::Transform getTransform() const;
@@ -61,18 +66,23 @@ private:
     std::vector<ScrollingBackdrop*> backdrops_;
     // Canvas size (in pixels, pre-scaling)
     const sf::Vector2u size_;
+    // Dimensions of the screen we are fitting to
+    sf::Vector2u base_size_;
     // Scaling factor
     sf::Vector2f scale_;
     // Repeats of background on the x axis
     unsigned repeats_;
+    // Background position
+    sf::Vector2f pos_;
     // Canvas
     sf::RenderTexture render_texture_;
     // Final texture resulting from the canvas
     sf::Texture texture_;
     // Final sprite that gets sent as the background
     sf::Sprite sprite_;
-    // The transform for the final sprite. Simply translates to align to
-    // the bottom if fitToScreen() was used
+    // The alignment transform for the final sprite. Does not apply
+    // the background position. Position gets applied on top by
+    // getTransform().
     sf::Transform transform_;
     // The color to be used to blend the background
     sf::Color blend_color_;
