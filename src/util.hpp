@@ -4,6 +4,14 @@
 #include <stdlib.h>
 #include <SFML/Graphics.hpp>
 
+struct Keys {
+    bool up = false;    // flip
+    bool down = false;  // stop engine
+    bool left = false;  // rotate
+    bool right = false; // rotate
+    bool d = false;     // shoot
+};
+
 // Returns the length of a given vector
 float len(const sf::Vector2f& vec);
 

@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Engine.hpp"
+#include "util.hpp"
 
 extern std::string ROOTDIR;
 
@@ -23,10 +24,13 @@ Engine::~Engine() {
         delete entity;
     for (auto entity : static_entities_)
         delete entity;
+    delete player_;
 }
 
 void Engine::Start() {
     sf::Clock clock;
+
+    AddPlayer(new PlayerPlane(sf::Vector2f(200.f, 200.f), ROOTDIR + "/res/plane007.png", 0.0f, false, 100, 0.0f));
 
     while (window_.isOpen()) {
         // Restart the clock and save the elapsed time.
@@ -47,6 +51,11 @@ void Engine::AddMoving(MovingEntity* entity) {
 
 void Engine::AddStatic(GameEntity* entity) {
     static_entities_.push_back(entity);
+}
+
+void Engine::AddPlayer(PlayerPlane* entity) {
+    player_ = entity;
+    AddMoving(entity);
 }
 
 void Engine::Input(sf::Event& event) {
@@ -116,6 +125,8 @@ void Engine::Input(sf::Event& event) {
 }
 
 void Engine::Update(float dt) {
+ //   player_->press_keys(keys_pressed_);
+ //   player_->act(dt);
     for (auto entity : moving_entities_)
         entity->act(dt, moving_entities_);
 }

@@ -3,14 +3,9 @@
 #include <SFML/Graphics.hpp>
 #include "GameEntity.hpp"
 #include "MovingEntity.hpp"
-
-struct Keys {
-    bool up = false;    // flip
-    bool down = false;  // stop engine
-    bool left = false;  // rotate
-    bool right = false; // rotate
-    bool d = false;     // shoot
-};
+#include "Plane.hpp"
+#include <map>
+#include "util.hpp"
 
 /* A simple class for the game engine.
 *  Contains all the game entities and handles the refresh, draw and input loops.
@@ -23,6 +18,7 @@ public:
     void Start();
     void AddMoving(MovingEntity* entity);
     void AddStatic(GameEntity* entity);
+    void AddPlayer(PlayerPlane* entity);
 
 private:
     float target_aspect_ratio_ = 16.f / 9.f;
@@ -32,6 +28,8 @@ private:
     sf::View camera_;
     std::vector<GameEntity*> static_entities_;
     std::vector<MovingEntity*> moving_entities_;
+    PlayerPlane* player_;
+
     Keys keys_pressed_;
 
     void Update(float dt);

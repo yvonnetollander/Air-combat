@@ -7,22 +7,29 @@ Plane::Plane()
 Plane::Plane(const sf::Vector2f& p, const std::string spritepath, const float r, const bool d, const unsigned hp, float drag)
     : Troop(p,spritepath,r,d,hp), thrust_(false), inverted_(false), drag_(drag), velocity_() {}
 
-void Plane::act(float dt, std::vector<MovingEntity*> moving_entities, bool left, bool right, bool down, bool up) {
+void Plane::act(float dt, std::vector<MovingEntity*> moving_entities) {
     // These will need some mechanic to not just spasm out on button hold
-    if (down)
+    
+
+
+
+ }
+
+ void PlayerPlane::press_keys(Keys keys_pressed) {
+    if (keys_pressed.down)
         thrust_ = !thrust_;
-    if (up)
+    if (keys_pressed.up)
         inverted_ = !inverted_;
 
     bool corrected_left, corrected_right;
     
     if(inverted_) {
-        corrected_left = right;
-        corrected_right = left;
+        corrected_left = keys_pressed.right;
+        corrected_right = keys_pressed.left;
     }
     else {
-        corrected_left = left;
-        corrected_right = right;
+        corrected_left = keys_pressed.left;
+        corrected_right = keys_pressed.right;
     }
 
     velocity_ -= normalize(velocity_) * drag_;
@@ -35,5 +42,6 @@ void Plane::act(float dt, std::vector<MovingEntity*> moving_entities, bool left,
             
         }
     }
-
  }
+
+
