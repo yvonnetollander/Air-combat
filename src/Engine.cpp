@@ -149,10 +149,13 @@ void Engine::Update(float dt) {
         entity->act(dt, moving_entities_);
 
     // Simplified camera movements before plane is configured
+    
+    /*
     if(keys_pressed_.up) camera_.move(0,-1);
     if(keys_pressed_.down) camera_.move(0,1);
     if(keys_pressed_.left) camera_.move(-1,0);
     if(keys_pressed_.right) camera_.move(1,0);
+    */
 
     // Refresh view after movement changes
     window_.setView(camera_);

@@ -8,8 +8,7 @@ class Plane : public Troop {
 public:
     Plane();
     Plane(const sf::Vector2f& p, const sf::Vector2f& v, const std::string spritepath, const float r, const bool d, const unsigned hp, float drag);
-    virtual void act(float dt) {}
-    void act(float dt, std::vector<MovingEntity*> moving_entities);
+    virtual void act(float dt, std::vector<MovingEntity*> moving_entities);
 protected:
     bool thrust_;
     bool inverted_;
@@ -22,6 +21,8 @@ public:
     PlayerPlane(const sf::Vector2f& p, const std::string spritepath, const float r, const bool d, const unsigned hp, float drag); 
     // Method to listen the key presses which control the plane
     void press_keys(Keys keys_pressed);
+    // Create custom behaviour for the player's plane by overriding the default logic in the Plane class's act method.
+    virtual void act(float dt, std::vector<MovingEntity*> moving_entities);
 private:
-    void fire() {} 
+    void fire() {}
 };
