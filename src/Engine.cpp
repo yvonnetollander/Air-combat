@@ -45,6 +45,8 @@ void Engine::Start() {
     while (window_.isOpen()) {
         // Restart the clock and save the elapsed time.
         sf::Time time = clock.restart();
+
+        // Todo: use integer microseconds
         float dt = time.asSeconds();
 
         sf::Event event;
