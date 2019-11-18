@@ -10,14 +10,9 @@ public:
     Troop();
 
     Troop(const sf::Vector2f& p, const sf::Vector2f& v, const std::string spritepath, const float r, const bool d, const unsigned hp);
-    virtual void act(float dt, std::vector<MovingEntity*> moving_entities) = 0;
 
-private:
-    virtual void fire() = 0;
+    virtual void act(float dt, Engine& engine) = 0;
+
+protected:
     unsigned hp_;
-};
-
-class PlayerTroop : virtual public Troop {
-public:
-    virtual void press_keys(Keys keys_pressed);
 };

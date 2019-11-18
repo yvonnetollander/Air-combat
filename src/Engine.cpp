@@ -148,7 +148,7 @@ void Engine::Update(float dt) {
 
     // Update moving entity states
     for (auto entity : moving_entities_)
-        entity->act(dt, moving_entities_);
+        entity->act(dt, *this);
 
     // Simplified camera movements before plane is configured
     

@@ -10,7 +10,7 @@ Plane::Plane(const sf::Vector2f& p, const sf::Vector2f& v, const std::string spr
     : Troop(p,v,spritepath,r,d,hp), thrust_(false), inverted_(false), drag_(drag) {}
 
 
-void Plane::act(float dt, std::vector<MovingEntity*> moving_entities) {
+void Plane::act(float dt, Engine& engine) {
     // These will need some mechanic to not just spasm out on button hold
     Move(dt);
 } 
@@ -21,7 +21,7 @@ PlayerPlane::PlayerPlane(const sf::Vector2f& p, const std::string spritepath, co
 
 // Create custom behaviour for the player's plane by overriding the default logic in the Plane class's act method.
 // Todo: Include fire and collision
-void PlayerPlane::act(float dt, std::vector<MovingEntity*> moving_entities) {
+void PlayerPlane::act(float dt, Engine& engine) {
    Move(dt);
 }
 

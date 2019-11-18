@@ -7,7 +7,7 @@ class Infantry : public Troop {
 public:
     Infantry();
     Infantry(const sf::Vector2f& p, const std::string spritepath, const float r, const bool d, const unsigned hp, const float radius);
-    virtual void act(float dt, std::vector<MovingEntity*> moving_entities);
+    virtual void act(float dt, Engine& engine);
 private:
     virtual void fire();
     // Current target position

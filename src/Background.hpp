@@ -12,7 +12,7 @@
 class ScrollingBackdrop : public MovingEntity {
 public:
     ScrollingBackdrop(const std::string spritepath, const float velocity, const float static_velocity);
-    void act(float dt, std::vector<MovingEntity*> moving_entities);
+    void act(float dt);
     void setViewVelocity(sf::Vector2f v);
     void setMovementScale(sf::Vector2f s);
 private:
