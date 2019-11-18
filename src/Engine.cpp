@@ -70,6 +70,10 @@ void Engine::AddPlayer(PlayerPlane* entity) {
     AddMoving(entity);
 }
 
+void Engine::AddMovingNextFrame(MovingEntity* entity) {
+    new_moving_entities_.push_back(entity);
+}
+
 void Engine::Input(sf::Event& event) {
     while (window_.pollEvent(event)) {
         // Check the type of the event.
@@ -183,6 +187,11 @@ void Engine::Draw() {
 
     // Refresh window
     window_.display();
+
+    for (auto e : new_moving_entities_) {
+        AddMoving(e);
+        new_moving_entities_.clear();
+    }
 }
 
 void Engine::resetView(const float w, const float h) {

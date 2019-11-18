@@ -22,7 +22,10 @@ PlayerPlane::PlayerPlane(const sf::Vector2f& p, const std::string spritepath, co
 // Create custom behaviour for the player's plane by overriding the default logic in the Plane class's act method.
 // Todo: Include fire and collision
 void PlayerPlane::act(float dt, Engine& engine) {
-   Move(dt);
+    Move(dt);
+    if (FireMachineGun(dt)) {
+        engine.AddEntityNextFrame(FireMachineGun());
+    }
 }
 
 void PlayerPlane::press_keys(Keys keys_pressed) {
@@ -65,18 +68,20 @@ void PlayerPlane::press_keys(Keys keys_pressed) {
     }
 
     if (keys_pressed.d) {
-        fire_machine_gun_ = true;
+        machine_gun_fired_ = true;
     }
 }
 
-void PlayerPlane::FireMachineGun() {
-
+Projectile* PlayerPlane::FireMachineGun() {
+    machine_gun_fired_ = false;
+    return new Projectile(pos_, velocity_, 20, this);
 }
 
-void PlayerPlane::FireMachineGun(float dt) {
+bool PlayerPlane::FireMachineGun(float dt) {
     machine_gun_cooldown_left_ -= dt;
-    if (machine_gun_cooldown_left_ < 0) {
-        machine_gun_cooldown_left_ = 50;
-        FireMachineGun();
+    if (machine_gun_fired_ && machine_gun_cooldown_left_ < 0) {
+        machine_gun_cooldown_left_ = machine_gun_cooldown_;
+        return true;
     }
+    return false;
 }

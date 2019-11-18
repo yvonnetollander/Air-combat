@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Troop.hpp"
+#include "Projectile.hpp"
 
 /* Plane is a class that represents a troop. 
    Plane takes parameters position, velocity, spritepath, rotation , status (dead or alive), health points and drag */
@@ -12,7 +13,7 @@ public:
 protected:
     bool thrust_;
     bool inverted_;
-    bool fire_machine_gun_ = false;
+    bool machine_gun_fired_ = false;
     float machine_gun_cooldown_ = 0.05;
     float machine_gun_cooldown_left_ = 0;
     float drag_;
@@ -26,8 +27,8 @@ public:
     void press_keys(Keys keys_pressed);
     // Create custom behaviour for the player's plane by overriding the default logic in the Plane class's act method.
     virtual void act(float dt, Engine& engine);
-    void FireMachineGun();
-    void FireMachineGun(float dt);
+    Projectile* FireMachineGun();
+    bool FireMachineGun(float dt);
 private:
     void fire() {}
 };
