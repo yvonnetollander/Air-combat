@@ -3,6 +3,7 @@
 #include "Infantry.hpp"
 #include "util.hpp"
 
+/* ****** Infantry ****** */
 Infantry::Infantry()
     : Troop(), targetPos_(), idle_(0), wanderRadius_(0) { pickTarget(); }
 
@@ -10,21 +11,25 @@ Infantry::Infantry(const sf::Vector2f& p, const std::string spritepath, const fl
     : Troop(p, sf::Vector2f(0.5f, 0.0f), spritepath, r, d, hp), targetPos_(), idle_(0), wanderRadius_(radius) { pickTarget(); }
 
 void Infantry::act(float dt, std::vector<MovingEntity*> moving_entities) {
-/*     sf::Vector2f diff = targetPos_ - getPos();
-    float movement = velocity_ * dt;
+    sf::Vector2f diff = targetPos_ - getPos();
+    float movement = velocity_.x * dt;
+    // If Infantry is idle, decrease the remaining time
     if(idle_ > 0) {
         idle_ = std::max(0.0f, idle_ - dt);
     }
- 
+    // If infantry is not idle change its position
     else {
+        // If the Infantry can reach the target position, it moves to the target position and it is set to be idle for random time
         if(len(diff) < movement) {
             setPos(targetPos_);
             idle_ = randFloat() * 5.0f;
+            pickTarget();
         }
-        else {
+        // Otherwise, the infantry moves closer to target position
+        else {         
             setPos(getPos() + normalize(diff) * movement);
         }
-    } */
+    } 
 }
 
 void Infantry::pickTarget() {
