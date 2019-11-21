@@ -18,6 +18,9 @@ Engine::Engine() : bg_(duskMountainBackground()) {
     ground_.setOutlineThickness(10);
     ground_.setOrigin(0,0);
 
+    hud_.Create(sf::Vector2f(window_.getSize().x, window_.getSize().y / 10));
+    hud_.UpdateValues(90, 15, 30);
+
     AddPlayer(new PlayerPlane(sf::Vector2f(200.f, -200.f), ROOTDIR + "/res/plane007.png", 0.0f, false, 100, 0.0f));
 
     // Camera starting position
@@ -178,6 +181,10 @@ void Engine::Draw() {
     // Draw moving entities
     for(auto& entity : moving_entities_)
         window_.draw(entity->getSprite(), sf::RenderStates(entity->getTransform()));
+
+    camera_.setCenter(window_.getSize().x / 2, window_.getSize().y / 2 + 2000);
+    window_.setView(camera_);
+    window_.draw(hud_.GetSprite(), hud_.GetTransform());
 
     // Refresh window
     window_.display();

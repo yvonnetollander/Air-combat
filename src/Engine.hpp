@@ -7,6 +7,7 @@
 #include <map>
 #include "util.hpp"
 #include "Background.hpp"
+#include "HUD.hpp"
 
 /* A simple class for the game engine.
 *  Contains all the game entities and handles the refresh, draw and input loops.
@@ -26,6 +27,7 @@ private:
     sf::RenderWindow window_;
     sf::RectangleShape ground_;
     sf::View camera_;
+    HUD hud_;
     sf::RenderTexture foreground_;
     sf::RenderTexture background_;
     std::vector<GameEntity*> static_entities_;
