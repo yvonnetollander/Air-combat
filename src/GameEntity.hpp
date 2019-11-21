@@ -17,7 +17,7 @@ public:
     void setPos(const sf::Vector2f& p);
     void Rotate(const float deg);
     void SetRotation(const float deg);
-    void SetScale(const sf::Vector2f& scale);
+    void SetScale(const sf::Vector2f scale);
     const bool isDead() const;
     void setRepeated(bool set);
     void setOrigin(sf::Vector2f origin);

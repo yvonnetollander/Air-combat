@@ -14,7 +14,7 @@ GameEntity::GameEntity(const sf::Vector2f& p, const std::string spritepath, cons
     }
 }
 
-void GameEntity::SetScale(const sf::Vector2f& scale) {
+void GameEntity::SetScale(const sf::Vector2f scale) {
     sprite_.setScale(scale);
 }
 
