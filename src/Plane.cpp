@@ -33,6 +33,7 @@ PlayerPlane::PlayerPlane(const sf::Vector2f& p, const float r, const bool d, con
 void PlayerPlane::act(float dt, std::vector<MovingEntity*> moving_entities, Keys keys_pressed) {
     const float turning_mult = 40.f;
     const float thrush_mult = 120.f;
+    const float pi = 3.141592653;
 
     // Flip plane on up key
     if (keys_pressed.up && !keys_.up) Flip();
@@ -43,11 +44,15 @@ void PlayerPlane::act(float dt, std::vector<MovingEntity*> moving_entities, Keys
     // Movement
     if (keys_pressed.right) {
         Rotate(dt * turning_mult);
-        velocity_ = rotate(velocity_, dt * turning_mult * M_PI / 180.f);
+        velocity_ = rotate(velocity_, dt * turning_mult * pi / 180.f);
     }
     if (keys_pressed.left) {
         Rotate(-dt * turning_mult);
-        velocity_ = rotate(velocity_, -dt * turning_mult * M_PI / 180.f);
+        velocity_ = rotate(velocity_, -dt * turning_mult * pi / 180.f);
+    }
+
+    if (keys_pressed.d) {
+        fire();
     }
 
     // Apply thrust & drag
@@ -62,3 +67,10 @@ void PlayerPlane::act(float dt, std::vector<MovingEntity*> moving_entities, Keys
     keys_ = keys_pressed;
 }
 
+void PlayerPlane::fire() {
+    float damage_radius = 10;
+    sf::Vector2f bullet_velocity = lengthen(velocity_, 1000);
+    sf::Vector2f bullet_pos = pos_ + (normalize(velocity_) * 100.0f);
+
+    projectiles_.push_back(new Projectile(bullet_pos, bullet_velocity, ROOTDIR + "/res/bullet.png", 0.f, false, damage_radius, 10));
+}

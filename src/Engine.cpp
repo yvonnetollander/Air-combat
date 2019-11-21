@@ -148,6 +148,9 @@ void Engine::Update(float dt) {
     for (auto entity : moving_entities_)
         entity->act(dt, moving_entities_);
 
+    for(auto& bullet : player_->GetProjectiles())
+        bullet->act(dt, moving_entities_);
+
     // Simplified camera movements before plane is configured
     
     /*
@@ -178,6 +181,9 @@ void Engine::Draw() {
     // Draw moving entities
     for(auto& entity : moving_entities_)
         window_.draw(entity->getSprite(), sf::RenderStates(entity->getTransform()));
+
+    for(auto& bullet : player_->GetProjectiles())
+        window_.draw(bullet->getSprite(), sf::RenderStates(bullet->getTransform()));
 
     // Refresh window
     window_.display();
