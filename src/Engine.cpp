@@ -18,7 +18,7 @@ Engine::Engine() : bg_(duskMountainBackground()) {
     ground_.setOutlineThickness(10);
     ground_.setOrigin(0,0);
 
-    hud_.Create(sf::Vector2f(window_.getSize().x, window_.getSize().y / 10));
+    hud_.Create(sf::Vector2f(window_.getSize().x, window_.getSize().y));
     hud_.UpdateValues(90, 15, 30);
 
     AddPlayer(new PlayerPlane(sf::Vector2f(200.f, -200.f), ROOTDIR + "/res/plane007.png", 0.0f, false, 100, 0.0f));
@@ -82,6 +82,7 @@ void Engine::Input(sf::Event& event) {
             case sf::Event::Resized:
                 resetView(event.size.width, event.size.height);
                 bg_.resize(event.size.width, event.size.height);
+                hud_.Resize(event.size.width, event.size.height);
                 break;
             case sf::Event::KeyPressed:
                 switch (event.key.code) {

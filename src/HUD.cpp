@@ -8,27 +8,29 @@ HUD::HUD() {
     transform_ = sf::Transform().translate(0, 2000);
 
     if(!font.loadFromFile(ROOTDIR + "/res/Roboto-Regular.ttf")) {
-        //error
+        // error
     }
     text_[0].setFont(font);
-    text_[0].setFillColor(sf::Color::Black);
-    text_[0].setPosition(0,0);
-    text_[0].setCharacterSize(15);
+    text_[0].setFillColor(sf::Color::White);
+    text_[0].setPosition(20,5);
+    text_[0].setCharacterSize(18);
 
     text_[1].setFont(font);
-    text_[1].setFillColor(sf::Color::Black);
-    text_[1].setPosition(400,0);
+    text_[1].setFillColor(sf::Color::White);
+    text_[1].setPosition(300,5);
+    text_[1].setCharacterSize(18);
 
     text_[2].setFont(font);
-    text_[2].setFillColor(sf::Color::Black);
-    text_[2].setPosition(0, 40);
+    text_[2].setFillColor(sf::Color::White);
+    text_[2].setPosition(20, 30);
+    text_[2].setCharacterSize(18);
 
     text_[3].setFont(font);
-    text_[3].setFillColor(sf::Color::Black);
-    text_[3].setPosition(400, 40);
+    text_[3].setFillColor(sf::Color::White);
+    text_[3].setPosition(300, 30);
+    text_[3].setCharacterSize(18);
 
-    background_.setSize(sf::Vector2f(500, 500));
-    background_.setFillColor(sf::Color(255, 255, 0));
+    background_.setFillColor(sf::Color(25, 0, 50));
     background_.setOrigin(0,0);
 
     max_hp_ = 100;
@@ -37,11 +39,21 @@ HUD::HUD() {
 }
 
 void HUD::Create(const sf::Vector2f size) {
-    render_texture_.create(size.x, size.y);
+    size_.x = size.x;
+    size_.y = size.y / 10;
+    background_.setSize(sf::Vector2f(size_.x, size_.y));
+    render_texture_.create(size_.x, size_.y);
 }
 
 const sf::Transform HUD::GetTransform() const {
     return transform_;
+}
+
+void HUD::Resize(const float base_width, const float base_height) {
+    size_.x = base_width;
+    size_.y = base_height / 10;
+    background_.setSize(sf::Vector2f(size_.x, size_.y));
+    render_texture_.create(size_.x, size_.y);
 }
 
 const sf::Sprite HUD::GetSprite() {
