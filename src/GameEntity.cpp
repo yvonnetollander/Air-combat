@@ -14,6 +14,10 @@ GameEntity::GameEntity(const sf::Vector2f& p, const std::string spritepath, cons
     }
 }
 
+void GameEntity::SetScale(const sf::Vector2f& scale) {
+    sprite_.setScale(scale);
+}
+
 const sf::Vector2f GameEntity::getPos() const {
     return pos_;
 }
@@ -54,4 +58,12 @@ void GameEntity::setOrigin(sf::Vector2f origin) {
 
 void GameEntity::kill() {
     dead_ = true;
+}
+
+void GameEntity::Rotate(const float deg) {
+    rotation_ += deg;
+}
+
+void GameEntity::SetRotation(const float deg) {
+    rotation_ = deg;
 }

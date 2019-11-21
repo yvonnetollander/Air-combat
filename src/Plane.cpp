@@ -1,5 +1,6 @@
 #include "util.hpp"
 #include "Plane.hpp"
+#include "globals.hpp"
 #include <iostream>
 
 /* ****** Plane ****** */
@@ -13,59 +14,51 @@ Plane::Plane(const sf::Vector2f& p, const sf::Vector2f& v, const std::string spr
 void Plane::act(float dt, std::vector<MovingEntity*> moving_entities) {
     // These will need some mechanic to not just spasm out on button hold
     Move(dt);
-} 
-
-/* ****** PlayerPlane ****** */
-PlayerPlane::PlayerPlane(const sf::Vector2f& p, const std::string spritepath, const float r, const bool d, const unsigned hp, float drag) 
-    : Plane(p, sf::Vector2f(50.0f, 20.0f), spritepath, r, d, hp, drag) {}
-
-// Create custom behaviour for the player's plane by overriding the default logic in the Plane class's act method.
-void PlayerPlane::act(float dt, std::vector<MovingEntity*> moving_entities) {
-    float old_x = pos_.x;
-    float old_y = pos_.y;
-    float new_x = old_x + (velocity_.x * dt);   // v = ds / dt
-    float new_y = old_y + (velocity_.y * dt);
-    pos_ = sf::Vector2f(new_x, new_y);
 }
 
- void PlayerPlane::press_keys(Keys keys_pressed) {
-    if (keys_pressed.up) {
-        inverted_ = !inverted_;
+void Plane::ToggleThrust() {
+    thrust_ = !thrust_;
+}
+
+void Plane::Flip() {
+    inverted_ = !inverted_;
+    SetScale(sf::Vector2f(1.f, inverted_ ? -1.f : 1.f));
+}
+
+/* ****** PlayerPlane ****** */
+PlayerPlane::PlayerPlane(const sf::Vector2f& p, const float r, const bool d, const unsigned hp, float drag) 
+    : Plane(p, sf::Vector2f(20, 0), ROOTDIR + "/res/biplane.png", r, d, hp, drag) {}
+
+// Create custom behaviour for the player's plane by overriding the default logic in the Plane class's act method.
+void PlayerPlane::act(float dt, std::vector<MovingEntity*> moving_entities, Keys keys_pressed) {
+    const float turning_mult = 40.f;
+    const float thrush_mult = 120.f;
+
+    // Flip plane on up key
+    if (keys_pressed.up && !keys_.up) Flip();
+
+    // Toggle thrust on down key
+    if (keys_pressed.down && !keys_.down) ToggleThrust();
+
+    // Movement
+    if (keys_pressed.right) {
+        Rotate(dt * turning_mult);
+        velocity_ = rotate(velocity_, dt * turning_mult * M_PI / 180.f);
+    }
+    if (keys_pressed.left) {
+        Rotate(-dt * turning_mult);
+        velocity_ = rotate(velocity_, -dt * turning_mult * M_PI / 180.f);
     }
 
-    bool corrected_left, corrected_right;
-
-    if (inverted_) {
-        corrected_left = keys_pressed.right;
-        corrected_right = keys_pressed.left;
-    }
-    else {
-        corrected_left = keys_pressed.left;
-        corrected_right = keys_pressed.right;
-    }
-
-    float rotation_speed_in_degrees = 0.2;
-    float rotation_speed_in_radians = rotation_speed_in_degrees * 3.14159265 / 180;
-
-    if (corrected_left) {
-        rotation_ -= rotation_speed_in_degrees;   // Update both the rotation float variable ...
-        velocity_ = rotate(velocity_, -rotation_speed_in_radians);   // ... and the velocity vector.
-    }
-
-    if (corrected_right) {
-        rotation_ += rotation_speed_in_degrees;
-        velocity_ = rotate(velocity_, rotation_speed_in_radians);
-    }
-    
-    // velocity_ -= normalize(velocity_) * drag_;   // Ignore drag for now.
-
-    if (keys_pressed.down) {
-        thrust_ = !thrust_;
-    }
-
+    // Apply thrust & drag
     if (thrust_) {
-        velocity_ += normalize(velocity_) * 0.2f;
+        velocity_ = lengthen(velocity_, dt * thrush_mult);
     }
- }
+    velocity_ *= 1.f - (drag_ * dt);
 
+    Move(dt);
+
+    // Update previous key status
+    keys_ = keys_pressed;
+}
 

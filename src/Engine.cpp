@@ -18,7 +18,7 @@ Engine::Engine() : bg_(duskMountainBackground()) {
     ground_.setOutlineThickness(10);
     ground_.setOrigin(0,0);
 
-    AddPlayer(new PlayerPlane(sf::Vector2f(200.f, -200.f), ROOTDIR + "/res/plane007.png", 0.0f, false, 100, 0.0f));
+    AddPlayer(new PlayerPlane(sf::Vector2f(200.f, -200.f), 0.0f, false, 100, 0.65f));
 
     // Camera starting position
     sf::Vector2f center = sf::Vector2f(0, 0);
@@ -138,7 +138,7 @@ void Engine::Input(sf::Event& event) {
 void Engine::Update(float dt) {
     camera_.setCenter(player_->getPos());
 
-    player_->press_keys(keys_pressed_);
+    player_->act(dt, moving_entities_, keys_pressed_);
 
     // Update background state 
     bg_.update(player_->getVelocity(), dt);

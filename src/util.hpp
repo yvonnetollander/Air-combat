@@ -22,3 +22,9 @@ sf::Vector2f rotate(const sf::Vector2f& vec, float rad);
 
 // Returns a random floating point number between 0 and 1
 float randFloat();
+
+// Increase length of given vector by len
+sf::Vector2f lengthen(const sf::Vector2f& vec, float len);
+
+// Increase length of given vector by len, capping at <max>
+sf::Vector2f lengthen(const sf::Vector2f& vec, float len, float max);

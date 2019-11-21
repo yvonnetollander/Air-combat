@@ -15,6 +15,9 @@ public:
     // Compute and return object-to-world transform
     const sf::Transform getTransform() const;
     void setPos(const sf::Vector2f& p);
+    void Rotate(const float deg);
+    void SetRotation(const float deg);
+    void SetScale(const sf::Vector2f& scale);
     const bool isDead() const;
     void setRepeated(bool set);
     void setOrigin(sf::Vector2f origin);

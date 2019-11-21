@@ -19,3 +19,11 @@ sf::Vector2f rotate(const sf::Vector2f& vec, float rad) {
 float randFloat() {
     return ((float) rand()) / (float) RAND_MAX;
 }
+
+sf::Vector2f lengthen(const sf::Vector2f& vec, float len) {
+    return vec + len * normalize(vec);
+}
+
+sf::Vector2f lengthen(const sf::Vector2f& vec, float length, float max) {
+    return std::min(len(vec) + length, max) * normalize(vec);
+}
