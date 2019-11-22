@@ -3,17 +3,42 @@
 #include <iostream>
 
 /* ****** Plane ****** */
-Plane::Plane()
-    : Troop(), thrust_(false), inverted_(false), drag_(0.0f) {}
+
+Plane::~Plane() { }
 
 Plane::Plane(const sf::Vector2f& p, const sf::Vector2f& v, const std::string spritepath, const float r, const bool d, const unsigned hp, float drag)
     : Troop(p,v,spritepath,r,d,hp), thrust_(false), inverted_(false), drag_(drag) {}
 
 
-void Plane::act(float dt, Engine& engine) {
+ std::vector<CombatEntity*>* Plane::Act(float dt, const std::vector<CombatEntity*>& combat_entities) {
     // These will need some mechanic to not just spasm out on button hold
     Move(dt);
+    if (FireMachineGun(dt)) {
+        Projectile* projectile = FireMachineGun();
+        std::cout << "ASD" << std::endl;
+        std::vector<CombatEntity*>* projectiles = new std::vector<CombatEntity*>;
+        projectiles->push_back(projectile);
+        std::cout << projectiles->size() << std::endl;
+        return projectiles;
+    }
+    return nullptr;
 } 
+
+Projectile* Plane::FireMachineGun() {
+    machine_gun_fired_ = false;
+    return new Projectile(pos_, velocity_, 20, this);
+}
+
+bool Plane::FireMachineGun(float dt) {
+    machine_gun_cooldown_left_ -= dt;
+    if (machine_gun_fired_ && machine_gun_cooldown_left_ < 0) {
+        machine_gun_cooldown_left_ = machine_gun_cooldown_;
+        return true;
+    }
+    return false;
+}
+
+
 
 /* ****** PlayerPlane ****** */
 PlayerPlane::PlayerPlane(const sf::Vector2f& p, const std::string spritepath, const float r, const bool d, const unsigned hp, float drag) 
@@ -21,12 +46,7 @@ PlayerPlane::PlayerPlane(const sf::Vector2f& p, const std::string spritepath, co
 
 // Create custom behaviour for the player's plane by overriding the default logic in the Plane class's act method.
 // Todo: Include fire and collision
-void PlayerPlane::act(float dt, Engine& engine) {
-    Move(dt);
-    if (FireMachineGun(dt)) {
-        engine.AddEntityNextFrame(FireMachineGun());
-    }
-}
+
 
 void PlayerPlane::press_keys(Keys keys_pressed) {
     if (keys_pressed.up) {
@@ -70,18 +90,4 @@ void PlayerPlane::press_keys(Keys keys_pressed) {
     if (keys_pressed.d) {
         machine_gun_fired_ = true;
     }
-}
-
-Projectile* PlayerPlane::FireMachineGun() {
-    machine_gun_fired_ = false;
-    return new Projectile(pos_, velocity_, 20, this);
-}
-
-bool PlayerPlane::FireMachineGun(float dt) {
-    machine_gun_cooldown_left_ -= dt;
-    if (machine_gun_fired_ && machine_gun_cooldown_left_ < 0) {
-        machine_gun_cooldown_left_ = machine_gun_cooldown_;
-        return true;
-    }
-    return false;
 }

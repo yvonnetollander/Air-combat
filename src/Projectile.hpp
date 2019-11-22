@@ -1,14 +1,14 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include "MovingEntity.hpp"
+#include "CombatEntity.hpp"
 #include "Troop.hpp"
 
-class Projectile : public MovingEntity {
+class Projectile : public CombatEntity {
 public:
     Projectile(const sf::Vector2f& position, const sf::Vector2f& direction, const int damage, Troop* shooter);
     ~Projectile();
-    void Act(float dt, Engine& engine);
+  //  std::vector<CombatEntity*>& Act(float dt, const std::vector<CombatEntity*>& combat_entities);
 private:
     int damage_;
     Troop* shooter_;

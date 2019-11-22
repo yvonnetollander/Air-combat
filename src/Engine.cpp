@@ -36,6 +36,8 @@ Engine::~Engine() {
         delete entity;
     for (auto entity : static_entities_)
         delete entity;
+    for (auto entity : combat_entities_)
+        delete entity;
     delete player_;
 }
 
@@ -67,11 +69,15 @@ void Engine::AddStatic(GameEntity* entity) {
 
 void Engine::AddPlayer(PlayerPlane* entity) {
     player_ = entity;
-    AddMoving(entity);
+    AddCombat(entity);
 }
 
-void Engine::AddMovingNextFrame(MovingEntity* entity) {
-    new_moving_entities_.push_back(entity);
+void Engine::AddCombat(CombatEntity* entity) {
+    combat_entities_.push_back(entity);
+}
+
+void Engine::AddCombatNextFrame(CombatEntity* entity) {
+    new_combat_entities_.push_back(entity);
 }
 
 void Engine::Input(sf::Event& event) {
@@ -105,7 +111,6 @@ void Engine::Input(sf::Event& event) {
                         break;
                     case sf::Keyboard::Key::D:
                         keys_pressed_.d = true;
-                        std::cout << "pew pew" << std::endl;
                         break;
                     case sf::Keyboard::Key::P:
                         std::cout << "Left: " << keys_pressed_.left << "Right: " << keys_pressed_.right << "Up: " << keys_pressed_.up << "Down: " << keys_pressed_.down << std::endl;
@@ -151,8 +156,20 @@ void Engine::Update(float dt) {
     bg_.recenter(camera_.getCenter());
 
     // Update moving entity states
-    for (auto entity : moving_entities_)
-        entity->act(dt, *this);
+    for (auto entity : moving_entities_) {
+        entity->act(dt);
+    }
+    for (auto entity : combat_entities_) {
+        std::vector<CombatEntity*>* new_combat_entities = entity->Act(dt, combat_entities_);
+        if (new_combat_entities) {
+            for (auto entity : *new_combat_entities) {
+                AddCombatNextFrame(entity);
+            }
+            std::cout << "168: " << new_combat_entities_.size() << std::endl;
+            delete new_combat_entities;
+            std::cout << "170: " << new_combat_entities_.size() << std::endl;
+        }
+    }
 
     // Simplified camera movements before plane is configured
     
@@ -185,13 +202,20 @@ void Engine::Draw() {
     for(auto& entity : moving_entities_)
         window_.draw(entity->getSprite(), sf::RenderStates(entity->getTransform()));
 
+    for(auto& entity : combat_entities_)
+        window_.draw(entity->getSprite(), sf::RenderStates(entity->getTransform()));
+
+    std::cout << "211: " << combat_entities_.size() << std::endl;
+    for (auto entity : new_combat_entities_) {
+        AddCombat(entity);
+    }
+    std::cout << "215: " << combat_entities_.size() << std::endl;
+    new_combat_entities_.clear();
+    std::cout << "215: " << combat_entities_.size() << std::endl;
+    
     // Refresh window
     window_.display();
 
-    for (auto e : new_moving_entities_) {
-        AddMoving(e);
-        new_moving_entities_.clear();
-    }
 }
 
 void Engine::resetView(const float w, const float h) {

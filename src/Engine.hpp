@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include "GameEntity.hpp"
 #include "MovingEntity.hpp"
+#include "CombatEntity.hpp"
 #include "Plane.hpp"
 #include <map>
 #include "util.hpp"
@@ -19,8 +20,9 @@ public:
     void Start();
     void AddMoving(MovingEntity* entity);
     void AddStatic(GameEntity* entity);
+    void AddCombat(CombatEntity* entity);
     void AddPlayer(PlayerPlane* entity);
-    void AddMovingNextFrame(MovingEntity* entity);
+    void AddCombatNextFrame(CombatEntity* entity);
 
 private:
     float target_aspect_ratio_ = 16.f / 9.f;
@@ -31,7 +33,8 @@ private:
     sf::RenderTexture background_;
     std::vector<GameEntity*> static_entities_;
     std::vector<MovingEntity*> moving_entities_;
-    std::vector<MovingEntity*> new_moving_entities_;
+    std::vector<CombatEntity*> combat_entities_;
+    std::vector<CombatEntity*> new_combat_entities_;
     PlayerPlane* player_;
 
     Keys keys_pressed_;
