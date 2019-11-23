@@ -33,7 +33,7 @@ private:
     PlayerPlane* player_;
 
     Keys keys_pressed_;
-    Background bg_;
+    BackgroundSet backgrounds_;
 
     void Update(float dt);
     void Draw();

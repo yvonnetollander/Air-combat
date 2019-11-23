@@ -53,7 +53,7 @@ public:
     void addBackdrop(ScrollingBackdrop* backdrop);
     // Configure background for a given base window/rect
     // And set up the desired scale
-    void fitToScreen(const sf::Vector2f camera_center, const sf::Vector2u base_size, const float scale, const float height);
+    void fitToScreen(const sf::Vector2u base_size, const float scale, const float height);
     // Realign to a new camera center position with the current base window/rect,
     void recenter(const sf::Vector2f camera_center);
     // Set up correct texture repetition and align to the bottom with the given offset
@@ -69,6 +69,10 @@ public:
     const sf::Color getBlendColor() const;
     void setScale(const sf::Vector2f scale);
     void setRepetition(const unsigned repeats);
+    const sf::Vector2f GetPos();
+    const sf::Vector2f GetScale();
+    const sf::Vector2u GetBaseSize();
+    const float GetHeightOffset();
 private:
     // Scrolling textures
     std::vector<ScrollingBackdrop*> backdrops_;
@@ -98,5 +102,23 @@ private:
     sf::Color blend_color_;
 };
 
-// An example pre-configured Background
-const Background duskMountainBackground();
+// Example backgrounds
+// Credits for the original sprites to ansimuz at opengameart :)
+// Some were edited mostly to properly loop and fit the same size
+Background* MountainBackground();
+Background* IndustrialBackground();
+Background* UnderwaterBackground();
+
+// class BackgroundSet acts as a container for backgrounds, allowing for easy switching in-game
+class BackgroundSet {
+public:
+    BackgroundSet();
+    ~BackgroundSet();
+    // Chnge current background
+    void Switch();
+    // Get current background
+    Background& Current();
+private:
+    unsigned current_idx_;
+    std::vector<Background*> backgrounds_;
+};

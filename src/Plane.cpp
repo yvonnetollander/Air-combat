@@ -3,6 +3,8 @@
 #include "globals.hpp"
 #include <iostream>
 
+#define PI 3.14159265358979f
+
 /* ****** Plane ****** */
 Plane::Plane()
     : Troop(), thrust_(false), inverted_(false), drag_(0.0f) {}
@@ -43,11 +45,11 @@ void PlayerPlane::act(float dt, std::vector<MovingEntity*> moving_entities, Keys
     // Movement
     if (keys_pressed.right) {
         Rotate(dt * turning_mult);
-        velocity_ = rotate(velocity_, dt * turning_mult * M_PI / 180.f);
+        velocity_ = rotate(velocity_, dt * turning_mult * PI / 180.f);
     }
     if (keys_pressed.left) {
         Rotate(-dt * turning_mult);
-        velocity_ = rotate(velocity_, -dt * turning_mult * M_PI / 180.f);
+        velocity_ = rotate(velocity_, -dt * turning_mult * PI / 180.f);
     }
 
     // Apply thrust & drag

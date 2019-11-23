@@ -109,7 +109,7 @@ const sf::Sprite Background::getTexture() {
      return t.translate(pos_);
  }
 
-void Background::fitToScreen(const sf::Vector2f camera_center, const sf::Vector2u base_size, const float scale, const float height = 0.f) {
+void Background::fitToScreen(const sf::Vector2u base_size, const float scale, const float height = 0.f) {
     base_size_ = base_size;
     height_offset_ = -height;
     setScale(sf::Vector2f(scale, scale));
@@ -134,16 +134,75 @@ void Background::resize(const float base_width, const float base_height) {
     transform_ = sf::Transform().translate(-1.f * (repeats_ / 2) * size_.x * scale_.x,  0);
 }
 
-// Example background
-// Credits for the original sprites to ansimuz at opengameart :)
-// Some were edited mostly to properly loop and fit the same size
-const Background duskMountainBackground() {
-    Background bg = Background(sf::Vector2u(272,160));
-    bg.addBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/parallax-mountain-bg.png", 0, -5));
-    bg.addBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/parallax-mountain-montain-far.png", 0.20f));
-    bg.addBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/parallax-mountain-mountains.png", 0.33f));
-    bg.addBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/parallax-mountain-trees.png", 0.50f));
-    bg.addBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/parallax-mountain-foreground-trees.png", 0.75f));
-    bg.setBlendColor(sf::Color(171, 106, 140));
+const sf::Vector2f Background::GetPos() {
+    return pos_;
+}
+
+const sf::Vector2f Background::GetScale() {
+    return scale_;
+}
+
+const sf::Vector2u Background::GetBaseSize() {
+    return base_size_;
+}
+
+ const float Background::GetHeightOffset() {
+     return height_offset_;
+ }
+
+Background* MountainBackground() {
+    Background* bg = new Background(sf::Vector2u(272,160));
+    bg->addBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/mountains_0.png", 0, -5));
+    bg->addBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/mountains_1.png", 0.20f));
+    bg->addBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/mountains_2.png", 0.33f));
+    bg->addBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/mountains_3.png", 0.50f));
+    bg->addBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/mountains_4.png", 0.75f));
+    bg->setBlendColor(sf::Color(171, 106, 140));
     return bg;
+}
+
+Background* IndustrialBackground() {
+    Background* bg = new Background(sf::Vector2u(272,160));
+    bg->addBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/industrial_0.png", 0.10f));
+    bg->addBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/industrial_1.png", 0.20f));
+    bg->addBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/industrial_2.png", 0.33f));
+    bg->addBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/industrial_3.png", 0.50f));
+    bg->setBlendColor(sf::Color(25, 40, 31));
+    return bg;
+}
+
+Background* UnderwaterBackground() {
+    Background* bg = new Background(sf::Vector2u(512,192));
+    bg->addBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/underwater_0.png", 0.10f));
+    bg->addBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/underwater_1.png", 0.20f));
+    bg->addBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/underwater_3.png", 0.33f));
+    bg->setBlendColor(sf::Color(62, 121, 221));
+    return bg;
+}
+
+BackgroundSet::BackgroundSet() : current_idx_(0u) {
+    backgrounds_.push_back(MountainBackground());
+    backgrounds_.push_back(IndustrialBackground());
+    backgrounds_.push_back(UnderwaterBackground());
+}
+
+BackgroundSet::~BackgroundSet() {
+    for (auto bg : backgrounds_) 
+        delete bg;
+}
+
+Background& BackgroundSet::Current() {
+    return *backgrounds_[current_idx_];
+}
+
+void BackgroundSet::Switch() {
+    const unsigned new_idx = (current_idx_ + 1) % backgrounds_.size();
+
+    // Fit new background identically to previous
+    const sf::Vector2u base_size = backgrounds_[current_idx_]->GetBaseSize();
+    const float scale =  backgrounds_[current_idx_]->GetScale().x;
+    const float height_offset = backgrounds_[current_idx_]->GetHeightOffset();
+    backgrounds_[new_idx]->fitToScreen(base_size, scale, -height_offset);
+
+    current_idx_ = new_idx;
 }

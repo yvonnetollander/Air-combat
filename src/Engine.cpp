@@ -4,14 +4,14 @@
 #include "globals.hpp"
 #include "Background.hpp"
 
-Engine::Engine() : bg_(duskMountainBackground()) {
-    // Initialize window to 0.7 x screen height at target aspect ratio
+Engine::Engine() {
+    // Initialize window to 0.7 x screen height
     auto video = sf::VideoMode().getDesktopMode();
     video.height *= 0.7f;
     video.width = video.height * target_aspect_ratio_;
     window_.create(video, "Air Combat Game");
 
-    // Set up a simpele ground terrain
+    // Set up a simple ground terrain
     ground_.setSize(sf::Vector2f(1500, 170));
     ground_.setFillColor(sf::Color(255, 204, 102));
     ground_.setOutlineColor(sf::Color(204, 102, 0));
@@ -20,15 +20,11 @@ Engine::Engine() : bg_(duskMountainBackground()) {
 
     AddPlayer(new PlayerPlane(sf::Vector2f(200.f, -200.f), 0.0f, false, 100, 0.65f));
 
-    // Camera starting position
-    sf::Vector2f center = sf::Vector2f(0, 0);
-
     // Set camera to match window
     resetView(window_.getSize().x, window_.getSize().y);
-    camera_.setCenter(center);
 
     // Align background
-    bg_.fitToScreen(center, window_.getSize(), 1.5f, 10.f);
+    backgrounds_.Current().fitToScreen(window_.getSize(), 2.f, 10.f);
 }
 
 Engine::~Engine() {
@@ -78,7 +74,7 @@ void Engine::Input(sf::Event& event) {
                 break;
             case sf::Event::Resized:
                 resetView(event.size.width, event.size.height);
-                bg_.resize(event.size.width, event.size.height);
+                backgrounds_.Current().resize(event.size.width, event.size.height);
                 break;
             case sf::Event::KeyPressed:
                 switch (event.key.code) {
@@ -124,6 +120,9 @@ void Engine::Input(sf::Event& event) {
                     case sf::Keyboard::Key::D:
                         keys_pressed_.d = false;
                         break;
+                    case sf::Keyboard::Key::B:
+                        backgrounds_.Switch();
+                        break;
                     default:
                         break;
                 }
@@ -141,8 +140,8 @@ void Engine::Update(float dt) {
     player_->act(dt, moving_entities_, keys_pressed_);
 
     // Update background state 
-    bg_.update(player_->getVelocity(), dt);
-    bg_.recenter(camera_.getCenter());
+    backgrounds_.Current().update(player_->getVelocity(), dt);
+    backgrounds_.Current().recenter(camera_.getCenter());
 
     // Update moving entity states
     for (auto entity : moving_entities_)
@@ -163,10 +162,10 @@ void Engine::Update(float dt) {
 
 void Engine::Draw() {
     // Clear window
-    window_.clear(bg_.getBlendColor());
+    window_.clear(backgrounds_.Current().getBlendColor());
 
     // Draw background
-    window_.draw(bg_.getTexture(), bg_.getTransform());
+    window_.draw(backgrounds_.Current().getTexture(), backgrounds_.Current().getTransform());
 
     // Draw ground
     window_.draw(ground_);
