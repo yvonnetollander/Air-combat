@@ -1,16 +1,30 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include "CombatEntity.hpp"
-#include "Troop.hpp"
+#include "MovingEntity.hpp"
 
-class Projectile : public CombatEntity {
+/* This class represents a projectile that troops can fire. */
+
+class Projectile : public MovingEntity {
 public:
-    Projectile(const sf::Vector2f& position, const sf::Vector2f& direction, const int damage, Troop* shooter);
+
+    /* Parameters for the constructor:
+       p: position
+       v: velocity
+       spritepath: illustration of the object
+       r: rotation
+       d: is this GameEntity dead
+       damage_radius: how far from the target's position does this projectile cause damage
+       damage: how much does the target lose hitpoints when this projectile hits the target
+    */
+    Projectile();
+    Projectile(const sf::Vector2f& p, const sf::Vector2f& v, const std::string spritepath, const float r, const bool d, const unsigned damage_radius, 
+        const unsigned damage);
     ~Projectile();
-  //  std::vector<CombatEntity*>& Act(float dt, const std::vector<CombatEntity*>& combat_entities);
+    
+    virtual void act(float dt, std::vector<MovingEntity*> moving_entities);
+
 private:
-    int damage_;
-    Troop* shooter_;
-    sf::Vector2f velocity_;
+    const unsigned damage_radius_;
+    const unsigned damage_;
 };

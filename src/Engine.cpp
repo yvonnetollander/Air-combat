@@ -18,7 +18,7 @@ Engine::Engine() : bg_(duskMountainBackground()) {
     ground_.setOutlineThickness(10);
     ground_.setOrigin(0,0);
 
-    AddPlayer(new PlayerPlane(sf::Vector2f(200.f, -200.f), ROOTDIR + "/res/plane007.png", 0.0f, false, 100, 0.0f));
+    AddPlayer(new PlayerPlane(sf::Vector2f(200.f, -200.f), 0.0f, false, 100, 0.65f));
 
     // Camera starting position
     sf::Vector2f center = sf::Vector2f(0, 0);
@@ -35,8 +35,6 @@ Engine::~Engine() {
     for (auto entity : moving_entities_)
         delete entity;
     for (auto entity : static_entities_)
-        delete entity;
-    for (auto entity : combat_entities_)
         delete entity;
     delete player_;
 }
@@ -69,15 +67,7 @@ void Engine::AddStatic(GameEntity* entity) {
 
 void Engine::AddPlayer(PlayerPlane* entity) {
     player_ = entity;
-    AddCombat(entity);
-}
-
-void Engine::AddCombat(CombatEntity* entity) {
-    combat_entities_.push_back(entity);
-}
-
-void Engine::AddCombatNextFrame(CombatEntity* entity) {
-    new_combat_entities_.push_back(entity);
+    AddMoving(entity);
 }
 
 void Engine::Input(sf::Event& event) {
@@ -149,7 +139,7 @@ void Engine::Input(sf::Event& event) {
 void Engine::Update(float dt) {
     camera_.setCenter(player_->getPos());
 
-    player_->press_keys(keys_pressed_);
+    player_->act(dt, moving_entities_, keys_pressed_);
 
     // Update background state 
     bg_.update(player_->getVelocity(), dt);
@@ -159,17 +149,9 @@ void Engine::Update(float dt) {
     for (auto entity : moving_entities_) {
         entity->act(dt);
     }
-    for (auto entity : combat_entities_) {
-        std::vector<CombatEntity*>* new_combat_entities = entity->Act(dt, combat_entities_);
-        if (new_combat_entities) {
-            for (auto entity : *new_combat_entities) {
-                AddCombatNextFrame(entity);
-            }
-            std::cout << "168: " << new_combat_entities_.size() << std::endl;
-            delete new_combat_entities;
-            std::cout << "170: " << new_combat_entities_.size() << std::endl;
-        }
-    }
+
+    for(auto& bullet : player_->GetProjectiles())
+        bullet->act(dt, moving_entities_);
 
     // Simplified camera movements before plane is configured
     
@@ -202,17 +184,9 @@ void Engine::Draw() {
     for(auto& entity : moving_entities_)
         window_.draw(entity->getSprite(), sf::RenderStates(entity->getTransform()));
 
-    for(auto& entity : combat_entities_)
-        window_.draw(entity->getSprite(), sf::RenderStates(entity->getTransform()));
+    for(auto& bullet : player_->GetProjectiles())
+        window_.draw(bullet->getSprite(), sf::RenderStates(bullet->getTransform()));
 
-    std::cout << "211: " << combat_entities_.size() << std::endl;
-    for (auto entity : new_combat_entities_) {
-        AddCombat(entity);
-    }
-    std::cout << "215: " << combat_entities_.size() << std::endl;
-    new_combat_entities_.clear();
-    std::cout << "215: " << combat_entities_.size() << std::endl;
-    
     // Refresh window
     window_.display();
 

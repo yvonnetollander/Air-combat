@@ -113,6 +113,7 @@ void Background::fitToScreen(const sf::Vector2f camera_center, const sf::Vector2
     base_size_ = base_size;
     height_offset_ = -height;
     setScale(sf::Vector2f(scale, scale));
+    resize(base_size.x, base_size.y);
 }
 
 void Background::recenter(const sf::Vector2f camera_center) {

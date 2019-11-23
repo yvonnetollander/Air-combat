@@ -6,7 +6,10 @@
 /* Troop represents an infantry soldier that runs around the terrain */
 class Infantry : public Troop {
 public:
+    Infantry();
     Infantry(const sf::Vector2f& p, const std::string spritepath, const float r, const bool d, const unsigned hp, const float radius);
+    virtual ~Infantry() {}
+    virtual void act(float dt, std::vector<MovingEntity*> moving_entities);
 private:
     virtual void fire();
     // Current target position
