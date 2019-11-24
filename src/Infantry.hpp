@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Troop.hpp"
-#include "CombatEntity.hpp"
 
 /* Troop represents an infantry soldier that runs around the terrain */
 class Infantry : public Troop {
