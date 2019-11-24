@@ -23,7 +23,7 @@ void Plane::FireMachineGun() {
         float damage_radius = 10;
         sf::Vector2f bullet_velocity = lengthen(velocity_, 1000);
         sf::Vector2f bullet_pos = pos_ + (normalize(velocity_) * 100.0f);
-        projectiles_.push_back(new Projectile(bullet_pos, bullet_velocity, ROOTDIR + "/res/plane007.png", 0.f, false, damage_radius, 10));
+        projectiles_.push_back(new Projectile(bullet_pos, bullet_velocity, ROOTDIR + "/res/bullet_small.png", 0.f, false, damage_radius, 10));
         machine_gun_fired_ = false;
         machine_gun_cooldown_left_ = machine_gun_cooldown_;
     }
