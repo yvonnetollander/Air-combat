@@ -16,10 +16,7 @@ public:
     virtual void act(float dt, std::vector<MovingEntity*> moving_entities) = 0;
     const std::vector<Projectile*>& GetProjectiles();
 
-private:
-    virtual void fire() = 0;
-    unsigned hp_;
-
 protected:
+    unsigned hp_;
     std::vector<Projectile*> projectiles_;
 };

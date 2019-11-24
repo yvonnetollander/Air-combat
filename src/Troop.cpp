@@ -14,6 +14,3 @@ Troop::~Troop() {
 const std::vector<Projectile*>& Troop::GetProjectiles() {
     return projectiles_;
 }
-
-void Troop::fire() {}
-

@@ -24,10 +24,14 @@ protected:
     bool thrust_;
     bool inverted_;
     bool machine_gun_fired_ = false;
-    float machine_gun_cooldown_ = 0.05;
+    float machine_gun_cooldown_ = 0.2;
     float machine_gun_cooldown_left_ = 0.f;
     float drag_;
     bool FireMachineGun(float dt);
+    virtual void Fire();
+    virtual void UpdateCooldowns(float dt);
+    virtual void ShootMachineGun();
+    virtual void FireMachineGun();
 };
 
 /* PlayerPlane is user controllable plane and takes same parameters as Plane */
@@ -37,6 +41,5 @@ public:
     // Create custom behaviour for the player's plane by overriding the default logic in the Plane class's act method.
     virtual void act(float dt, std::vector<MovingEntity*> moving_entities, Keys keys_pressed);
 private:
-    void fire();
     Keys keys_;
 };
