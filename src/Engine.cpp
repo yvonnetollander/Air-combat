@@ -41,6 +41,8 @@ void Engine::Start() {
     while (window_.isOpen()) {
         // Restart the clock and save the elapsed time.
         sf::Time time = clock.restart();
+
+        // Todo: use integer microseconds
         float dt = time.asSeconds();
 
         sf::Event event;
@@ -95,7 +97,6 @@ void Engine::Input(sf::Event& event) {
                         break;
                     case sf::Keyboard::Key::D:
                         keys_pressed_.d = true;
-                        std::cout << "pew pew" << std::endl;
                         break;
                     case sf::Keyboard::Key::P:
                         std::cout << "Left: " << keys_pressed_.left << "Right: " << keys_pressed_.right << "Up: " << keys_pressed_.up << "Down: " << keys_pressed_.down << std::endl;
@@ -144,8 +145,12 @@ void Engine::Update(float dt) {
     backgrounds_.Current().recenter(camera_.getCenter());
 
     // Update moving entity states
-    for (auto entity : moving_entities_)
-        entity->act(dt, moving_entities_);
+    for (auto entity : moving_entities_) {
+        entity->act(dt);
+    }
+
+    for(auto& bullet : player_->GetProjectiles())
+        bullet->act(dt, moving_entities_);
 
     // Simplified camera movements before plane is configured
     
@@ -178,8 +183,12 @@ void Engine::Draw() {
     for(auto& entity : moving_entities_)
         window_.draw(entity->getSprite(), sf::RenderStates(entity->getTransform()));
 
+    for(auto& bullet : player_->GetProjectiles())
+        window_.draw(bullet->getSprite(), sf::RenderStates(bullet->getTransform()));
+
     // Refresh window
     window_.display();
+
 }
 
 void Engine::resetView(const float w, const float h) {

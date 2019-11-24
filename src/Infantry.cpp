@@ -10,6 +10,8 @@ Infantry::Infantry()
 Infantry::Infantry(const sf::Vector2f& p, const std::string spritepath, const float r, const bool d, const unsigned hp, const float radius)
     : Troop(p, sf::Vector2f(0.5f, 0.0f), spritepath, r, d, hp), targetPos_(), idle_(0), wanderRadius_(radius) { pickTarget(); }
 
+
+
 void Infantry::act(float dt, std::vector<MovingEntity*> moving_entities) {
     sf::Vector2f diff = targetPos_ - getPos();
     float movement = velocity_.x * dt;
@@ -30,7 +32,7 @@ void Infantry::act(float dt, std::vector<MovingEntity*> moving_entities) {
             setPos(getPos() + normalize(diff) * movement);
         }
     } 
-}
+} 
 
 void Infantry::pickTarget() {
     float random = randFloat();

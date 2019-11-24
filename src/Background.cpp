@@ -15,7 +15,7 @@ ScrollingBackdrop::ScrollingBackdrop(const std::string spritepath, const float v
     setTextureRect(sf::IntRect(0, 0, getSize().x * 3, getSize().y));
 }
 
-void ScrollingBackdrop::act(float dt, std::vector<MovingEntity*> moving_entities) {
+void ScrollingBackdrop::act(float dt) {
     // Movement relative to v
     const float dx = velocity_ * view_velocity_.x * movement_scale_.x * dt;
     // Static movement
@@ -77,7 +77,7 @@ void Background::addBackdrop(ScrollingBackdrop* backdrop) {
 void Background::update(sf::Vector2f v, const float dt) {
     for(auto& entity : backdrops_) {
         entity->setViewVelocity(v);
-        entity->act(dt, std::vector<MovingEntity*>());
+        entity->act(dt);
     }
 }
 
