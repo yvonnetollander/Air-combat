@@ -6,7 +6,7 @@ MovingEntity::MovingEntity()
 MovingEntity::MovingEntity(const sf::Vector2f& p, const sf::Vector2f& v, const std::string spritepath, const float r, const bool d)
     : GameEntity(p, spritepath, r, d) { velocity_ = v; }
 
-void MovingEntity::act(float dt) { 
+void MovingEntity::Act(float dt) { 
     Move(dt);
 }
 

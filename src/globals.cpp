@@ -7,7 +7,6 @@ void SetRootDir() {
     ROOTDIR = ROOTDIR.substr(0, ROOTDIR.find("lib") - 1);
 }
 
-
 namespace AirCombatFonts {
     void LoadFonts() {
         if(!AirCombatFonts::roboto_regular.loadFromFile(ROOTDIR + "/res/Roboto-Regular.ttf"))

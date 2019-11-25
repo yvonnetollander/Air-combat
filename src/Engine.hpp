@@ -10,9 +10,6 @@
 #include "Config.hpp"
 #include "Menu.hpp"
 
-// Scoped enumeration for views
-enum class State { menu, game, credits };
-
 /* A simple class for the game engine.
 *  Contains all the game entities and handles the refresh, draw and input loops.
 *  Start the engine calling the Start() method.
@@ -24,16 +21,15 @@ public:
     void Start();
     void AddMoving(MovingEntity* entity);
     void AddStatic(GameEntity* entity);
-    void AddPlayer(PlayerPlane* entity);
+    void AddPlayerPlane(PlayerPlane* entity);
 
 private:
-    State state_;
+    GameState state_;
     Config config_;
     const float target_aspect_ratio_ = 16.f / 9.f;
     sf::RenderWindow window_;
     sf::RectangleShape ground_;
     sf::View camera_;
-    sf::RenderTexture foreground_;
     sf::RenderTexture background_;
     std::vector<GameEntity*> static_entities_;
     std::vector<MovingEntity*> moving_entities_;
@@ -43,10 +39,18 @@ private:
     BackgroundSet backgrounds_;
     Menu menu_;
 
+    // Mouse movement tracking for menu parallax effect and buttons
+    sf::Vector2i mouse_pos_;
+    sf::Vector2i mouse_velocity_;
+    bool mouse_clicked_this_frame_;
+
+
+    // In-game logic and drawing
     void UpdateGame(float dt);
     void DrawGame();
 
-    void UpdateMenu();
+    // In-menu logic and drawing
+    void UpdateMenu(float dt);
     void DrawMenu();
     
     void Input(sf::Event& event);

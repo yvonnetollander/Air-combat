@@ -41,8 +41,8 @@ sf::RectangleShape CreateCenteredRect(sf::FloatRect bounds, sf::Color color) {
 }
 
 sf::Text CreateCenteredText(sf::String string, sf::FloatRect bounds, unsigned size, sf::Color color) {
-    sf::Text t(string, sf::Font(), size);
-    sf::FloatRect local_bounds = t.getLocalBounds();
+    sf::Text t(string, AirCombatFonts::roboto_regular, size);
+    const sf::FloatRect local_bounds = t.getLocalBounds();
     t.setOrigin(local_bounds.width/2.f, local_bounds.height/2.f);
     t.setPosition(bounds.left + bounds.width/2.f, bounds.top + bounds.height/2.f);
     t.setFillColor(color);
@@ -51,6 +51,12 @@ sf::Text CreateCenteredText(sf::String string, sf::FloatRect bounds, unsigned si
 
 sf::Text CreateCenteredText(sf::String string, sf::Vector2f pos, unsigned size, sf::Color color) {
     return CreateCenteredText(string, sf::FloatRect(pos.x, pos.y, 0.f, 0.f), size, color);
+}
+
+void CenterText(sf::Text& t, sf::Vector2f center) {
+    const sf::FloatRect local_bounds = t.getLocalBounds();
+    t.setOrigin(local_bounds.width/2.f, local_bounds.height/2.f);
+    t.setPosition(center);
 }
 
 sf::Vector2f ToFloatVec(const sf::Vector2u& v) {

@@ -22,7 +22,7 @@ public:
         const unsigned damage);
     ~Projectile();
     
-    virtual void act(float dt, std::vector<MovingEntity*> moving_entities);
+    virtual void Act(float dt, std::vector<MovingEntity*> moving_entities);
 
 private:
     const unsigned damage_radius_;

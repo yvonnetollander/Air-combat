@@ -4,11 +4,16 @@
 #include "util.hpp"
 #include "globals.hpp"
 
-Menu::Menu() : done_(false) {
-    bool kek = true;
-    buttons_.push_back(new InteractiveButton(sf::Vector2f(350, 100), sf::Vector2f(0.5f, 0.5f), kek));
-    buttons_.push_back(new InteractiveButton(sf::Vector2f(350, 100), sf::Vector2f(0.5f, 0.5f), kek, sf::Vector2f(0, 120)));
-    buttons_.push_back(new InteractiveButton(sf::Vector2f(350, 100), sf::Vector2f(0.5f, 0.5f), kek, sf::Vector2f(0, 240)));
+Menu::Menu() : state_(MenuState::index) {
+    buttons_.push_back(new InteractiveButton("Play", sf::Vector2f(350, 80), sf::Vector2f(0.5f, 0.4f), &state_, MenuState::play));
+    buttons_.push_back(new InteractiveButton("Settings?", sf::Vector2f(350, 80), sf::Vector2f(0.5f, 0.4f), &state_, MenuState::index, sf::Vector2f(0, 100)));
+    buttons_.push_back(new InteractiveButton("Credits?", sf::Vector2f(350, 80), sf::Vector2f(0.5f, 0.4f), &state_, MenuState::index, sf::Vector2f(0, 200)));
+    buttons_.push_back(new InteractiveButton("Exit", sf::Vector2f(350, 80), sf::Vector2f(0.5f, 0.4f), &state_, MenuState::quit, sf::Vector2f(0, 300)));
+}
+
+Menu::~Menu() {
+    for (auto& button : buttons_)
+        delete button;
 }
 
 void Menu::Create(Config* config, sf::Vector2u window_size) {
@@ -17,35 +22,38 @@ void Menu::Create(Config* config, sf::Vector2u window_size) {
     canvas_.create(window_size.x, window_size.y);
 }
 
-void Menu::Update(sf::Vector2i mouse) {
+void Menu::Update(sf::Vector2i mouse, bool clicked) {
     for (auto& button : buttons_)
-        button->Update(mouse);
+        button->Update(mouse, clicked);
 }
 
 void Menu::Resize(unsigned x, unsigned y) {
-    // Make sure we maintain correct positioning
-    offset_ += (sf::Vector2f(screen_size_.x, screen_size_.y) - sf::Vector2f(x,y)) / 2.f;
     // Update size, recreate canvas
     screen_size_ = sf::Vector2u(x, y);
     canvas_.create(x, y);
 }
 
-sf::Sprite Menu::getSprite() {
-    auto title = CreateCenteredText("Air Combat", sf::Vector2f(0.5f * float(screen_size_.x), 0.3f * float(screen_size_.y)), 20, sf::Color::Red);
-    title.setFont(AirCombatFonts::roboto_regular);
+MenuState Menu::GetState() {
+    return state_;
+}
 
-    bool kek = true;
+sf::Sprite Menu::GetSprite() {
+    canvas_.clear(sf::Color::Transparent);
 
-    canvas_.clear(sf::Color::Black);
+    // Title text
+    auto title = CreateCenteredText("Air Combat", sf::Vector2f(0.5f * float(screen_size_.x), 0.25f * float(screen_size_.y)), 60, sf::Color::White);
     canvas_.draw(title);
 
+    // Buttons
     for (auto& button : buttons_)
         canvas_.draw(button->getSprite(screen_size_));
 
     canvas_.display();
 
+    // Generate sprite and return
     texture_ = canvas_.getTexture();
     sprite_ = sf::Sprite(texture_);
-    sprite_.setPosition(offset_);
+    sprite_.setOrigin(texture_.getSize().x, texture_.getSize().y);
+    sprite_.setPosition(screen_size_.x/2, screen_size_.y/2);
     return sprite_;
 }

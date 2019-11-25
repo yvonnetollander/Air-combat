@@ -14,7 +14,7 @@ public:
     MovingEntity();
     virtual ~MovingEntity() {}
     MovingEntity(const sf::Vector2f& p, const sf::Vector2f& v, const std::string spritepath, const float r, const bool d);
-    virtual void act(float dt);
+    virtual void Act(float dt);
     void Move(float dt);
     const sf::Vector2f getVelocity() const;
 protected:

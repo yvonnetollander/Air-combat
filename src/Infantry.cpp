@@ -12,7 +12,7 @@ Infantry::Infantry(const sf::Vector2f& p, const std::string spritepath, const fl
 
 
 
-void Infantry::act(float dt, std::vector<MovingEntity*> moving_entities) {
+void Infantry::Act(float dt, std::vector<MovingEntity*> moving_entities) {
     sf::Vector2f diff = targetPos_ - getPos();
     float movement = velocity_.x * dt;
     // If Infantry is idle, decrease the remaining time

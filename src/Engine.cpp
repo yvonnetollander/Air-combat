@@ -4,7 +4,7 @@
 #include "globals.hpp"
 #include "Background.hpp"   
 
-Engine::Engine() : state_(State::game) {
+Engine::Engine() : state_(GameState::menu) {
     // Initialize window to 0.7 x screen height
     auto video = sf::VideoMode().getDesktopMode();
     video.height *= 0.7f;
@@ -17,20 +17,21 @@ Engine::Engine() : state_(State::game) {
     ground_.setFillColor(sf::Color(255, 204, 102));
     ground_.setOutlineColor(sf::Color(204, 102, 0));
     ground_.setOutlineThickness(10);
-    ground_.setOrigin(0,0);
+    ground_.setOrigin(0,-10);
 
+    // TODO: An actual game configuration
     Player p1 = { "Sakari", sf::Color(255, 10, 10) };
     config_ = { true, p1, p1 };
     menu_.Create(&config_, window_.getSize());
 
-    AddPlayer(new PlayerPlane(sf::Vector2f(200.f, -200.f), 0.0f, false, 100, 0.65f));
+    AddPlayerPlane(new PlayerPlane(sf::Vector2f(200.f, -200.f), 0.0f, false, 100, 0.65f));
 
+    // Center camera and set to match window
     CenterCamera();
-    // Set camera to match window
     ResizeCamera(window_.getSize().x, window_.getSize().y);
 
     // Align background
-    backgrounds_.Current().fitToScreen(window_.getSize(), 2.f, 10.f);
+    backgrounds_.Current().FitToScreen(window_.getSize(), 2.f, 0.f);
 }
 
 Engine::~Engine() {
@@ -47,8 +48,6 @@ void Engine::Start() {
     while (window_.isOpen()) {
         // Restart the clock and save the elapsed time.
         sf::Time time = clock.restart();
-
-        // Todo: use integer microseconds
         float dt = time.asSeconds();
 
         // Handle input
@@ -58,12 +57,12 @@ void Engine::Start() {
         // Update state & draw
         switch(state_)
         {
-            case State::game:
+            case GameState::ingame:
                 UpdateGame(dt);
                 DrawGame();
                 break;
-            case State::menu:
-                UpdateMenu();
+            case GameState::menu:
+                UpdateMenu(dt);
                 DrawMenu();
                 break;
             default:
@@ -80,7 +79,7 @@ void Engine::AddStatic(GameEntity* entity) {
     static_entities_.push_back(entity);
 }
 
-void Engine::AddPlayer(PlayerPlane* entity) {
+void Engine::AddPlayerPlane(PlayerPlane* entity) {
     player_ = entity;
     AddMoving(entity);
 }
@@ -96,11 +95,11 @@ void Engine::Input(sf::Event& event) {
             case sf::Event::Resized:
                 switch(state_)
                 {
-                    case State::game:
+                    case GameState::ingame:
                         ResizeCamera(event.size.width, event.size.height);
-                        backgrounds_.Current().resize(event.size.width, event.size.height);
+                        backgrounds_.Current().Resize(event.size.width, event.size.height);
                         break;
-                    case State::menu:
+                    case GameState::menu:
                         ResizeCamera(event.size.width, event.size.height);
                         menu_.Resize(event.size.width, event.size.height);
                         break;
@@ -158,7 +157,14 @@ void Engine::Input(sf::Event& event) {
                         break;
                 }
                 break;
-            // We don't process other types of events.
+            case sf::Event::MouseMoved:
+                mouse_velocity_ = sf::Mouse::getPosition(window_) - mouse_pos_;
+                mouse_pos_ = sf::Mouse::getPosition(window_);
+                break;
+            case sf::Event::MouseButtonPressed:
+                if(event.mouseButton.button == sf::Mouse::Button::Left) 
+                    mouse_clicked_this_frame_= true;
+                break;
             default:
                 break;
         }
@@ -170,29 +176,25 @@ void Engine::UpdateGame(float dt) {
     camera_.setCenter(player_->getPos());
     window_.setView(camera_);
 
-    player_->act(dt, moving_entities_, keys_pressed_);
-
     // Update background state 
-    backgrounds_.Current().update(player_->getVelocity(), dt);
-    backgrounds_.Current().recenter(camera_.getCenter());
+    backgrounds_.Current().Update(player_->getVelocity(), dt);
+    backgrounds_.Current().Recenter(camera_.getCenter());
 
     // Update moving entity states
-    for (auto entity : moving_entities_) {
-        entity->act(dt);
-    }
-
+    player_->Act(dt, moving_entities_, keys_pressed_);
+    for (auto entity : moving_entities_)
+        entity->Act(dt);
     for(auto& bullet : player_->GetProjectiles())
-        bullet->act(dt, moving_entities_);
-
+        bullet->Act(dt, moving_entities_);
 }
 
 void Engine::DrawGame() {
-    window_.clear(backgrounds_.Current().getBlendColor());
-    // Draw background
-    window_.draw(backgrounds_.Current().getTexture(), backgrounds_.Current().getTransform());
-    // Draw ground
+    window_.clear(backgrounds_.Current().GetBlendColor());
+    // Background
+    window_.draw(backgrounds_.Current().GetTexture(), backgrounds_.Current().GetTransform());
+    // Terrain
     window_.draw(ground_);
-    // Draw entities
+    // Entities
     for(auto& entity : static_entities_)
         window_.draw(entity->getSprite(), entity->getTransform());
     for(auto& entity : moving_entities_)
@@ -202,13 +204,35 @@ void Engine::DrawGame() {
     window_.display();
 }
 
-void Engine::UpdateMenu() {
-    menu_.Update(sf::Mouse::getPosition(window_));
+void Engine::UpdateMenu(float dt) {
+    // Update Background
+    backgrounds_.Current().Recenter(camera_.getCenter());
+    backgrounds_.Current().Update( 50.f * sf::Vector2f(mouse_velocity_.x, mouse_velocity_.y), dt);
+
+    // Update menu, reset mouse click status
+    menu_.Update(mouse_pos_, mouse_clicked_this_frame_);
+    mouse_clicked_this_frame_ = false;
+
+    // Switch to play state/exit when appropriate
+    switch(menu_.GetState()) {
+        case MenuState::play:
+            state_ = GameState::ingame;
+            break;
+        case MenuState::quit:
+            window_.close();
+            break;
+        default:
+            break;
+    }
 }
 
 void Engine::DrawMenu() {
-    window_.clear(sf::Color::White);
-    window_.draw(menu_.getSprite());
+    window_.clear(backgrounds_.Current().GetBlendColor());
+    // Background
+    sf::Transform bg_transform = backgrounds_.Current().GetTransform();
+    window_.draw(backgrounds_.Current().GetTexture(), bg_transform.translate(0, window_.getSize().y / 2 + 1));
+    // Menu
+    window_.draw(menu_.GetSprite());
     window_.display();
 }
 
@@ -218,5 +242,5 @@ void Engine::ResizeCamera(const float w, const float h) {
 }
 
 void Engine::CenterCamera() {
-    camera_.setCenter(window_.getSize().x / 2, window_.getSize().y / 2);
+    camera_.setCenter(0, 0);
 }

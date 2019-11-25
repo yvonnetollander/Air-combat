@@ -12,9 +12,9 @@
 class ScrollingBackdrop : public MovingEntity {
 public:
     ScrollingBackdrop(const std::string spritepath, const float velocity, const float static_velocity);
-    void act(float dt);
-    void setViewVelocity(sf::Vector2f v);
-    void setMovementScale(sf::Vector2f s);
+    void Act(float dt);
+    void SetViewVelocity(sf::Vector2f v);
+    void SetMovementScale(sf::Vector2f s);
 private:
     // Relative velocity multiplier
     float velocity_;
@@ -48,27 +48,27 @@ public:
     Background(const Background&);
     ~Background();
     // Set up correct texture repetition matching current base window/rect
-    void correctRepetition();
+    void CorrectRepetition();
     // Add new backdrop element (drawn in the order added)
-    void addBackdrop(ScrollingBackdrop* backdrop);
+    void AddBackdrop(ScrollingBackdrop* backdrop);
     // Configure background for a given base window/rect
     // And set up the desired scale
-    void fitToScreen(const sf::Vector2u base_size, const float scale, const float height);
+    void FitToScreen(const sf::Vector2u base_size, const float scale, const float height);
     // Realign to a new camera center position with the current base window/rect,
-    void recenter(const sf::Vector2f camera_center);
+    void Recenter(const sf::Vector2f camera_center);
     // Set up correct texture repetition and align to the bottom with the given offset
-    void resize(const float base_width, const float base_height);
+    void Resize(const float base_width, const float base_height);
     // Update parallax state
-    void update(const sf::Vector2f v, const float dt);
+    void Update(const sf::Vector2f v, const float dt);
     // Move with the given offset, to keep u with camera/align
-    void move(const float w, const float h);
+    void Move(const float w, const float h);
     // Generate and return a new texture based on the current state
-    const sf::Sprite getTexture();
-    const sf::Transform getTransform() const;
-    void setBlendColor(const sf::Color color);
-    const sf::Color getBlendColor() const;
-    void setScale(const sf::Vector2f scale);
-    void setRepetition(const unsigned repeats);
+    const sf::Sprite GetTexture();
+    const sf::Transform GetTransform() const;
+    void SetBlendColor(const sf::Color color);
+    const sf::Color GetBlendColor() const;
+    void SetScale(const sf::Vector2f scale);
+    void SetRepetition(const unsigned repeats);
     const sf::Vector2f GetPos();
     const sf::Vector2f GetScale();
     const sf::Vector2u GetBaseSize();

@@ -6,13 +6,12 @@
 #define PI 3.14159265358979f
 
 /* ****** Plane ****** */
-
 Plane::~Plane() { }
 
 Plane::Plane(const sf::Vector2f& p, const sf::Vector2f& v, const std::string spritepath, const float r, const bool d, const unsigned hp, float drag)
     : Troop(p,v,spritepath,r,d,hp), thrust_(false), inverted_(false), drag_(drag) {}
 
-void Plane::act(float dt, std::vector<MovingEntity*> moving_entities) {
+void Plane::Act(float dt, std::vector<MovingEntity*> moving_entities) {
     Move(dt);
 }
 
@@ -39,12 +38,6 @@ void Plane::UpdateCooldowns(float dt) {
     machine_gun_cooldown_left_ -= dt;
 }
 
-
-/* ****** PlayerPlane ****** */
-
-// Create custom behaviour for the player's plane by overriding the default logic in the Plane class's act method.
-// Todo: Include fire and collision
-
 void Plane::ToggleThrust() {
     thrust_ = !thrust_;
 }
@@ -59,39 +52,36 @@ PlayerPlane::PlayerPlane(const sf::Vector2f& p, const float r, const bool d, con
     : Plane(p, sf::Vector2f(20, 0), ROOTDIR + "/res/biplane.png", r, d, hp, drag) {}
 
 // Create custom behaviour for the player's plane by overriding the default logic in the Plane class's act method.
-void PlayerPlane::act(float dt, std::vector<MovingEntity*> moving_entities, Keys keys_pressed) {
+void PlayerPlane::Act(float dt, std::vector<MovingEntity*> moving_entities, Keys keys_pressed) {
     const float turning_mult = 40.f;
     const float thrush_mult = 120.f;
-    const float pi = 3.141592653;
 
     UpdateCooldowns(dt);
 
     // Flip plane on up key
-    if (keys_pressed.up && !keys_.up) Flip();
+    if (keys_pressed.up && !keys_.up)
+        Flip();
 
-    float rotation_speed_in_degrees = 1;
-    float rotation_speed_in_radians = rotation_speed_in_degrees * 3.14159265 / 180;
     // Toggle thrust on down key
-    if (keys_pressed.down && !keys_.down) ToggleThrust();
+    if (keys_pressed.down && !keys_.down)
+        ToggleThrust();
 
     // Movement
     if (keys_pressed.right) {
         Rotate(dt * turning_mult);
-        velocity_ = rotate(velocity_, dt * turning_mult * pi / 180.f);
+        velocity_ = rotate(velocity_, dt * turning_mult * PI / 180.f);
     }
     if (keys_pressed.left) {
         Rotate(-dt * turning_mult);
-        velocity_ = rotate(velocity_, -dt * turning_mult * pi / 180.f);
+        velocity_ = rotate(velocity_, -dt * turning_mult * PI / 180.f);
     }
 
-    if (keys_pressed.d) {
+    if (keys_pressed.d)
         ShootMachineGun();
-    }
 
     // Apply thrust & drag
-    if (thrust_) {
+    if (thrust_)
         velocity_ = lengthen(velocity_, dt * thrush_mult);
-    }
     if(len(velocity_) > 0.0001f) // Prevent direction loss on a zero vector
         velocity_ *= 1.f - (drag_ * dt);
 

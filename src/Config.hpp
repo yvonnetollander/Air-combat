@@ -2,6 +2,8 @@
 
 #include <SFML/Graphics.hpp>
 
+// Simple data structures for player and game information
+
 struct Player {
     std::string name;
     sf::Color color;

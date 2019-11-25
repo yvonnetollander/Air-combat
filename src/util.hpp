@@ -33,6 +33,9 @@ sf::RectangleShape CreateCenteredRect(sf::FloatRect bounds, sf::Color color);
 sf::Text CreateCenteredText(sf::String string, sf::FloatRect bounds, unsigned size, sf::Color color);
 sf::Text CreateCenteredText(sf::String string, sf::Vector2f pos, unsigned size, sf::Color color);
 
+// Center text to a ppint
+void CenterText(sf::Text& t, sf::Vector2f center);
+
 // Vector2u to Vector2f
 sf::Vector2f ToFloatVec(const sf::Vector2u& v);
 
