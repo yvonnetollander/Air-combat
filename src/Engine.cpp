@@ -4,7 +4,7 @@
 #include "globals.hpp"
 #include "Background.hpp"   
 
-Engine::Engine() : state_(State::menu) {
+Engine::Engine() : state_(State::game) {
     // Initialize window to 0.7 x screen height
     auto video = sf::VideoMode().getDesktopMode();
     video.height *= 0.7f;
@@ -194,38 +194,22 @@ void Engine::DrawGame() {
     window_.draw(ground_);
     // Draw entities
     for(auto& entity : static_entities_)
-        window_.draw(entity->getSprite(), sf::RenderStates(entity->getTransform()));
+        window_.draw(entity->getSprite(), entity->getTransform());
     for(auto& entity : moving_entities_)
-        window_.draw(entity->getSprite(), sf::RenderStates(entity->getTransform()));
+        window_.draw(entity->getSprite(), entity->getTransform());
     for(auto& bullet : player_->GetProjectiles())
-        window_.draw(bullet->getSprite(), sf::RenderStates(bullet->getTransform()));
+        window_.draw(bullet->getSprite(), bullet->getTransform());
     window_.display();
 }
 
 void Engine::UpdateMenu() {
-    const sf::Vector2i mouse = sf::Mouse::getPosition(window_);
-    menu_.Update(mouse);
-    if(keys_pressed_.up) camera_.move(0,-1);
-    if(keys_pressed_.down) camera_.move(0,1);
-    if(keys_pressed_.left) camera_.move(-1,0);
-    if(keys_pressed_.right) camera_.move(1,0);
+    menu_.Update(sf::Mouse::getPosition(window_));
 }
 
 void Engine::DrawMenu() {
     window_.clear(sf::Color::White);
-
-    // sf::RectangleShape r;
-    // r.setSize(sf::Vector2f(100, 100));
-    // r.setFillColor(sf::Color::Black);
-    // r.setOrigin(0,0);
-    // window_.draw(r);
-
-
     window_.draw(menu_.getSprite());
-
-    // Refresh window
     window_.display();
-
 }
 
 void Engine::ResizeCamera(const float w, const float h) {

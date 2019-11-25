@@ -5,9 +5,6 @@
 #include "globals.hpp"
 
 Menu::Menu() : done_(false) {
-    if(!font_.loadFromFile(ROOTDIR + "/res/Roboto-Regular.ttf"))
-        std::cerr << "Error loading menu font: " << ROOTDIR << "/res/Roboto-Regular.ttf";
-    
     bool kek = true;
     buttons_.push_back(new InteractiveButton(sf::Vector2f(350, 100), sf::Vector2f(0.5f, 0.5f), kek));
     buttons_.push_back(new InteractiveButton(sf::Vector2f(350, 100), sf::Vector2f(0.5f, 0.5f), kek, sf::Vector2f(0, 120)));
@@ -35,7 +32,7 @@ void Menu::Resize(unsigned x, unsigned y) {
 
 sf::Sprite Menu::getSprite() {
     auto title = CreateCenteredText("Air Combat", sf::Vector2f(0.5f * float(screen_size_.x), 0.3f * float(screen_size_.y)), 20, sf::Color::Red);
-    title.setFont(font_);
+    title.setFont(AirCombatFonts::roboto_regular);
 
     bool kek = true;
 

@@ -1,6 +1,4 @@
-#include <iostream>
 #include <SFML/Graphics.hpp>
-#include <unistd.h>
 
 #include "globals.hpp"
 
@@ -9,13 +7,12 @@
 #include "Config.hpp"
 
 std::string ROOTDIR;
+sf::Font AirCombatFonts::roboto_regular;
 
 int main()
 {
-    // Set global variable for project root directory
-    char cwd[1024];
-    ROOTDIR = getcwd(cwd, sizeof(cwd)) ? std::string(cwd) : std::string("");
-    ROOTDIR = ROOTDIR.substr(0, ROOTDIR.find("lib") - 1);
+    SetRootDir();
+    AirCombatFonts::LoadFonts();
 
     Engine engine;
     engine.Start();
