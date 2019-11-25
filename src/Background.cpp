@@ -175,7 +175,7 @@ Background* UnderwaterBackground() {
     Background* bg = new Background(sf::Vector2u(512,192));
     bg->addBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/underwater_0.png", 0.10f));
     bg->addBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/underwater_1.png", 0.20f));
-    bg->addBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/underwater_3.png", 0.33f));
+    bg->addBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/underwater_2.png", 0.33f));
     bg->setBlendColor(sf::Color(62, 121, 221));
     return bg;
 }

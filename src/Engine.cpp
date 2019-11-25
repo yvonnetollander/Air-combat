@@ -2,9 +2,9 @@
 #include "Engine.hpp"
 #include "util.hpp"
 #include "globals.hpp"
-#include "Background.hpp"
+#include "Background.hpp"   
 
-Engine::Engine() {
+Engine::Engine() : state_(State::menu) {
     // Initialize window to 0.7 x screen height
     auto video = sf::VideoMode().getDesktopMode();
     video.height *= 0.7f;
@@ -12,16 +12,22 @@ Engine::Engine() {
     window_.create(video, "Air Combat Game");
 
     // Set up a simple ground terrain
+    // TODO: Move terrain generation to somewhere separate and improve
     ground_.setSize(sf::Vector2f(1500, 170));
     ground_.setFillColor(sf::Color(255, 204, 102));
     ground_.setOutlineColor(sf::Color(204, 102, 0));
     ground_.setOutlineThickness(10);
     ground_.setOrigin(0,0);
 
+    Player p1 = { "Sakari", sf::Color(255, 10, 10) };
+    config_ = { true, p1, p1 };
+    menu_.Create(&config_, window_.getSize());
+
     AddPlayer(new PlayerPlane(sf::Vector2f(200.f, -200.f), 0.0f, false, 100, 0.65f));
 
+    CenterCamera();
     // Set camera to match window
-    resetView(window_.getSize().x, window_.getSize().y);
+    ResizeCamera(window_.getSize().x, window_.getSize().y);
 
     // Align background
     backgrounds_.Current().fitToScreen(window_.getSize(), 2.f, 10.f);
@@ -45,11 +51,24 @@ void Engine::Start() {
         // Todo: use integer microseconds
         float dt = time.asSeconds();
 
+        // Handle input
         sf::Event event;
-
         Input(event);
-        Update(dt);
-        Draw();
+
+        // Update state & draw
+        switch(state_)
+        {
+            case State::game:
+                UpdateGame(dt);
+                DrawGame();
+                break;
+            case State::menu:
+                UpdateMenu();
+                DrawMenu();
+                break;
+            default:
+                break;
+        }
     }
 }
 
@@ -75,8 +94,19 @@ void Engine::Input(sf::Event& event) {
                 window_.close();
                 break;
             case sf::Event::Resized:
-                resetView(event.size.width, event.size.height);
-                backgrounds_.Current().resize(event.size.width, event.size.height);
+                switch(state_)
+                {
+                    case State::game:
+                        ResizeCamera(event.size.width, event.size.height);
+                        backgrounds_.Current().resize(event.size.width, event.size.height);
+                        break;
+                    case State::menu:
+                        ResizeCamera(event.size.width, event.size.height);
+                        menu_.Resize(event.size.width, event.size.height);
+                        break;
+                    default:
+                        break;
+                }
                 break;
             case sf::Event::KeyPressed:
                 switch (event.key.code) {
@@ -135,8 +165,10 @@ void Engine::Input(sf::Event& event) {
     }
 }
 
-void Engine::Update(float dt) {
+void Engine::UpdateGame(float dt) {
+    // Refresh camera view
     camera_.setCenter(player_->getPos());
+    window_.setView(camera_);
 
     player_->act(dt, moving_entities_, keys_pressed_);
 
@@ -152,46 +184,55 @@ void Engine::Update(float dt) {
     for(auto& bullet : player_->GetProjectiles())
         bullet->act(dt, moving_entities_);
 
-    // Simplified camera movements before plane is configured
-    
-    /*
+}
+
+void Engine::DrawGame() {
+    window_.clear(backgrounds_.Current().getBlendColor());
+    // Draw background
+    window_.draw(backgrounds_.Current().getTexture(), backgrounds_.Current().getTransform());
+    // Draw ground
+    window_.draw(ground_);
+    // Draw entities
+    for(auto& entity : static_entities_)
+        window_.draw(entity->getSprite(), sf::RenderStates(entity->getTransform()));
+    for(auto& entity : moving_entities_)
+        window_.draw(entity->getSprite(), sf::RenderStates(entity->getTransform()));
+    for(auto& bullet : player_->GetProjectiles())
+        window_.draw(bullet->getSprite(), sf::RenderStates(bullet->getTransform()));
+    window_.display();
+}
+
+void Engine::UpdateMenu() {
+    const sf::Vector2i mouse = sf::Mouse::getPosition(window_);
+    menu_.Update(mouse);
     if(keys_pressed_.up) camera_.move(0,-1);
     if(keys_pressed_.down) camera_.move(0,1);
     if(keys_pressed_.left) camera_.move(-1,0);
     if(keys_pressed_.right) camera_.move(1,0);
-    */
-
-    // Refresh view after movement changes
-    window_.setView(camera_);
 }
 
-void Engine::Draw() {
-    // Clear window
-    window_.clear(backgrounds_.Current().getBlendColor());
+void Engine::DrawMenu() {
+    window_.clear(sf::Color::White);
 
-    // Draw background
-    window_.draw(backgrounds_.Current().getTexture(), backgrounds_.Current().getTransform());
+    // sf::RectangleShape r;
+    // r.setSize(sf::Vector2f(100, 100));
+    // r.setFillColor(sf::Color::Black);
+    // r.setOrigin(0,0);
+    // window_.draw(r);
 
-    // Draw ground
-    window_.draw(ground_);
 
-    // Draw static entities
-    for(auto& entity : static_entities_)
-        window_.draw(entity->getSprite(), sf::RenderStates(entity->getTransform()));
-
-    // Draw moving entities
-    for(auto& entity : moving_entities_)
-        window_.draw(entity->getSprite(), sf::RenderStates(entity->getTransform()));
-
-    for(auto& bullet : player_->GetProjectiles())
-        window_.draw(bullet->getSprite(), sf::RenderStates(bullet->getTransform()));
+    window_.draw(menu_.getSprite());
 
     // Refresh window
     window_.display();
 
 }
 
-void Engine::resetView(const float w, const float h) {
+void Engine::ResizeCamera(const float w, const float h) {
     camera_.setSize(w, h);
     window_.setView(camera_);
+}
+
+void Engine::CenterCamera() {
+    camera_.setCenter(window_.getSize().x / 2, window_.getSize().y / 2);
 }

@@ -7,6 +7,11 @@
 #include <map>
 #include "util.hpp"
 #include "Background.hpp"
+#include "Config.hpp"
+#include "Menu.hpp"
+
+// Scoped enumeration for views
+enum class State { menu, game, credits };
 
 /* A simple class for the game engine.
 *  Contains all the game entities and handles the refresh, draw and input loops.
@@ -22,7 +27,9 @@ public:
     void AddPlayer(PlayerPlane* entity);
 
 private:
-    float target_aspect_ratio_ = 16.f / 9.f;
+    State state_;
+    Config config_;
+    const float target_aspect_ratio_ = 16.f / 9.f;
     sf::RenderWindow window_;
     sf::RectangleShape ground_;
     sf::View camera_;
@@ -34,10 +41,18 @@ private:
 
     Keys keys_pressed_;
     BackgroundSet backgrounds_;
+    Menu menu_;
 
-    void Update(float dt);
-    void Draw();
+    void UpdateGame(float dt);
+    void DrawGame();
+
+    void UpdateMenu();
+    void DrawMenu();
+    
     void Input(sf::Event& event);
     // Resets camera to given resolution
-    void resetView(const float w, const float h);
+    void ResizeCamera(const float w, const float h);
+    // Centers camera to starting position (middle of window size)
+    // Used centering the menu
+    void CenterCamera();
 };

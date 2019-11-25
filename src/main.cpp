@@ -6,6 +6,7 @@
 
 #include "Engine.hpp"
 #include "Background.hpp"
+#include "Config.hpp"
 
 std::string ROOTDIR;
 

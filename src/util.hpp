@@ -28,3 +28,13 @@ sf::Vector2f lengthen(const sf::Vector2f& vec, float len);
 
 // Increase length of given vector by len, capping at <max>
 sf::Vector2f lengthen(const sf::Vector2f& vec, float len, float max);
+
+sf::RectangleShape CreateCenteredRect(sf::FloatRect bounds, sf::Color color);
+sf::Text CreateCenteredText(sf::String string, sf::FloatRect bounds, unsigned size, sf::Color color);
+sf::Text CreateCenteredText(sf::String string, sf::Vector2f pos, unsigned size, sf::Color color);
+
+// Vector2u to Vector2f
+sf::Vector2f ToFloatVec(const sf::Vector2u& v);
+
+// Lighten a color
+sf::Color Lighter(const sf::Color& c);

@@ -92,8 +92,8 @@ void PlayerPlane::act(float dt, std::vector<MovingEntity*> moving_entities, Keys
     if (thrust_) {
         velocity_ = lengthen(velocity_, dt * thrush_mult);
     }
-
-    velocity_ *= 1.f - (drag_ * dt);
+    if(len(velocity_) > 0.0001f) // Prevent direction loss on a zero vector
+        velocity_ *= 1.f - (drag_ * dt);
 
     Fire();
     Move(dt);
