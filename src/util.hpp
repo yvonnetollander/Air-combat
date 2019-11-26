@@ -18,6 +18,9 @@ float len(const sf::Vector2f& vec);
 // Return a normalized version of a given vector
 sf::Vector2f normalize(const sf::Vector2f& vec);
 
+// Return the angle between x-axis and the vector. The angle is converted in the clockwise direction (because of SFML's rotation direction).
+float getVectorAngle(const sf::Vector2f& v);
+
 sf::Vector2f rotate(const sf::Vector2f& vec, float rad);
 
 // Returns a random floating point number between 0 and 1

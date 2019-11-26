@@ -6,8 +6,19 @@
 #include "globals.hpp"
 #include <SFML/Graphics.hpp>
 
+#define PI 3.14159265358979f
+
 float len(const sf::Vector2f& vec) {
     return std::sqrt(vec.x*vec.x + vec.y*vec.y);
+}
+
+float getVectorAngle(const sf::Vector2f& v) {
+    float atan_angle = atan2(v.y, v.x);
+    float angle = atan_angle * 180 / PI;   // (-180, 180)
+    if (angle < 0) {
+        angle += 360;   // (0, 360)
+    }
+    return angle;
 }
 
 sf::Vector2f normalize(const sf::Vector2f& vec) {

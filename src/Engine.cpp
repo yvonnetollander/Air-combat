@@ -29,6 +29,11 @@ Engine::Engine() : state_(GameState::menu) {
 
     AddPlayerPlane(new PlayerPlane(sf::Vector2f(200.f, -200.f), 0.0f, false, 100, 0.65f));
 
+    // TODO: Fix the image so that it doesn't need scaling.
+    Plane* plane = new Plane(sf::Vector2f(10.f, 10.f), sf::Vector2f(100.f, 100.f), ROOTDIR + "/res/enemy_plane_orange.png", 0.0f, false, 100, 0.0f);
+    plane->SetScale(sf::Vector2f(0.15f, 0.15f));
+    AddEnemy(plane);
+    
     // Center camera and set to match window
     CenterCamera();
     ResizeCamera(window_.getSize().x, window_.getSize().y);
@@ -76,6 +81,10 @@ void Engine::Start() {
 
 void Engine::AddMoving(MovingEntity* entity) {
     moving_entities_.push_back(entity);
+}
+
+void Engine::AddEnemy(Troop* entity) {
+    enemies_.push_back(entity);
 }
 
 void Engine::AddStatic(GameEntity* entity) {
@@ -188,7 +197,9 @@ void Engine::UpdateGame(float dt) {
     player_->Act(dt, moving_entities_, keys_pressed_);
     for (auto entity : moving_entities_)
         entity->Act(dt);
-    for(auto& bullet : player_->GetProjectiles())
+    for (auto troop : enemies_)
+        troop->Act(dt, moving_entities_, player_->getPos(), player_->getVelocity());
+    for(auto bullet : player_->GetProjectiles())
         bullet->Act(dt, moving_entities_);
 }
 
@@ -203,6 +214,8 @@ void Engine::DrawGame() {
         window_.draw(entity->getSprite(), entity->getTransform());
     for(auto& entity : moving_entities_)
         window_.draw(entity->getSprite(), entity->getTransform());
+    for(auto& troop : enemies_)
+        window_.draw(troop->getSprite(), troop->getTransform());
     for(auto& bullet : player_->GetProjectiles())
         window_.draw(bullet->getSprite(), bullet->getTransform());
     // HUD

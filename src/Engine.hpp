@@ -21,6 +21,7 @@ public:
     ~Engine();
     void Start();
     void AddMoving(MovingEntity* entity);
+    void AddEnemy(Troop* entity);
     void AddStatic(GameEntity* entity);
     void AddPlayerPlane(PlayerPlane* entity);
 
@@ -35,6 +36,7 @@ private:
     sf::RenderTexture background_;
     std::vector<GameEntity*> static_entities_;
     std::vector<MovingEntity*> moving_entities_;
+    std::vector<Troop*> enemies_;
     PlayerPlane* player_;
 
     Keys keys_pressed_;

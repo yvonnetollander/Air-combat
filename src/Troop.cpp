@@ -6,7 +6,7 @@ Troop::Troop(const sf::Vector2f& p, const sf::Vector2f& v, const std::string spr
     MovingEntity(p, v, spritepath, r, d), hp_(hp) {}
 
 Troop::~Troop() {
-    for (auto& p : projectiles_) {
+    for (auto p : projectiles_) {
         delete p;
     }
 }

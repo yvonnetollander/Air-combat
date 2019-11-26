@@ -10,7 +10,8 @@ public:
     virtual ~Plane();
     Plane(const sf::Vector2f& p, const sf::Vector2f& v, const std::string spritepath, const float r, const bool d, const unsigned hp, float drag);
 
-    virtual void Act(float dt, std::vector<MovingEntity*> moving_entities);
+    virtual void Act(float dt, std::vector<MovingEntity*> moving_entities, const sf::Vector2f& player_pos, 
+        const sf::Vector2f& player_velocity);
     void ToggleThrust();
     void Flip();
 
@@ -21,6 +22,8 @@ protected:
     float machine_gun_cooldown_ = 0.2;
     float machine_gun_cooldown_left_ = 0.f;
     float drag_;
+    float time_for_new_estimation_ = 0.f;   // Only relevant for the enemy planes.
+    float time_between_estimations_ = 0.1f;
     bool FireMachineGun(float dt);
     virtual void Fire();
     virtual void UpdateCooldowns(float dt);

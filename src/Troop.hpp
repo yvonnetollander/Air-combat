@@ -13,7 +13,8 @@ public:
     Troop();
     virtual ~Troop();
 
-    virtual void Act(float dt, std::vector<MovingEntity*> moving_entities) = 0;
+    virtual void Act(float dt, std::vector<MovingEntity*> moving_entities, const sf::Vector2f& player_pos, 
+        const sf::Vector2f& player_velocity) = 0;
     const std::vector<Projectile*>& GetProjectiles();
 
 protected:

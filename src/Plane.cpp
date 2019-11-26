@@ -9,9 +9,25 @@
 Plane::~Plane() { }
 
 Plane::Plane(const sf::Vector2f& p, const sf::Vector2f& v, const std::string spritepath, const float r, const bool d, const unsigned hp, float drag)
-    : Troop(p,v,spritepath,r,d,hp), thrust_(false), inverted_(false), drag_(drag) {}
+    : Troop(p, v, spritepath, r, d, hp), thrust_(false), inverted_(false), drag_(drag) {}
 
-void Plane::Act(float dt, std::vector<MovingEntity*> moving_entities) {
+void Plane::Act(float dt, std::vector<MovingEntity*> moving_entities, const sf::Vector2f& player_pos, 
+        const sf::Vector2f& player_velocity) {
+    if (time_for_new_estimation_ <= 0.f) {
+        time_for_new_estimation_ = time_between_estimations_;
+
+        // Estimate where the player is after time <time_between_estimations_>. Change velocity to point to that direction.
+        sf::Vector2f player_new_pos = player_pos + player_velocity * time_between_estimations_;
+
+        sf::Vector2f pos_diff = player_new_pos - pos_;
+        sf::Vector2f new_velocity = len(velocity_) * normalize(pos_diff);
+        velocity_ = new_velocity;
+        rotation_ = getVectorAngle(new_velocity);
+    }
+    else {
+        time_for_new_estimation_ -= dt;
+    }
+
     Move(dt);
 }
 
