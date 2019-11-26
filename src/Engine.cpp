@@ -24,6 +24,9 @@ Engine::Engine() : state_(GameState::menu) {
     config_ = { true, p1, p1 };
     menu_.Create(&config_, window_.getSize());
 
+    hud_.Create(sf::Vector2f(window_.getSize().x, window_.getSize().y));
+    hud_.UpdateValues(90, 15, 30);
+
     AddPlayerPlane(new PlayerPlane(sf::Vector2f(200.f, -200.f), 0.0f, false, 100, 0.65f));
 
     // Center camera and set to match window
@@ -98,6 +101,7 @@ void Engine::Input(sf::Event& event) {
                     case GameState::ingame:
                         ResizeCamera(event.size.width, event.size.height);
                         backgrounds_.Current().Resize(event.size.width, event.size.height);
+                        hud_.Resize(event.size.width, event.size.height);
                         break;
                     case GameState::menu:
                         ResizeCamera(event.size.width, event.size.height);
@@ -201,6 +205,11 @@ void Engine::DrawGame() {
         window_.draw(entity->getSprite(), entity->getTransform());
     for(auto& bullet : player_->GetProjectiles())
         window_.draw(bullet->getSprite(), bullet->getTransform());
+    // HUD
+    camera_.setCenter(window_.getSize().x / 2, window_.getSize().y / 2 + 2000);
+    window_.setView(camera_);
+    window_.draw(hud_.GetSprite(), hud_.GetTransform());
+
     window_.display();
 }
 

@@ -9,6 +9,7 @@
 #include "Background.hpp"
 #include "Config.hpp"
 #include "Menu.hpp"
+#include "HUD.hpp"
 
 /* A simple class for the game engine.
 *  Contains all the game entities and handles the refresh, draw and input loops.
@@ -30,6 +31,7 @@ private:
     sf::RenderWindow window_;
     sf::RectangleShape ground_;
     sf::View camera_;
+    HUD hud_;
     sf::RenderTexture background_;
     std::vector<GameEntity*> static_entities_;
     std::vector<MovingEntity*> moving_entities_;
