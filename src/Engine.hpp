@@ -43,11 +43,14 @@ private:
     BackgroundSet backgrounds_;
     Menu menu_;
 
+    unsigned enemy_count_ = 0;
+
     // Mouse movement tracking for menu parallax effect and buttons
     sf::Vector2i mouse_pos_;
     sf::Vector2i mouse_velocity_;
     bool mouse_clicked_this_frame_;
 
+    void CheckProjectileHits();
 
     // In-game logic and drawing
     void UpdateGame(float dt);

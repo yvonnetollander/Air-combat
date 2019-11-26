@@ -18,3 +18,13 @@ Projectile::Projectile(const sf::Vector2f& p, const sf::Vector2f& v, const std::
 void Projectile::Act(float dt, std::vector<MovingEntity*> moving_entities) {
     setPos(getPos() + (velocity_ * dt));
 }
+
+bool Projectile::WasTroopHit(sf::Vector2f troop_pos) {
+    sf::Vector2f diff = troop_pos - pos_;
+    float dist = len(diff);
+    return dist <= damage_radius_;
+}
+
+unsigned Projectile::GetDamage() {
+    return damage_;
+}

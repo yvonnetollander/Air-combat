@@ -2,7 +2,8 @@
 #include "Engine.hpp"
 #include "util.hpp"
 #include "globals.hpp"
-#include "Background.hpp"   
+#include "Background.hpp"
+#include "Projectile.hpp"
 
 Engine::Engine() : state_(GameState::menu) {
     // Initialize window to 0.7 x screen height
@@ -24,13 +25,13 @@ Engine::Engine() : state_(GameState::menu) {
     config_ = { true, p1, p1 };
     menu_.Create(&config_, window_.getSize());
 
-    hud_.Create(sf::Vector2f(window_.getSize().x, window_.getSize().y));
-    hud_.InitializeValues(100, 15, 200, "Machine Gun");
-
     AddPlayerPlane(new PlayerPlane(sf::Vector2f(200.f, -200.f), 0.0f, false, 100, 0.65f));
 
-    // TODO: Fix the image so that it doesn't need scaling.
-    Plane* plane = new Plane(sf::Vector2f(10.f, 10.f), sf::Vector2f(100.f, 100.f), ROOTDIR + "/res/enemy_plane_orange.png", 0.0f, false, 100, 0.0f);
+    hud_.Create(sf::Vector2f(window_.getSize().x, window_.getSize().y));
+    hud_.InitializeValues(player_->GetHP(), enemy_count_, player_->GetAmmoLeft(), "Machine Gun");
+
+    // TODO: Fix the enemy plane image so that it doesn't need scaling.
+    Plane* plane = new Plane(sf::Vector2f(1000.f, 0.0f), sf::Vector2f(100.f, 100.f), ROOTDIR + "/res/enemy_plane_orange.png", 0.0f, false, 100, 0.0f, 100);
     plane->SetScale(sf::Vector2f(0.15f, 0.15f));
     AddEnemy(plane);
     
@@ -85,6 +86,7 @@ void Engine::AddMoving(MovingEntity* entity) {
 
 void Engine::AddEnemy(Troop* entity) {
     enemies_.push_back(entity);
+    enemy_count_++;
 }
 
 void Engine::AddStatic(GameEntity* entity) {
@@ -201,6 +203,11 @@ void Engine::UpdateGame(float dt) {
         troop->Act(dt, moving_entities_, player_->getPos(), player_->getVelocity());
     for(auto bullet : player_->GetProjectiles())
         bullet->Act(dt, moving_entities_);
+
+    // Update HUD
+    hud_.UpdateValues(player_->GetHP(), enemy_count_, player_->GetAmmoLeft());
+
+    CheckProjectileHits();
 }
 
 void Engine::DrawGame() {
@@ -265,4 +272,30 @@ void Engine::ResizeCamera(const float w, const float h) {
 
 void Engine::CenterCamera() {
     camera_.setCenter(0, 0);
+}
+
+void Engine::CheckProjectileHits() {
+    // Bad design, has to be changed :(
+    std::vector<Projectile*> projectiles;
+    for (auto p : player_->GetProjectiles()) {
+        projectiles.push_back(p);
+    }
+    for (auto enemy: enemies_) {
+        for (auto p : enemy->GetProjectiles()) {
+            projectiles.push_back(p);
+        }
+    }
+
+    for (auto p : projectiles) {
+        for (auto enemy : enemies_) {
+            if (p->WasTroopHit(enemy->getPos())) {
+                enemy->ReduceHP(p->GetDamage());
+            }
+        }
+
+        if (p->WasTroopHit(player_->getPos())) {
+            player_->ReduceHP(p->GetDamage());
+        }
+    }
+
 }

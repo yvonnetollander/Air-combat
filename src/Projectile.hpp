@@ -23,6 +23,8 @@ public:
     ~Projectile();
     
     virtual void Act(float dt, std::vector<MovingEntity*> moving_entities);
+    bool WasTroopHit(sf::Vector2f troop_pos);
+    unsigned GetDamage();
 
 private:
     const unsigned damage_radius_;
