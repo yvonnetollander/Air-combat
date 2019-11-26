@@ -25,7 +25,7 @@ Engine::Engine() : state_(GameState::menu) {
     menu_.Create(&config_, window_.getSize());
 
     hud_.Create(sf::Vector2f(window_.getSize().x, window_.getSize().y));
-    hud_.UpdateValues(90, 15, 30);
+    hud_.InitializeValues(100, 15, 200, "Machine Gun");
 
     AddPlayerPlane(new PlayerPlane(sf::Vector2f(200.f, -200.f), 0.0f, false, 100, 0.65f));
 
