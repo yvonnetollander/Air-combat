@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <SFML/Graphics.hpp>
+#include "globals.hpp"
 
 /* Class head-up display alias HUD.
 *  Tracks players hitpoints, enemies, weapon and ammo count.
@@ -15,11 +16,13 @@ public:
     void Create(const sf::Vector2f size);
     // Get sprite to be drawn
     const sf::Sprite GetSprite();
+    // Initialize max values and set current values to the maximum
+    void InitializeValues(const unsigned hp, const unsigned enemies, const unsigned ammo, std::string weapon);
     // Update changing player values
     void UpdateValues(const unsigned hp, const unsigned enemies, const unsigned ammo);
     // Update text to match updated values
     void UpdateTexts();
-    // TODO: Resize the HUD when screen size is changed
+    // Resize the HUD when screen size is changed
     void Resize(const float base_width, const float base_height);
 
     const sf::Transform GetTransform() const;
@@ -33,7 +36,6 @@ private:
     sf::RectangleShape background_;
     sf::Texture t_;
     sf::Sprite s_;
-    sf::Font font;
     sf::Text text_[4];
     
     unsigned max_hp_;
@@ -42,4 +44,5 @@ private:
     unsigned enemies_;
     unsigned total_ammo_;
     unsigned ammo_;
+    std::string weapon_;
 };
