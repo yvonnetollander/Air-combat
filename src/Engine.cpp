@@ -35,6 +35,10 @@ Engine::Engine() : state_(GameState::menu) {
     plane->SetScale(sf::Vector2f(0.15f, 0.15f));
     AddEnemy(plane);
     
+    // TODO: Add several infantry soldiers with correct image
+    Infantry *infantry = new Infantry(sf::Vector2f(0.f, 0.0f), ROOTDIR + "/res/plane007.png" , 0.0f, false, 10, 10, 100);
+    AddEnemy(infantry);
+
     // Center camera and set to match window
     CenterCamera();
     ResizeCamera(window_.getSize().x, window_.getSize().y);
@@ -199,8 +203,11 @@ void Engine::UpdateGame(float dt) {
     player_->Act(dt, moving_entities_, keys_pressed_);
     for (auto entity : moving_entities_)
         entity->Act(dt);
-    for (auto troop : enemies_)
+    for (auto troop : enemies_) {
         troop->Act(dt, moving_entities_, player_->getPos(), player_->getVelocity());
+        for(auto bullet : troop->GetProjectiles())
+            bullet->Act(dt, moving_entities_);
+    }
     for(auto bullet : player_->GetProjectiles())
         bullet->Act(dt, moving_entities_);
 
@@ -221,8 +228,12 @@ void Engine::DrawGame() {
         window_.draw(entity->getSprite(), entity->getTransform());
     for(auto& entity : moving_entities_)
         window_.draw(entity->getSprite(), entity->getTransform());
-    for(auto& troop : enemies_)
+    for(auto& troop : enemies_) {
         window_.draw(troop->getSprite(), troop->getTransform());
+        for(auto& bullet : troop->GetProjectiles()) {
+            window_.draw(bullet->getSprite(), bullet->getTransform());
+        }
+    }
     for(auto& bullet : player_->GetProjectiles())
         window_.draw(bullet->getSprite(), bullet->getTransform());
     // HUD

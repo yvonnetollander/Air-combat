@@ -10,6 +10,7 @@
 #include "Config.hpp"
 #include "Menu.hpp"
 #include "HUD.hpp"
+#include "Infantry.hpp"
 
 /* A simple class for the game engine.
 *  Contains all the game entities and handles the refresh, draw and input loops.

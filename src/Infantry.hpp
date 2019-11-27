@@ -11,12 +11,17 @@ public:
     virtual void Act(float dt, std::vector<MovingEntity*> moving_entities, const sf::Vector2f& player_pos, 
         const sf::Vector2f& player_velocity);
 private:
-    virtual void fire();
     // Current target position
     sf::Vector2f targetPos_;
     // Pick the next target position within <wanderRadius>
-    void pickTarget();
+    void PickTarget();
     // Idle timer between movements
     float idle_;
     float wanderRadius_;
+    // Handle shooting
+    float machine_gun_cooldown_ = 0.2f;
+    float machine_gun_cooldown_left_ = 0.f;
+    virtual void UpdateCooldown(float dt);
+    virtual void FireMachineGun(const sf::Vector2f& player_pos);
+    virtual void Fire(const sf::Vector2f& player_pos);
 };
