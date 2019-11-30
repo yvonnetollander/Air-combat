@@ -3,6 +3,7 @@
 #include <vector>
 #include <SFML/Graphics.hpp>
 #include "MovingEntity.hpp"
+#include "Projectile.hpp"
 
 /**
     class ScrollingBackdrop depresents a dynamically scrolling backdrop element
@@ -12,7 +13,7 @@
 class ScrollingBackdrop : public MovingEntity {
 public:
     ScrollingBackdrop(const std::string spritepath, const float velocity, const float static_velocity);
-    void Act(float dt);
+    Projectile* Act(float dt);
     void SetViewVelocity(sf::Vector2f v);
     void SetMovementScale(sf::Vector2f s);
 private:

@@ -10,8 +10,7 @@ public:
     virtual ~Plane();
     Plane(const sf::Vector2f& p, const sf::Vector2f& v, const std::string spritepath, const float r, const bool d, const unsigned hp, float drag, unsigned ammo_left);
 
-    virtual void Act(float dt, std::vector<MovingEntity*> moving_entities, const sf::Vector2f& player_pos, 
-        const sf::Vector2f& player_velocity);
+    virtual Projectile* Act(float dt, const sf::Vector2f& player_pos, const sf::Vector2f& player_velocity);
     void ToggleThrust();
     void Flip();
 
@@ -25,10 +24,10 @@ protected:
     float time_for_new_estimation_ = 0.f;   // Only relevant for the enemy planes.
     float time_between_estimations_ = 0.1f;
     bool FireMachineGun(float dt);
-    virtual void Fire();
+    virtual Projectile* Fire();
     virtual void UpdateCooldowns(float dt);
     virtual void ShootMachineGun();
-    virtual void FireMachineGun();
+    virtual Projectile* FireMachineGun();
 };
 
 /* PlayerPlane is user controllable plane and takes same parameters as Plane */
@@ -36,7 +35,7 @@ class PlayerPlane : public Plane {
 public:
     PlayerPlane(const sf::Vector2f& p, const float r, const bool d, const unsigned hp, float drag);
     // Create custom behaviour for the player's plane by overriding the default logic in the Plane class's act method.
-    virtual void Act(float dt, std::vector<MovingEntity*> moving_entities, Keys keys_pressed);
+    virtual Projectile* Act(float dt, Keys keys_pressed);
 private:
     Keys keys_;
 };

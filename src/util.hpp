@@ -21,6 +21,9 @@ sf::Vector2f normalize(const sf::Vector2f& vec);
 // Return the angle between x-axis and the vector. The angle is converted in the clockwise direction (because of SFML's rotation direction).
 float getVectorAngle(const sf::Vector2f& v);
 
+// Return the euclidean dot product of two vectors.
+float dotProduct(const sf::Vector2f& v1, const sf::Vector2f& v2);
+
 sf::Vector2f rotate(const sf::Vector2f& vec, float rad);
 
 // Returns a random floating point number between 0 and 1

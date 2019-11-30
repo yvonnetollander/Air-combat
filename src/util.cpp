@@ -21,6 +21,10 @@ float getVectorAngle(const sf::Vector2f& v) {
     return angle;
 }
 
+float dotProduct(const sf::Vector2f& v1, const sf::Vector2f& v2) {
+    return (v1.x * v2.x) + (v1.y * v2.y);
+}
+
 sf::Vector2f normalize(const sf::Vector2f& vec) {
     return vec / len(vec);
 }

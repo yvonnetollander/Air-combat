@@ -26,7 +26,7 @@ Engine::Engine() : state_(GameState::menu) {
     menu_.Create(&config_, window_.getSize());
 
     AddPlayerPlane(new PlayerPlane(sf::Vector2f(200.f, -200.f), 0.0f, false, 100, 0.65f));
-
+    
     hud_.Create(sf::Vector2f(window_.getSize().x, window_.getSize().y));
     hud_.InitializeValues(player_->GetHP(), enemy_count_, player_->GetAmmoLeft(), "Machine Gun");
 
@@ -51,6 +51,8 @@ Engine::~Engine() {
     for (auto entity : moving_entities_)
         delete entity;
     for (auto entity : static_entities_)
+        delete entity;
+    for (auto entity : projectiles_)
         delete entity;
     for (auto entity : enemies_)
         delete entity;
@@ -102,6 +104,10 @@ void Engine::AddStatic(GameEntity* entity) {
 void Engine::AddPlayerPlane(PlayerPlane* entity) {
     player_ = entity;
     AddMoving(entity);
+}
+
+void Engine::AddProjectile(Projectile* entity) {
+    projectiles_.push_back(entity);
 }
 
 void Engine::Input(sf::Event& event) {
@@ -201,17 +207,27 @@ void Engine::UpdateGame(float dt) {
     backgrounds_.Current().Update(player_->getVelocity(), dt);
     backgrounds_.Current().Recenter(camera_.getCenter());
 
-    // Update moving entity states
-    player_->Act(dt, moving_entities_, keys_pressed_);
-    for (auto entity : moving_entities_)
-        entity->Act(dt);
-    for (auto troop : enemies_) {
-        troop->Act(dt, moving_entities_, player_->getPos(), player_->getVelocity());
-        for(auto bullet : troop->GetProjectiles())
-            bullet->Act(dt, moving_entities_);
+    // Update the player's state.
+    Projectile* p = player_->Act(dt, keys_pressed_);
+    if (p != nullptr) {   // If the player has tried to shoot an enemy, add the projectile to moving_entities.
+        AddProjectile(p);
     }
-    for(auto bullet : player_->GetProjectiles())
-        bullet->Act(dt, moving_entities_);
+    // Update the enemie's states.
+    for (auto troop : enemies_) {
+        Projectile* p = troop->Act(dt, player_->getPos(), player_->getVelocity());
+        if (p != nullptr) {   // If an enemy has tried to shoot the player, add the projectile to moving_entities.
+            AddProjectile(p);
+        }
+    }
+    // Update moving entity states
+    for (auto entity : moving_entities_) {
+        entity->Act(dt);
+    }
+
+    // Update projectile states
+    for (auto p : projectiles_) {
+        p->Act(dt);
+    }
 
     // Update HUD
     hud_.UpdateValues(player_->GetHP(), enemy_count_, player_->GetAmmoLeft());
@@ -230,14 +246,10 @@ void Engine::DrawGame() {
         window_.draw(entity->getSprite(), entity->getTransform());
     for(auto& entity : moving_entities_)
         window_.draw(entity->getSprite(), entity->getTransform());
-    for(auto& troop : enemies_) {
+    for(auto& troop : enemies_)
         window_.draw(troop->getSprite(), troop->getTransform());
-        for(auto& bullet : troop->GetProjectiles()) {
-            window_.draw(bullet->getSprite(), bullet->getTransform());
-        }
-    }
-    for(auto& bullet : player_->GetProjectiles())
-        window_.draw(bullet->getSprite(), bullet->getTransform());
+    for(auto& entity : projectiles_)
+        window_.draw(entity->getSprite(), entity->getTransform());
     // HUD
     camera_.setCenter(window_.getSize().x / 2, window_.getSize().y / 2 + 2000);
     window_.setView(camera_);
@@ -288,26 +300,31 @@ void Engine::CenterCamera() {
 }
 
 void Engine::CheckProjectileHits() {
-    // Bad design, has to be changed :(
-    std::vector<Projectile*> projectiles;
-    for (auto p : player_->GetProjectiles()) {
-        projectiles.push_back(p);
-    }
-    for (auto enemy: enemies_) {
-        for (auto p : enemy->GetProjectiles()) {
-            projectiles.push_back(p);
-        }
-    }
-
-    for (auto p : projectiles) {
+    for (auto p : projectiles_) {
+        // Check if an enemy was hit by a projectile.
         for (auto enemy : enemies_) {
             if (p->WasTroopHit(enemy->getPos())) {
                 enemy->ReduceHP(p->GetDamage());
+                p->kill();
             }
         }
-
+        // Check if the player was hit by a projectile.
         if (p->WasTroopHit(player_->getPos())) {
             player_->ReduceHP(p->GetDamage());
+            p->kill();
+        }
+    }
+
+    auto it = projectiles_.begin();
+    while (it != projectiles_.end()) {
+        // Remove "dead" projectiles, that is projectiles that have already hit a troop -> we can avoid considering the same
+        // projectile multiple times.
+        if ((*it)->isDead()) {
+            delete *it;
+            it = projectiles_.erase(it);
+        }
+        else {
+            it++;
         }
     }
 

@@ -15,7 +15,7 @@ ScrollingBackdrop::ScrollingBackdrop(const std::string spritepath, const float v
     setTextureRect(sf::IntRect(0, 0, getSize().x * 3, getSize().y));
 }
 
-void ScrollingBackdrop::Act(float dt) {
+Projectile* ScrollingBackdrop::Act(float dt) {
     // Movement relative to v
     const float dx = velocity_ * view_velocity_.x * movement_scale_.x * dt;
     // Static movement
@@ -23,6 +23,7 @@ void ScrollingBackdrop::Act(float dt) {
     // Move & clip back to original position when we go over a full width
     sf::Vector2f pos = getPos();
     setPos(sf::Vector2f(std::fmod(pos.x - dx - static_dx, getSize().x * movement_scale_.x), pos.y));
+    return nullptr;
 }
 
 void ScrollingBackdrop::SetViewVelocity(sf::Vector2f v) {

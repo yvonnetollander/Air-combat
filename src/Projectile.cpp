@@ -1,6 +1,7 @@
 #include "Projectile.hpp"
 #include "globals.hpp"
 #include "util.hpp"
+#include <iostream>
 
 Projectile::~Projectile() { }
 
@@ -15,8 +16,9 @@ Projectile::Projectile(const sf::Vector2f& p, const sf::Vector2f& v, const std::
     const unsigned damage)
     : MovingEntity(p, v, spritepath, r, d), damage_radius_(damage_radius), damage_(damage) {}
 
-void Projectile::Act(float dt, std::vector<MovingEntity*> moving_entities) {
+Projectile* Projectile::Act(float dt) {
     setPos(getPos() + (velocity_ * dt));
+    return nullptr;
 }
 
 bool Projectile::WasTroopHit(sf::Vector2f troop_pos) {

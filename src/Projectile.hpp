@@ -22,7 +22,7 @@ public:
         const unsigned damage);
     ~Projectile();
     
-    virtual void Act(float dt, std::vector<MovingEntity*> moving_entities);
+    virtual Projectile* Act(float dt);
     bool WasTroopHit(sf::Vector2f troop_pos);
     unsigned GetDamage();
 
