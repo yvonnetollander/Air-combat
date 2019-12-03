@@ -11,6 +11,7 @@
 #include "Menu.hpp"
 #include "HUD.hpp"
 #include "Infantry.hpp"
+#include "Outcome.hpp"
 
 /* A simple class for the game engine.
 *  Contains all the game entities and handles the refresh, draw and input loops.
@@ -45,6 +46,7 @@ private:
     Keys keys_pressed_;
     BackgroundSet backgrounds_;
     Menu menu_;
+    Outcome outcome_;
 
     unsigned enemy_count_ = 0;
 
@@ -67,6 +69,11 @@ private:
     void UpdateMenu(float dt);
     void DrawMenu();
     
+    // Game outcome drawing
+    void UpdateOutcome(float dt);
+    void DrawOutcome();
+
+    // User input handling
     void Input(sf::Event& event);
     // Resets camera to given resolution
     void ResizeCamera(const float w, const float h);

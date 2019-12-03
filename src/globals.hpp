@@ -5,7 +5,7 @@
 #include <SFML/Graphics.hpp>
 
 // Enumeration for game and menu views/statuses
-enum GameState { menu, ingame };
+enum GameState { menu, ingame, outcome };
 enum MenuState { index, options, credits, play, quit };
 
 // Global variable for project root directory

@@ -24,6 +24,7 @@ Engine::Engine() : state_(GameState::menu) {
     Player p1 = { "Sakari", sf::Color(255, 10, 10) };
     config_ = { true, p1, p1 };
     menu_.Create(&config_, window_.getSize());
+    outcome_.Create(window_.getSize());
 
     AddPlayerPlane(new PlayerPlane(sf::Vector2f(200.f, -200.f), 0.0f, false, 100, 0.65f));
 
@@ -79,6 +80,10 @@ void Engine::Start() {
             case GameState::menu:
                 UpdateMenu(dt);
                 DrawMenu();
+                break;
+            case GameState::outcome:
+                UpdateOutcome(dt);
+                DrawOutcome();
                 break;
             default:
                 break;
@@ -136,6 +141,10 @@ void Engine::Input(sf::Event& event) {
                     case GameState::menu:
                         ResizeCamera(event.size.width, event.size.height);
                         menu_.Resize(event.size.width, event.size.height);
+                        break;
+                    case GameState::outcome:
+                        ResizeCamera(event.size.width, event.size.height);
+                        outcome_.Resize(event.size.width, event.size.height);
                         break;
                     default:
                         break;
@@ -241,6 +250,15 @@ void Engine::UpdateGame(float dt) {
 
     CheckProjectileHits();
     RemoveDeadEnemies();
+    
+    if (enemy_count_ == 0) {
+        state_ = GameState::outcome;
+        outcome_.SetState(true);
+    }
+    else if (player_->GetHP() == 0) {
+        state_ = GameState::outcome;
+        outcome_.SetState(false);
+    }
 }
 
 void Engine::DrawGame() {
@@ -286,6 +304,26 @@ void Engine::UpdateMenu(float dt) {
         default:
             break;
     }
+}
+
+void Engine::UpdateOutcome(float dt) {
+    // Refresh camera view
+    CenterCamera();
+    window_.setView(camera_);
+
+    // Update background state 
+    backgrounds_.Current().Recenter(camera_.getCenter());
+    backgrounds_.Current().Update( 50.f * sf::Vector2f(mouse_velocity_.x, mouse_velocity_.y), dt);
+}
+
+void Engine::DrawOutcome() {
+    window_.clear(backgrounds_.Current().GetBlendColor());
+    // Background
+    sf::Transform bg_transform = backgrounds_.Current().GetTransform();
+    window_.draw(backgrounds_.Current().GetTexture(), bg_transform.translate(0, window_.getSize().y / 2 + 1));
+    // Outcome
+    window_.draw(outcome_.GetSprite());
+    window_.display();
 }
 
 void Engine::DrawMenu() {
