@@ -56,7 +56,6 @@ Engine::~Engine() {
         delete entity;
     for (auto entity : enemies_)
         delete entity;
-    delete player_;
 }
 
 void Engine::Start() {
