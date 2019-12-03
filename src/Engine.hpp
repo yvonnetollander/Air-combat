@@ -53,6 +53,9 @@ private:
     sf::Vector2i mouse_velocity_;
     bool mouse_clicked_this_frame_;
 
+    // Create number of infantry soldiers
+    void AddInfantry(int num);
+
     void CheckProjectileHits();
     void RemoveDeadEnemies();
 

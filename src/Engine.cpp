@@ -32,9 +32,8 @@ Engine::Engine() : state_(GameState::menu) {
     plane->SetScale(sf::Vector2f(0.15f, 0.15f));
     AddEnemy(plane);
     
-    // TODO: Add several infantry soldiers with correct image
-    Infantry *infantry = new Infantry(sf::Vector2f(0.f, 0.0f), ROOTDIR + "/res/plane007.png" , 0.0f, false, 10, 10, 100);
-    AddEnemy(infantry);
+    // Add several infantry soldiers
+    AddInfantry(10);
 
     hud_.Create(sf::Vector2f(window_.getSize().x, window_.getSize().y));
     hud_.InitializeValues(player_->GetHP(), enemy_count_, player_->GetAmmoLeft(), "Machine Gun");
@@ -103,6 +102,15 @@ void Engine::AddStatic(GameEntity* entity) {
 void Engine::AddPlayerPlane(PlayerPlane* entity) {
     player_ = entity;
     AddMoving(entity);
+}
+
+void Engine::AddInfantry(int num) {
+    // Add given number of infantry soldiers in x-axis range 0 - 200
+    for (int i = 0; i < num; i++) {
+        // TODO: Change correct image
+        Infantry *infantry = new Infantry(sf::Vector2f(randFloat() * 200.f, 0.0f), ROOTDIR + "/res/plane007.png" , 0.0f, false, 10 + randFloat() * 20, 250, 100);
+        AddEnemy(infantry);
+    }
 }
 
 void Engine::AddProjectile(Projectile* entity) {
