@@ -26,9 +26,6 @@ Engine::Engine() : state_(GameState::menu) {
     menu_.Create(&config_, window_.getSize());
 
     AddPlayerPlane(new PlayerPlane(sf::Vector2f(200.f, -200.f), 0.0f, false, 100, 0.65f));
-    
-    hud_.Create(sf::Vector2f(window_.getSize().x, window_.getSize().y));
-    hud_.InitializeValues(player_->GetHP(), enemy_count_, player_->GetAmmoLeft(), "Machine Gun");
 
     // TODO: Fix the enemy plane image so that it doesn't need scaling.
     Plane* plane = new Plane(sf::Vector2f(1000.f, 0.0f), sf::Vector2f(100.f, 100.f), ROOTDIR + "/res/enemy_plane_orange.png", 0.0f, false, 100, 0.0f, 100);
@@ -38,6 +35,9 @@ Engine::Engine() : state_(GameState::menu) {
     // TODO: Add several infantry soldiers with correct image
     Infantry *infantry = new Infantry(sf::Vector2f(0.f, 0.0f), ROOTDIR + "/res/plane007.png" , 0.0f, false, 10, 10, 100);
     AddEnemy(infantry);
+
+    hud_.Create(sf::Vector2f(window_.getSize().x, window_.getSize().y));
+    hud_.InitializeValues(player_->GetHP(), enemy_count_, player_->GetAmmoLeft(), "Machine Gun");
 
     // Center camera and set to match window
     CenterCamera();
@@ -233,6 +233,7 @@ void Engine::UpdateGame(float dt) {
     hud_.UpdateValues(player_->GetHP(), enemy_count_, player_->GetAmmoLeft());
 
     CheckProjectileHits();
+    RemoveDeadEnemies();
 }
 
 void Engine::DrawGame() {
@@ -328,4 +329,18 @@ void Engine::CheckProjectileHits() {
         }
     }
 
+}
+
+void Engine::RemoveDeadEnemies() {
+    auto it = enemies_.begin();
+    while (it != enemies_.end()) {
+        if ((*it)->isDead()) {
+            delete *it;
+            it = enemies_.erase(it);
+            enemy_count_--;
+        }
+        else {
+            it++;
+        }
+    }
 }

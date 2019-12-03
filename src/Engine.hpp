@@ -54,6 +54,7 @@ private:
     bool mouse_clicked_this_frame_;
 
     void CheckProjectileHits();
+    void RemoveDeadEnemies();
 
     // In-game logic and drawing
     void UpdateGame(float dt);
