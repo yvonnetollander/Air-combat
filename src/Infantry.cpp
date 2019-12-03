@@ -9,7 +9,7 @@ Infantry::Infantry()
     : Troop(), targetPos_(), idle_(0), wanderRadius_(0) { PickTarget(); }
 
 Infantry::Infantry(const sf::Vector2f& p, const std::string spritepath, const float r, const bool d, const unsigned hp, const float radius, unsigned ammo_left)
-    : Troop(p, sf::Vector2f(0.5f, 0.0f), spritepath, r, d, hp, ammo_left), targetPos_(), idle_(0), wanderRadius_(radius) { PickTarget(); }
+    : Troop(p, sf::Vector2f(5.0f, 0.0f), spritepath, r, d, hp, ammo_left), targetPos_(), idle_(0), wanderRadius_(radius) { PickTarget(); }
 
 Projectile* Infantry::Act(float dt, const sf::Vector2f& player_pos, const sf::Vector2f& player_velocity) {
     if (!dead_) {
