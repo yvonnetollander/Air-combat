@@ -12,6 +12,7 @@
 #include "HUD.hpp"
 #include "Infantry.hpp"
 #include "Outcome.hpp"
+#include "World.hpp"
 
 /* A simple class for the game engine.
 *  Contains all the game entities and handles the refresh, draw and input loops.
@@ -33,7 +34,7 @@ private:
     Config config_;
     const float target_aspect_ratio_ = 16.f / 9.f;
     sf::RenderWindow window_;
-    sf::RectangleShape ground_;
+    World world_;
     sf::View camera_;
     HUD hud_;
     sf::RenderTexture background_;

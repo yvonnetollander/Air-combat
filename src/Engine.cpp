@@ -4,6 +4,7 @@
 #include "globals.hpp"
 #include "Background.hpp"
 #include "Projectile.hpp"
+#include "World.hpp"
 
 Engine::Engine() : state_(GameState::menu) {
     // Initialize window to 0.7 x screen height
@@ -12,14 +13,7 @@ Engine::Engine() : state_(GameState::menu) {
     video.width = video.height * target_aspect_ratio_;
     window_.create(video, "Air Combat Game");
 
-    // Set up a simple ground terrain
-    // TODO: Move terrain generation to somewhere separate and improve
-    ground_.setSize(sf::Vector2f(1500, 170));
-    ground_.setFillColor(sf::Color(255, 204, 102));
-    ground_.setOutlineColor(sf::Color(204, 102, 0));
-    ground_.setOutlineThickness(10);
-    ground_.setOrigin(0,-10);
-
+    world_ = World(10000, 1000);
     // TODO: An actual game configuration
     Player p1 = { "Sakari", sf::Color(255, 10, 10) };
     config_ = { true, p1, p1 };
@@ -266,7 +260,7 @@ void Engine::DrawGame() {
     // Background
     window_.draw(backgrounds_.Current().GetTexture(), backgrounds_.Current().GetTransform());
     // Terrain
-    window_.draw(ground_);
+    window_.draw(world_.GetGround());
     // Entities
     for(auto& entity : static_entities_)
         window_.draw(entity->getSprite(), entity->getTransform());
