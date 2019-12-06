@@ -26,8 +26,12 @@ public:
     void AddMoving(MovingEntity* entity);
     void AddEnemy(Troop* entity);
     void AddStatic(GameEntity* entity);
+    void AddPlane(Plane* plane);
+    void AddEnemyPlane(Plane* plane);
     void AddPlayerPlane(PlayerPlane* entity);
     void AddProjectile(Projectile* entity);
+
+    void CheckGroundHits();
 
 private:
     GameState state_;
@@ -42,6 +46,7 @@ private:
     std::vector<MovingEntity*> moving_entities_;
     std::vector<Troop*> enemies_;
     std::vector<Projectile*> projectiles_;
+    std::vector<Plane*> planes_;
     PlayerPlane* player_;
 
     Keys keys_pressed_;

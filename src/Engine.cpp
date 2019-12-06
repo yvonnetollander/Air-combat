@@ -20,12 +20,12 @@ Engine::Engine() : state_(GameState::menu) {
     menu_.Create(&config_, window_.getSize());
     outcome_.Create(window_.getSize());
 
-    AddPlayerPlane(new PlayerPlane(sf::Vector2f(200.f, -200.f), 0.0f, false, 100, 0.65f));
+    AddPlayerPlane(new PlayerPlane(sf::Vector2f(200.f, -600.f), 0.0f, false, 100, 0.65f));
 
     // TODO: Fix the enemy plane image so that it doesn't need scaling.
-    Plane* plane = new Plane(sf::Vector2f(1000.f, 0.0f), sf::Vector2f(100.f, 100.f), ROOTDIR + "/res/enemy_plane_orange.png", 0.0f, false, 100, 0.0f, 100);
+    Plane* plane = new Plane(sf::Vector2f(1000.f, -200.0f), sf::Vector2f(100.f, 100.f), ROOTDIR + "/res/enemy_plane_orange.png", 0.0f, false, 100, 0.0f, 100);
     plane->SetScale(sf::Vector2f(0.15f, 0.15f));
-    AddEnemy(plane);
+    AddEnemyPlane(plane);
     
     // Add several infantry soldiers
     AddInfantry(10);
@@ -98,9 +98,19 @@ void Engine::AddStatic(GameEntity* entity) {
     static_entities_.push_back(entity);
 }
 
+void Engine::AddPlane(Plane* plane) {
+    planes_.push_back(plane);
+}
+
+void Engine::AddEnemyPlane(Plane* plane) {
+    AddPlane(plane);
+    AddEnemy(plane);
+}
+
 void Engine::AddPlayerPlane(PlayerPlane* entity) {
     player_ = entity;
     AddMoving(entity);
+    AddPlane(entity);
 }
 
 void Engine::AddInfantry(int num) {
@@ -243,13 +253,14 @@ void Engine::UpdateGame(float dt) {
     hud_.UpdateValues(player_->GetHP(), enemy_count_, player_->GetAmmoLeft());
 
     CheckProjectileHits();
+    CheckGroundHits();
     RemoveDeadEnemies();
     
     if (enemy_count_ == 0) {
         state_ = GameState::outcome;
         outcome_.SetState(true);
     }
-    else if (player_->GetHP() == 0) {
+    else if (player_->isDead()) {
         state_ = GameState::outcome;
         outcome_.SetState(false);
     }
@@ -368,6 +379,15 @@ void Engine::CheckProjectileHits() {
         }
     }
 
+}
+
+void Engine::CheckGroundHits() {
+    for (auto plane : planes_ ) {
+        unsigned int plane_y = plane->getPos().y;
+        if (plane_y < world_.GetGroundY()) {
+            plane->kill();
+        }
+    }
 }
 
 void Engine::RemoveDeadEnemies() {
