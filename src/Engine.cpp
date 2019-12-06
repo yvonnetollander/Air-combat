@@ -20,7 +20,7 @@ Engine::Engine() : state_(GameState::menu) {
     menu_.Create(&config_, window_.getSize());
     outcome_.Create(window_.getSize());
 
-    AddPlayerPlane(new PlayerPlane(sf::Vector2f(200.f, -600.f), 0.0f, false, 100, 0.65f));
+    AddPlayerPlane(new PlayerPlane(sf::Vector2f(200.f, -600.f), 0.0f, false, 5000, 0.65f));
 
     // TODO: Fix the enemy plane image so that it doesn't need scaling.
     Plane* plane = new Plane(sf::Vector2f(1000.f, -200.0f), sf::Vector2f(100.f, 100.f), ROOTDIR + "/res/enemy_plane_orange.png", 0.0f, false, 100, 0.0f, 100);
@@ -174,8 +174,6 @@ void Engine::Input(sf::Event& event) {
                     case sf::Keyboard::Key::D:
                         keys_pressed_.d = true;
                         break;
-                    case sf::Keyboard::Key::P:
-                        std::cout << "Left: " << keys_pressed_.left << "Right: " << keys_pressed_.right << "Up: " << keys_pressed_.up << "Down: " << keys_pressed_.down << std::endl;
                     default:
                         break;
                 }
@@ -381,10 +379,11 @@ void Engine::CheckProjectileHits() {
 
 }
 
+// Destroy planes that hit the ground;
 void Engine::CheckGroundHits() {
     for (auto plane : planes_ ) {
-        unsigned int plane_y = plane->getPos().y;
-        if (plane_y < world_.GetGroundY()) {
+        int plane_y = plane->getPos().y;
+        if (plane_y > 0) {
             plane->kill();
         }
     }

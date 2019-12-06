@@ -6,13 +6,15 @@ class World {
 public:
     World();
     ~World();
-    World(unsigned int width, unsigned int height, unsigned int ground_y = 1000);
+    World(int width, int height, int ground_height_ = 1000);
     const sf::RectangleShape& GetGround() const;
-    unsigned int GetGroundY() const;
+    int GetGroundHeight() const;
+    int GetHeight() const;
+    int GetWidth() const;
 
 private:
-    unsigned int width_;
-    unsigned int height_;
-    unsigned int ground_y_;
+    int width_;
+    int height_;
+    int ground_height_;
     sf::RectangleShape ground_;
 };
