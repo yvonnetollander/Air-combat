@@ -253,6 +253,7 @@ void Engine::UpdateGame(float dt) {
     CheckProjectileHits();
     CheckGroundHits();
     RemoveDeadEnemies();
+    CheckBorders();
     
     if (enemy_count_ == 0) {
         state_ = GameState::outcome;
@@ -385,6 +386,20 @@ void Engine::CheckGroundHits() {
         int plane_y = plane->getPos().y;
         if (plane_y > 0) {
             plane->kill();
+        }
+    }
+}
+
+// Prevent units from flying out of the map
+void Engine::CheckBorders() {
+    for (auto plane : planes_) {
+        const sf::Vector2f& pos = plane->getPos();
+        int x = pos.x;
+        int y = pos.y;
+        if (x < 0) {
+            plane->setPos(0, y);
+        } else if (pos.x > world_.GetWidth()) {
+            plane->setPos(world_.GetWidth(), y);
         }
     }
 }

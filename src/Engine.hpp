@@ -31,8 +31,6 @@ public:
     void AddPlayerPlane(PlayerPlane* entity);
     void AddProjectile(Projectile* entity);
 
-    void CheckGroundHits();
-
 private:
     GameState state_;
     Config config_;
@@ -66,6 +64,9 @@ private:
 
     void CheckProjectileHits();
     void RemoveDeadEnemies();
+    
+    void CheckGroundHits();
+    void CheckBorders();
 
     // In-game logic and drawing
     void UpdateGame(float dt);
