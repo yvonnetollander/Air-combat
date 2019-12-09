@@ -5,7 +5,7 @@
 #include "Background.hpp"
 #include "Projectile.hpp"
 
-Engine::Engine() : state_(GameState::menu) {
+Engine::Engine() : state_(GameState::menu), mouse_clicked_this_frame_(false) {
     // Initialize window to 0.7 x screen height
     auto video = sf::VideoMode().getDesktopMode();
     video.height *= 0.7f;
@@ -289,8 +289,15 @@ void Engine::UpdateMenu(float dt) {
     backgrounds_.Current().Recenter(camera_.getCenter());
     backgrounds_.Current().Update( 50.f * sf::Vector2f(mouse_velocity_.x, mouse_velocity_.y), dt);
 
-    // Update menu, reset mouse click status
-    menu_.Update(mouse_pos_, mouse_clicked_this_frame_);
+    // Update menu or options, reset mouse click status
+    switch(menu_.GetState()) {
+        case MenuState::options:
+            menu_.UpdateOptions(mouse_pos_, mouse_clicked_this_frame_);
+            break;
+        default:
+            menu_.Update(mouse_pos_, mouse_clicked_this_frame_);
+            break;
+    }
     mouse_clicked_this_frame_ = false;
 
     // Switch to play state/exit when appropriate
@@ -331,8 +338,16 @@ void Engine::DrawMenu() {
     // Background
     sf::Transform bg_transform = backgrounds_.Current().GetTransform();
     window_.draw(backgrounds_.Current().GetTexture(), bg_transform.translate(0, window_.getSize().y / 2 + 1));
-    // Menu
-    window_.draw(menu_.GetSprite());
+    // Draw menu or options
+    switch(menu_.GetState()) {
+        case MenuState::options:
+            window_.draw(menu_.GetOptionsSprite());
+            break;
+        default:
+            window_.draw(menu_.GetSprite());
+            break;
+    }
+
     window_.display();
 }
 
