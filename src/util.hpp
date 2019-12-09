@@ -42,6 +42,9 @@ sf::Text CreateCenteredText(sf::String string, sf::Vector2f pos, unsigned size, 
 // Center text to a ppint
 void CenterText(sf::Text& t, sf::Vector2f center);
 
+// Create a text to a certain position
+sf::Text CreatePositionedText(sf::String string, float x, float y, unsigned size, sf::Color color);
+
 // Vector2u to Vector2f
 sf::Vector2f ToFloatVec(const sf::Vector2u& v);
 

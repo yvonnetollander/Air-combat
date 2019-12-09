@@ -1,5 +1,6 @@
 #include "HUD.hpp"
 #include "globals.hpp"
+#include "util.hpp"
 #include <iostream>
 #include <string>
 
@@ -7,25 +8,10 @@
 HUD::HUD() {
     transform_ = sf::Transform().translate(0, 2000);
 
-    text_[0].setFont(AirCombatFonts::roboto_regular);
-    text_[0].setFillColor(sf::Color::White);
-    text_[0].setPosition(20,5);
-    text_[0].setCharacterSize(18);
-
-    text_[1].setFont(AirCombatFonts::roboto_regular);
-    text_[1].setFillColor(sf::Color::White);
-    text_[1].setPosition(300,5);
-    text_[1].setCharacterSize(18);
-
-    text_[2].setFont(AirCombatFonts::roboto_regular);
-    text_[2].setFillColor(sf::Color::White);
-    text_[2].setPosition(20, 30);
-    text_[2].setCharacterSize(18);
-
-    text_[3].setFont(AirCombatFonts::roboto_regular);
-    text_[3].setFillColor(sf::Color::White);
-    text_[3].setPosition(300, 30);
-    text_[3].setCharacterSize(18);
+    text_[0] = CreatePositionedText("", 20, 5, 18, sf::Color::White);
+    text_[1] = CreatePositionedText("", 300, 5, 18, sf::Color::White);
+    text_[2] = CreatePositionedText("", 20, 30, 18, sf::Color::White);
+    text_[3] = CreatePositionedText("", 300, 30, 18, sf::Color::White);
 
     background_.setFillColor(sf::Color(25, 0, 50));
     background_.setOrigin(0,0);

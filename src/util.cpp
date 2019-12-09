@@ -74,6 +74,13 @@ void CenterText(sf::Text& t, sf::Vector2f center) {
     t.setPosition(center);
 }
 
+sf::Text CreatePositionedText(sf::String string, float x, float y, unsigned size, sf::Color color) {
+    sf::Text t(string, AirCombatFonts::roboto_regular, size);
+    t.setPosition(x, y);
+    t.setFillColor(color);
+    return t;
+}
+
 sf::Vector2f ToFloatVec(const sf::Vector2u& v) {
     return sf::Vector2f(float(v.x), float(v.y));
 }
