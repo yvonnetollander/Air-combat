@@ -117,7 +117,8 @@ void Engine::AddInfantry(int num) {
     // Add given number of infantry soldiers in x-axis range 0 - 200
     for (int i = 0; i < num; i++) {
         // TODO: Change correct image
-        Infantry *infantry = new Infantry(sf::Vector2f(randFloat() * 200.f, 0.0f), ROOTDIR + "/res/soldier.png" , 0.0f, false, 10 + randFloat() * 20, 250, 0, world_.GetWidth(), 100);
+        int world_width = world_.GetWidth();
+        Infantry *infantry = new Infantry(sf::Vector2f(world_width - randFloat() * world_width / 2, 0.0f), ROOTDIR + "/res/soldier.png" , 0.0f, false, 10 + randFloat() * 20, 250, 0, world_width, 100);
         AddEnemy(infantry);
     }
 }
