@@ -18,6 +18,8 @@ public:
     void UpdateOptions(sf::Vector2i mouse, bool clicked);
     // Resize to a window
     void Resize(unsigned x, unsigned y);
+    // Set Menustate parameter state_ to index
+    void SetStateIndex();
     MenuState GetState();
     sf::Sprite GetSprite();
     sf::Sprite GetOptionsSprite();
