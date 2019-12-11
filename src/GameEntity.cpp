@@ -40,6 +40,10 @@ void GameEntity::setPos(const sf::Vector2f& p) {
     pos_ = p;
 }
 
+void GameEntity::setPos(int x, int y) {
+    pos_ = sf::Vector2f(x, y);
+}
+
 const bool GameEntity::isDead() const {
     return dead_;
 }

@@ -4,6 +4,7 @@
 #include "globals.hpp"
 #include "Background.hpp"
 #include "Projectile.hpp"
+#include "World.hpp"
 
 Engine::Engine() : state_(GameState::menu), mouse_clicked_this_frame_(false) {
     // Initialize window to 0.7 x screen height
@@ -12,26 +13,19 @@ Engine::Engine() : state_(GameState::menu), mouse_clicked_this_frame_(false) {
     video.width = video.height * target_aspect_ratio_;
     window_.create(video, "Air Combat Game");
 
-    // Set up a simple ground terrain
-    // TODO: Move terrain generation to somewhere separate and improve
-    ground_.setSize(sf::Vector2f(1500, 170));
-    ground_.setFillColor(sf::Color(255, 204, 102));
-    ground_.setOutlineColor(sf::Color(204, 102, 0));
-    ground_.setOutlineThickness(10);
-    ground_.setOrigin(0,-10);
-
+    world_ = World(10000, 1000);
     // TODO: An actual game configuration
     Player p1 = { "Sakari", sf::Color(255, 10, 10) };
     config_ = { true, p1, p1 };
     menu_.Create(&config_, window_.getSize());
     outcome_.Create(window_.getSize());
 
-    AddPlayerPlane(new PlayerPlane(sf::Vector2f(200.f, -200.f), 0.0f, false, 100, 0.65f));
+    AddPlayerPlane(new PlayerPlane(sf::Vector2f(200.f, -600.f), 0.0f, false, 5000, 0.65f));
 
     // TODO: Fix the enemy plane image so that it doesn't need scaling.
-    Plane* plane = new Plane(sf::Vector2f(1000.f, 0.0f), sf::Vector2f(100.f, 100.f), ROOTDIR + "/res/enemy_plane_orange.png", 0.0f, false, 100, 0.0f, 100);
+    Plane* plane = new Plane(sf::Vector2f(1000.f, -200.0f), sf::Vector2f(100.f, 100.f), ROOTDIR + "/res/enemy_plane_orange.png", 0.0f, false, 100, 0.0f, 100);
     plane->SetScale(sf::Vector2f(0.15f, 0.15f));
-    AddEnemy(plane);
+    AddEnemyPlane(plane);
     
     // Add several infantry soldiers
     AddInfantry(10);
@@ -104,16 +98,26 @@ void Engine::AddStatic(GameEntity* entity) {
     static_entities_.push_back(entity);
 }
 
+void Engine::AddPlane(Plane* plane) {
+    planes_.push_back(plane);
+}
+
+void Engine::AddEnemyPlane(Plane* plane) {
+    AddPlane(plane);
+    AddEnemy(plane);
+}
+
 void Engine::AddPlayerPlane(PlayerPlane* entity) {
     player_ = entity;
     AddMoving(entity);
+    AddPlane(entity);
 }
 
 void Engine::AddInfantry(int num) {
     // Add given number of infantry soldiers in x-axis range 0 - 200
     for (int i = 0; i < num; i++) {
         // TODO: Change correct image
-        Infantry *infantry = new Infantry(sf::Vector2f(randFloat() * 200.f, 0.0f), ROOTDIR + "/res/plane007.png" , 0.0f, false, 10 + randFloat() * 20, 250, 100);
+        Infantry *infantry = new Infantry(sf::Vector2f(randFloat() * 200.f, 0.0f), ROOTDIR + "/res/soldier.png" , 0.0f, false, 10 + randFloat() * 20, 250, 0, world_.GetWidth(), 100);
         AddEnemy(infantry);
     }
 }
@@ -170,8 +174,6 @@ void Engine::Input(sf::Event& event) {
                     case sf::Keyboard::Key::D:
                         keys_pressed_.d = true;
                         break;
-                    case sf::Keyboard::Key::P:
-                        std::cout << "Left: " << keys_pressed_.left << "Right: " << keys_pressed_.right << "Up: " << keys_pressed_.up << "Down: " << keys_pressed_.down << std::endl;
                     default:
                         break;
                 }
@@ -249,13 +251,15 @@ void Engine::UpdateGame(float dt) {
     hud_.UpdateValues(player_->GetHP(), enemy_count_, player_->GetAmmoLeft());
 
     CheckProjectileHits();
+    CheckGroundHits();
     RemoveDeadEnemies();
+    CheckBorders();
     
     if (enemy_count_ == 0) {
         state_ = GameState::outcome;
         outcome_.SetState(true);
     }
-    else if (player_->GetHP() == 0) {
+    else if (player_->isDead()) {
         state_ = GameState::outcome;
         outcome_.SetState(false);
     }
@@ -266,7 +270,7 @@ void Engine::DrawGame() {
     // Background
     window_.draw(backgrounds_.Current().GetTexture(), backgrounds_.Current().GetTransform());
     // Terrain
-    window_.draw(ground_);
+    window_.draw(world_.GetGround());
     // Entities
     for(auto& entity : static_entities_)
         window_.draw(entity->getSprite(), entity->getTransform());
@@ -389,6 +393,33 @@ void Engine::CheckProjectileHits() {
         }
     }
 
+}
+
+// Destroy planes that hit the ground;
+void Engine::CheckGroundHits() {
+    for (auto plane : planes_ ) {
+        int plane_y = plane->getPos().y;
+        if (plane_y > 0) {
+            plane->kill();
+        }
+    }
+}
+
+// Prevent units from flying out of the map
+void Engine::CheckBorders() {
+    for (auto plane : planes_) {
+        const sf::Vector2f& pos = plane->getPos();
+        int x = pos.x;
+        int y = pos.y;
+        if (x < 0) {
+            plane->setPos(0, y);
+        } else if (pos.x > world_.GetWidth()) {
+            plane->setPos(world_.GetWidth(), y);
+        }
+        if (y < -world_.GetHeight()) {
+            plane->setPos(x, -world_.GetHeight());
+        }
+    }
 }
 
 void Engine::RemoveDeadEnemies() {

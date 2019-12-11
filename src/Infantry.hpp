@@ -7,7 +7,7 @@
 class Infantry : public Troop {
 public:
     Infantry();
-    Infantry(const sf::Vector2f& p, const std::string spritepath, const float r, const bool d, const unsigned hp, const float radius, unsigned ammo_left);
+    Infantry(const sf::Vector2f& p, const std::string spritepath, const float r, const bool d, const unsigned hp, const float radius, const int min_x, const int max_x, unsigned ammo_left);
     virtual ~Infantry() {}
     virtual Projectile* Act(float dt, const sf::Vector2f& player_pos, const sf::Vector2f& player_velocity);
 private:
@@ -18,6 +18,8 @@ private:
     // Idle timer between movements
     float idle_;
     float wanderRadius_;
+    int min_x_;
+    int max_x_;
     // Handle shooting
     float machine_gun_cooldown_ = 0.2f;
     float machine_gun_cooldown_left_ = 0.f;

@@ -17,7 +17,9 @@ public:
     virtual Projectile* Act(float dt);
     void Move(float dt);
     const sf::Vector2f getVelocity() const;
+    void FlipX();
 protected:
     sf::Vector2f velocity_;
+    int x_multiplier_;
 };
 

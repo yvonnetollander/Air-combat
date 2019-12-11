@@ -12,6 +12,7 @@
 #include "HUD.hpp"
 #include "Infantry.hpp"
 #include "Outcome.hpp"
+#include "World.hpp"
 
 /* A simple class for the game engine.
 *  Contains all the game entities and handles the refresh, draw and input loops.
@@ -25,6 +26,8 @@ public:
     void AddMoving(MovingEntity* entity);
     void AddEnemy(Troop* entity);
     void AddStatic(GameEntity* entity);
+    void AddPlane(Plane* plane);
+    void AddEnemyPlane(Plane* plane);
     void AddPlayerPlane(PlayerPlane* entity);
     void AddProjectile(Projectile* entity);
 
@@ -33,7 +36,7 @@ private:
     Config config_;
     const float target_aspect_ratio_ = 16.f / 9.f;
     sf::RenderWindow window_;
-    sf::RectangleShape ground_;
+    World world_;
     sf::View camera_;
     HUD hud_;
     sf::RenderTexture background_;
@@ -41,6 +44,7 @@ private:
     std::vector<MovingEntity*> moving_entities_;
     std::vector<Troop*> enemies_;
     std::vector<Projectile*> projectiles_;
+    std::vector<Plane*> planes_;
     PlayerPlane* player_;
 
     Keys keys_pressed_;
@@ -60,6 +64,9 @@ private:
 
     void CheckProjectileHits();
     void RemoveDeadEnemies();
+    
+    void CheckGroundHits();
+    void CheckBorders();
 
     // In-game logic and drawing
     void UpdateGame(float dt);
