@@ -281,14 +281,23 @@ void Engine::UpdateGame(float dt) {
     CheckGroundHits();
     RemoveDeadEnemies();
     CheckBorders();
-    
+
+    // End the game if the player has killed all enemies and won the game
     if (enemy_count_ == 0) {
         state_ = GameState::outcome;
-        outcome_.SetState(true);
+        outcome_.SetState(true, "Score: " + std::to_string(player_->GetHP() * player_->GetAmmoLeft()));
     }
+    // End the game if the player has died
     else if (player_->isDead()) {
         state_ = GameState::outcome;
-        outcome_.SetState(false);
+        // The player died because the plane hit the ground
+        if (player_->GetHP() > 0) {
+            outcome_.SetState(false, "The plane hit the ground");
+        }
+        // Enemies killed the player
+        else {
+            outcome_.SetState(false, "Score: 0");
+        }
     }
 }
 

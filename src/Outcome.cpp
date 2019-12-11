@@ -3,10 +3,12 @@
 
 /* ****** Outcome ****** */
 Outcome::Outcome() : menuState_(MenuState::none) {
-    menuButton_ = new InteractiveButton("Back to menu", sf::Vector2f(350, 80), sf::Vector2f(0.5f, 0.4f), &menuState_, MenuState::index);
+    menuButton_ = new InteractiveButton("Back to menu", sf::Vector2f(350, 80), sf::Vector2f(0.5f, 0.4f), &menuState_, MenuState::index, sf::Vector2f(0, 200));
 }
 
-Outcome::~Outcome() { }
+Outcome::~Outcome() { 
+    delete menuButton_;
+}
 
 void Outcome::Create(sf::Vector2u window_size) {
     screen_size_ = sf::Vector2u(window_size.x, window_size.y);
@@ -15,16 +17,18 @@ void Outcome::Create(sf::Vector2u window_size) {
 
 void Outcome::Initialize() {
     menuState_ = MenuState::none;
+    message_ = "";
 }
 
-void Outcome::SetState(bool outcome) {
+void Outcome::SetState(bool outcome, std::string message) {
     state_ = outcome;
     if (state_) {
         title_ = "You won";
     }
     else {
-        title_ = "You lost";
+        title_ = "Game over";
     }
+    message_ = message;
 }
 
 void Outcome::Resize(unsigned x, unsigned y) {
@@ -47,6 +51,9 @@ sf::Sprite Outcome::GetSprite() {
     // Title text
     auto title = CreateCenteredText(title_, sf::Vector2f(0.5f * float(screen_size_.x), 0.25f * float(screen_size_.y)), 60, sf::Color::White);
     canvas_.draw(title);
+    // Message text contains information how the game ended
+    auto text = CreateCenteredText(message_, sf::Vector2f(0.5f * float(screen_size_.x), 0.4f * float(screen_size_.y)), 24, sf::Color::White);
+    canvas_.draw(text);
 
     // Back to menu button
     canvas_.draw(menuButton_->getSprite(screen_size_));
