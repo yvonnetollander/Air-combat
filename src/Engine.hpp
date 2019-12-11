@@ -27,7 +27,8 @@ public:
     void AddStatic(GameEntity* entity);
     void AddPlayerPlane(PlayerPlane* entity);
     void AddProjectile(Projectile* entity);
-
+    void ClearEntities();
+    void InitializeGame();
 private:
     GameState state_;
     Config config_;

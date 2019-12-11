@@ -43,6 +43,10 @@ MenuState Menu::GetState() {
     return state_;
 }
 
+void Menu::SetStateIndex() {
+    state_ = MenuState::index;
+}
+
 sf::Sprite Menu::GetSprite() {
     canvas_.clear(sf::Color::Transparent);
 

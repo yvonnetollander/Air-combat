@@ -26,18 +26,10 @@ Engine::Engine() : state_(GameState::menu), mouse_clicked_this_frame_(false) {
     menu_.Create(&config_, window_.getSize());
     outcome_.Create(window_.getSize());
 
-    AddPlayerPlane(new PlayerPlane(sf::Vector2f(200.f, -200.f), 0.0f, false, 100, 0.65f));
-
-    // TODO: Fix the enemy plane image so that it doesn't need scaling.
-    Plane* plane = new Plane(sf::Vector2f(1000.f, 0.0f), sf::Vector2f(100.f, 100.f), ROOTDIR + "/res/enemy_plane_orange.png", 0.0f, false, 100, 0.0f, 100);
-    plane->SetScale(sf::Vector2f(0.15f, 0.15f));
-    AddEnemy(plane);
-    
-    // Add several infantry soldiers
-    AddInfantry(10);
-
     hud_.Create(sf::Vector2f(window_.getSize().x, window_.getSize().y));
-    hud_.InitializeValues(player_->GetHP(), enemy_count_, player_->GetAmmoLeft(), "Machine Gun");
+
+    // Add player and enemies
+    InitializeGame();
 
     // Center camera and set to match window
     CenterCamera();
@@ -56,6 +48,22 @@ Engine::~Engine() {
         delete entity;
     for (auto entity : enemies_)
         delete entity;
+}
+
+void Engine::ClearEntities() {
+    for (auto entity : moving_entities_)
+        delete entity;
+    moving_entities_.clear();
+    for (auto entity : static_entities_)
+        delete entity;
+    static_entities_.clear();
+    for (auto entity : projectiles_)
+        delete entity;
+    projectiles_.clear();
+    for (auto entity : enemies_)
+        delete entity;
+    enemies_.clear();
+    enemy_count_ = 0;
 }
 
 void Engine::Start() {
@@ -89,6 +97,24 @@ void Engine::Start() {
                 break;
         }
     }
+}
+
+void Engine::InitializeGame() {
+    // Clear previous game
+    ClearEntities();
+
+    // Add player
+    AddPlayerPlane(new PlayerPlane(sf::Vector2f(200.f, -200.f), 0.0f, false, 100, 0.65f));
+
+    // TODO: Fix the enemy plane image so that it doesn't need scaling.
+    Plane* plane = new Plane(sf::Vector2f(1000.f, 0.0f), sf::Vector2f(100.f, 100.f), ROOTDIR + "/res/enemy_plane_orange.png", 0.0f, false, 100, 0.0f, 100);
+    plane->SetScale(sf::Vector2f(0.15f, 0.15f));
+    AddEnemy(plane);
+    
+    // Add several infantry soldiers
+    AddInfantry(10);
+
+    hud_.InitializeValues(player_->GetHP(), enemy_count_, player_->GetAmmoLeft(), "Machine Gun");
 }
 
 void Engine::AddMoving(MovingEntity* entity) {
@@ -317,6 +343,21 @@ void Engine::UpdateOutcome(float dt) {
     // Refresh camera view
     CenterCamera();
     window_.setView(camera_);
+
+    outcome_.Update(mouse_pos_, mouse_clicked_this_frame_);
+    mouse_clicked_this_frame_ = false;
+
+    // Switch back to menu from outcome page
+    switch(outcome_.GetState()) {
+        case MenuState::index:
+            state_ = GameState::menu;
+            menu_.SetStateIndex();
+            outcome_.Initialize();
+            InitializeGame();
+            break;
+        default:
+            break;
+    }
 
     // Update background state 
     backgrounds_.Current().Recenter(camera_.getCenter());
