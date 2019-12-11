@@ -401,6 +401,9 @@ void Engine::CheckBorders() {
         } else if (pos.x > world_.GetWidth()) {
             plane->setPos(world_.GetWidth(), y);
         }
+        if (y < -world_.GetHeight()) {
+            plane->setPos(x, -world_.GetHeight());
+        }
     }
 }
 
