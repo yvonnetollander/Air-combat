@@ -8,8 +8,8 @@
 Infantry::Infantry()
     : Troop(), targetPos_(), idle_(0), wanderRadius_(0) { PickTarget(); }
 
-Infantry::Infantry(const sf::Vector2f& p, const std::string spritepath, const float r, const bool d, const unsigned hp, const float radius, unsigned ammo_left)
-    : Troop(p, sf::Vector2f(5.0f, 0.0f), spritepath, r, d, hp, ammo_left), targetPos_(), idle_(0), wanderRadius_(radius) { PickTarget(); }
+Infantry::Infantry(const sf::Vector2f& p, const std::string spritepath, const float r, const bool d, const unsigned hp, const float radius, const int min_x, const int max_x, unsigned ammo_left)
+    : Troop(p, sf::Vector2f(5.0f, 0.0f), spritepath, r, d, hp, ammo_left), targetPos_(), idle_(0), wanderRadius_(radius), min_x_(min_x), max_x_(max_x) { PickTarget(); }
 
 Projectile* Infantry::Act(float dt, const sf::Vector2f& player_pos, const sf::Vector2f& player_velocity) {
     if (!dead_) {
@@ -42,8 +42,11 @@ Projectile* Infantry::Act(float dt, const sf::Vector2f& player_pos, const sf::Ve
 
 void Infantry::PickTarget() {
     float random = randFloat();
-    // Currently only moves on the x-axis
-    targetPos_ = sf::Vector2f(2.0f * (random - 0.5f) * wanderRadius_, 0);
+    // Infantry move on the x-axis only
+    int new_x = 2.0f * (random - 0.5f) * wanderRadius_;
+    if (new_x < min_x_) { new_x = min_x_; }
+    else if (new_x > max_x_) { new_x = max_x_; }
+    targetPos_ = sf::Vector2f(new_x, 0);
 }
 
 Projectile* Infantry::FireMachineGun(const sf::Vector2f& player_pos) {
