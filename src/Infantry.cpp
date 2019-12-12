@@ -43,7 +43,8 @@ Projectile* Infantry::Act(float dt, const sf::Vector2f& player_pos, const sf::Ve
 void Infantry::PickTarget() {
     float random = randFloat();
     // Infantry move on the x-axis only
-    int new_x = 20.0f * (random - 0.5f) * wanderRadius_;
+    int x_diff = 20.0f * (random - 0.5f) * wanderRadius_;
+    int new_x = getPos().x - x_diff;
     if (new_x < min_x_) { new_x = min_x_; }
     else if (new_x > max_x_) { new_x = max_x_; }
     if ( (new_x < pos_.x && x_multiplier_ == 1) || (new_x > pos_.x && x_multiplier_ == -1) ) FlipX();
@@ -54,8 +55,9 @@ Projectile* Infantry::FireMachineGun(const sf::Vector2f& player_pos) {
     if (machine_gun_cooldown_left_ <= 0.f) {
         float damage_radius = 10.f;
         // Set the bullet go towards the player
-        sf::Vector2f bullet_velocity = lengthen(player_pos, 1000);
-        sf::Vector2f bullet_pos = pos_ + (normalize(velocity_) * 10.0f);
+        sf::Vector2f direction = normalize(player_pos - getPos());
+        sf::Vector2f bullet_velocity = lengthen(direction, 1000);
+        sf::Vector2f bullet_pos = pos_ + (direction * 10.0f);
         Projectile* projectiles = new Projectile(bullet_pos, bullet_velocity, ROOTDIR + "/res/bullet_small.png", 0.f, false, damage_radius, 10, team_);
         machine_gun_cooldown_left_ = machine_gun_cooldown_;
         ammo_left_ -= 1;
