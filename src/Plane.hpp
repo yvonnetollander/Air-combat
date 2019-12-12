@@ -13,7 +13,8 @@ public:
     virtual Projectile* Act(float dt, const sf::Vector2f& player_pos, const sf::Vector2f& player_velocity);
     void ToggleThrust();
     void Flip();
-
+    // Check if the plane is able to land on the ground or  being killed as hitting to the ground
+    void Landing(int x_ground);
 protected:
     bool thrust_;
     bool inverted_;
