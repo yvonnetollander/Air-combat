@@ -449,10 +449,7 @@ void Engine::CheckProjectileHits() {
 // Destroy planes that hit the ground;
 void Engine::CheckGroundHits() {
     for (auto plane : planes_ ) {
-        int plane_y = plane->getPos().y;
-        if (plane_y > 0) {
-            plane->kill();
-        }
+        plane->Landing(0);
     }
 }
 

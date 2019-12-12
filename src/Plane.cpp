@@ -51,6 +51,37 @@ Projectile* Plane::Act(float dt, const sf::Vector2f& player_pos, const sf::Vecto
     return nullptr;
 }
 
+void Plane::Landing(int x_ground) {
+    // Check if the plane hits the ground
+    if (getPos().y > x_ground) {
+        // If the plane is on the ground and taking off 
+        // In other words the plane is going going upwards = the angle is between 180 and 360 degrees 
+        // Do nothing
+        if(getVectorAngle(getVelocity()) < 360 && getVectorAngle(getVelocity()) > 180) {
+
+        }
+        // If the plane is moving to the right, right side up
+        // and hits the ground in smaller than 55 degree angle 
+        // Set the plane move along the ground
+        else if(!inverted_ && getVectorAngle(getVelocity()) >= 0 && getVectorAngle(getVelocity()) < 55) {
+            velocity_ = sf::Vector2f(velocity_.x, 0.0f);
+            rotation_ = 0;
+        }
+        // If the plane is moving to the left, right side up
+        // and hits the ground in smaller than 55 degree angle
+        // Set the plane move along the ground
+        else if(inverted_ && getVectorAngle(getVelocity()) <= 180 && getVectorAngle(getVelocity()) > 125) {
+            velocity_ = sf::Vector2f(velocity_.x, 0.0f);
+            rotation_ = -180;
+        }
+        // Otherwise kill the player because it hits the ground
+        else {
+            kill();
+        }
+        
+    }
+}
+
 void Plane::ShootMachineGun() {
     machine_gun_fired_ = true;
 }
