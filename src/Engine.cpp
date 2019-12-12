@@ -20,10 +20,10 @@ Engine::Engine() : state_(GameState::menu), mouse_clicked_this_frame_(false) {
     menu_.Create(&config_, window_.getSize());
     outcome_.Create(window_.getSize());
 
-    AddPlayerPlane(new PlayerPlane(sf::Vector2f(200.f, -600.f), 0.0f, false, 5000, 0.65f));
+    AddPlayerPlane(new PlayerPlane(sf::Vector2f(200.f, -600.f), 0.0f, false, 5000, 0.65f, 1));
 
     // TODO: Fix the enemy plane image so that it doesn't need scaling.
-    Plane* plane = new Plane(sf::Vector2f(1000.f, -200.0f), sf::Vector2f(100.f, 100.f), ROOTDIR + "/res/enemy_plane_orange.png", 0.0f, false, 100, 0.0f, 100);
+    Plane* plane = new Plane(sf::Vector2f(1000.f, -200.0f), sf::Vector2f(100.f, 100.f), ROOTDIR + "/res/enemy_plane_orange.png", 0.0f, false, 100, 0.0f, 100, 2);
     plane->SetScale(sf::Vector2f(0.15f, 0.15f));
     AddEnemyPlane(plane);
     
@@ -118,7 +118,7 @@ void Engine::AddInfantry(int num) {
     for (int i = 0; i < num; i++) {
         // TODO: Change correct image
         int world_width = world_.GetWidth();
-        Infantry *infantry = new Infantry(sf::Vector2f(world_width - randFloat() * world_width / 2, 0.0f), ROOTDIR + "/res/soldier.png" , 0.0f, false, 10 + randFloat() * 20, 250, 0, world_width, 100);
+        Infantry *infantry = new Infantry(sf::Vector2f(world_width - randFloat() * world_width / 2, 0.0f), ROOTDIR + "/res/soldier.png" , 0.0f, false, 10 + randFloat() * 20, 250, 0, world_width, 100, 2);
         AddEnemy(infantry);
     }
 }
@@ -369,13 +369,13 @@ void Engine::CheckProjectileHits() {
     for (auto p : projectiles_) {
         // Check if an enemy was hit by a projectile.
         for (auto enemy : enemies_) {
-            if (p->WasTroopHit(enemy->getPos())) {
+            if (p->GetTeam() != enemy->GetTeam() && p->WasTroopHit(enemy->getPos())) {
                 enemy->ReduceHP(p->GetDamage());
                 p->kill();
             }
         }
         // Check if the player was hit by a projectile.
-        if (p->WasTroopHit(player_->getPos())) {
+        if (p->GetTeam() != player_->GetTeam() && p->WasTroopHit(player_->getPos())) {
             player_->ReduceHP(p->GetDamage());
             p->kill();
         }

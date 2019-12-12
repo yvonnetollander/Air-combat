@@ -19,7 +19,7 @@ public:
     */
     Projectile();
     Projectile(const sf::Vector2f& p, const sf::Vector2f& v, const std::string spritepath, const float r, const bool d, const unsigned damage_radius, 
-        const unsigned damage);
+        const unsigned damage, int team);
     ~Projectile();
     
     virtual Projectile* Act(float dt);

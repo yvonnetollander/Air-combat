@@ -13,13 +13,14 @@ class MovingEntity : public GameEntity {
 public:
     MovingEntity();
     virtual ~MovingEntity() {}
-    MovingEntity(const sf::Vector2f& p, const sf::Vector2f& v, const std::string spritepath, const float r, const bool d);
+    MovingEntity(const sf::Vector2f& p, const sf::Vector2f& v, const std::string spritepath, const float r, const bool d, int team = 0);
     virtual Projectile* Act(float dt);
     void Move(float dt);
     const sf::Vector2f getVelocity() const;
     void FlipX();
+    int GetTeam() const;
 protected:
     sf::Vector2f velocity_;
     int x_multiplier_;
+    int team_;
 };
-

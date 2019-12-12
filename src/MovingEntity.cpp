@@ -3,8 +3,8 @@
 MovingEntity::MovingEntity()
     : GameEntity(), velocity_() { }
 
-MovingEntity::MovingEntity(const sf::Vector2f& p, const sf::Vector2f& v, const std::string spritepath, const float r, const bool d)
-    : GameEntity(p, spritepath, r, d), x_multiplier_(1) { velocity_ = v; }
+MovingEntity::MovingEntity(const sf::Vector2f& p, const sf::Vector2f& v, const std::string spritepath, const float r, const bool d, int team)
+    : GameEntity(p, spritepath, r, d), x_multiplier_(1), team_(team) { velocity_ = v; }
 
 Projectile* MovingEntity::Act(float dt) { 
     Move(dt);
@@ -22,4 +22,8 @@ const sf::Vector2f MovingEntity::getVelocity() const {
 void MovingEntity::FlipX() {
     x_multiplier_ = -x_multiplier_;
     SetScale(sf::Vector2f(1.f * x_multiplier_, 1.f));
+}
+
+int MovingEntity::GetTeam() const {
+    return team_;
 }

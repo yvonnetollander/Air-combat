@@ -8,8 +8,8 @@
 Infantry::Infantry()
     : Troop(), targetPos_(), idle_(0), wanderRadius_(0) { PickTarget(); }
 
-Infantry::Infantry(const sf::Vector2f& p, const std::string spritepath, const float r, const bool d, const unsigned hp, const float radius, const int min_x, const int max_x, unsigned ammo_left)
-    : Troop(p, sf::Vector2f(50.0f, 0.0f), spritepath, r, d, hp, ammo_left), targetPos_(), idle_(0), wanderRadius_(radius), min_x_(min_x), max_x_(max_x) { PickTarget(); }
+Infantry::Infantry(const sf::Vector2f& p, const std::string spritepath, const float r, const bool d, const unsigned hp, const float radius, const int min_x, const int max_x, unsigned ammo_left, int team)
+    : Troop(p, sf::Vector2f(50.0f, 0.0f), spritepath, r, d, hp, ammo_left, team), targetPos_(), idle_(0), wanderRadius_(radius), min_x_(min_x), max_x_(max_x) { PickTarget(); }
 
 Projectile* Infantry::Act(float dt, const sf::Vector2f& player_pos, const sf::Vector2f& player_velocity) {
     if (!dead_) {
@@ -56,7 +56,7 @@ Projectile* Infantry::FireMachineGun(const sf::Vector2f& player_pos) {
         // Set the bullet go towards the player
         sf::Vector2f bullet_velocity = lengthen(player_pos, 1000);
         sf::Vector2f bullet_pos = pos_ + (normalize(velocity_) * 10.0f);
-        Projectile* projectiles = new Projectile(bullet_pos, bullet_velocity, ROOTDIR + "/res/bullet_small.png", 0.f, false, damage_radius, 10);
+        Projectile* projectiles = new Projectile(bullet_pos, bullet_velocity, ROOTDIR + "/res/bullet_small.png", 0.f, false, damage_radius, 10, team_);
         machine_gun_cooldown_left_ = machine_gun_cooldown_;
         ammo_left_ -= 1;
         return projectiles;

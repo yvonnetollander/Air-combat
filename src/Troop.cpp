@@ -2,8 +2,8 @@
 
 Troop::Troop() {}
 
-Troop::Troop(const sf::Vector2f& p, const sf::Vector2f& v, const std::string spritepath, const float r, const bool d, const unsigned hp, unsigned ammo_left) : 
-    MovingEntity(p, v, spritepath, r, d), hp_(hp), ammo_left_(ammo_left) { }
+Troop::Troop(const sf::Vector2f& p, const sf::Vector2f& v, const std::string spritepath, const float r, const bool d, const unsigned hp, unsigned ammo_left, int team) : 
+    MovingEntity(p, v, spritepath, r, d, team), hp_(hp), ammo_left_(ammo_left) { }
 
 unsigned Troop::GetAmmoLeft() {
     return ammo_left_;

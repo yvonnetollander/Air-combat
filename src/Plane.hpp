@@ -8,7 +8,7 @@
 class Plane : public Troop {
 public:
     virtual ~Plane();
-    Plane(const sf::Vector2f& p, const sf::Vector2f& v, const std::string spritepath, const float r, const bool d, const unsigned hp, float drag, unsigned ammo_left);
+    Plane(const sf::Vector2f& p, const sf::Vector2f& v, const std::string spritepath, const float r, const bool d, const unsigned hp, float drag, unsigned ammo_left, int team);
 
     virtual Projectile* Act(float dt, const sf::Vector2f& player_pos, const sf::Vector2f& player_velocity);
     void ToggleThrust();
@@ -33,7 +33,7 @@ protected:
 /* PlayerPlane is user controllable plane and takes same parameters as Plane */
 class PlayerPlane : public Plane {
 public:
-    PlayerPlane(const sf::Vector2f& p, const float r, const bool d, const unsigned hp, float drag);
+    PlayerPlane(const sf::Vector2f& p, const float r, const bool d, const unsigned hp, float drag, int team);
     // Create custom behaviour for the player's plane by overriding the default logic in the Plane class's act method.
     virtual Projectile* Act(float dt, Keys keys_pressed);
 private:

@@ -13,8 +13,8 @@ Projectile::Projectile()
     }
 
 Projectile::Projectile(const sf::Vector2f& p, const sf::Vector2f& v, const std::string spritepath, const float r, const bool d, const unsigned damage_radius, 
-    const unsigned damage)
-    : MovingEntity(p, v, spritepath, r, d), damage_radius_(damage_radius), damage_(damage) {}
+    const unsigned damage, int team)
+    : MovingEntity(p, v, spritepath, r, d, team), damage_radius_(damage_radius), damage_(damage) {}
 
 Projectile* Projectile::Act(float dt) {
     setPos(getPos() + (velocity_ * dt));

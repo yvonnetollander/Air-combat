@@ -9,7 +9,7 @@
 
 class Troop : public MovingEntity {
 public:
-    Troop(const sf::Vector2f& p, const sf::Vector2f& v, const std::string spritepath, const float r, const bool d, const unsigned hp, unsigned ammo_left);
+    Troop(const sf::Vector2f& p, const sf::Vector2f& v, const std::string spritepath, const float r, const bool d, const unsigned hp, unsigned ammo_left, int team);
     Troop();
     virtual ~Troop() {}
 

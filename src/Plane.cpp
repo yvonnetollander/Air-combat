@@ -9,8 +9,8 @@
 /* ****** Plane ****** */
 Plane::~Plane() { }
 
-Plane::Plane(const sf::Vector2f& p, const sf::Vector2f& v, const std::string spritepath, const float r, const bool d, const unsigned hp, float drag, unsigned ammo_left)
-    : Troop(p, v, spritepath, r, d, hp, ammo_left), thrust_(false), inverted_(false), drag_(drag) {}
+Plane::Plane(const sf::Vector2f& p, const sf::Vector2f& v, const std::string spritepath, const float r, const bool d, const unsigned hp, float drag, unsigned ammo_left, int team)
+    : Troop(p, v, spritepath, r, d, hp, ammo_left, team), thrust_(false), inverted_(false), drag_(drag) {}
 
 Projectile* Plane::Act(float dt, const sf::Vector2f& player_pos, const sf::Vector2f& player_velocity) {
     /*TODO: Change the act method so that the enemy planes only chase the player sometimes and after chasing they continue to fly 
@@ -60,7 +60,7 @@ Projectile* Plane::FireMachineGun() {
         float damage_radius = 100.f;
         sf::Vector2f bullet_velocity = lengthen(velocity_, 1000);
         sf::Vector2f bullet_pos = pos_ + (normalize(velocity_) * 100.0f);
-        Projectile* p = new Projectile(bullet_pos, bullet_velocity, ROOTDIR + "/res/bullet_small.png", 0.f, false, damage_radius, 10);
+        Projectile* p = new Projectile(bullet_pos, bullet_velocity, ROOTDIR + "/res/bullet_small.png", 0.f, false, damage_radius, 10, team_);
         machine_gun_fired_ = false;
         machine_gun_cooldown_left_ = machine_gun_cooldown_;
         ammo_left_ -= 1;
@@ -89,8 +89,8 @@ void Plane::Flip() {
 }
 
 /* ****** PlayerPlane ****** */
-PlayerPlane::PlayerPlane(const sf::Vector2f& p, const float r, const bool d, const unsigned hp, float drag) 
-    : Plane(p, sf::Vector2f(20, 0), ROOTDIR + "/res/biplane.png", r, d, hp, drag, 100) {}
+PlayerPlane::PlayerPlane(const sf::Vector2f& p, const float r, const bool d, const unsigned hp, float drag, int team) 
+    : Plane(p, sf::Vector2f(20, 0), ROOTDIR + "/res/biplane.png", r, d, hp, drag, 100, team) {}
 
 // Create custom behaviour for the player's plane by overriding the default logic in the Plane class's act method.
 Projectile* PlayerPlane::Act(float dt, Keys keys_pressed) {
