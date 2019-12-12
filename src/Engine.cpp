@@ -98,13 +98,11 @@ void Engine::InitializeGame() {
     ClearEntities();
 
     // Add player
-    AddPlayerPlane(new PlayerPlane(sf::Vector2f(200.f, -600.f), 0.0f, false, 5000, 0.65f, 1));
-
-    // TODO: Fix the enemy plane image so that it doesn't need scaling.
-    Plane* plane = new Plane(sf::Vector2f(1000.f, -200.0f), sf::Vector2f(100.f, 100.f), ROOTDIR + "/res/enemy_plane_orange.png", 0.0f, false, 100, 0.0f, 100, 2);
-    plane->SetScale(sf::Vector2f(0.15f, 0.15f));
-    AddEnemyPlane(plane);
+    AddPlayerPlane(new PlayerPlane(sf::Vector2f(200.f, -600.f), 0.0f, false, 5000, 0.65f, 1, world_.GetWidth(), -world_.GetHeight()));
     
+    // Generate enemy planes.
+    GeneratePlanes(3);
+
     // Add several infantry soldiers
     AddInfantry(10);
 
@@ -146,6 +144,17 @@ void Engine::AddInfantry(int num) {
         int world_width = world_.GetWidth();
         Infantry *infantry = new Infantry(sf::Vector2f(world_width - randFloat() * world_width / 2, 0.0f), ROOTDIR + "/res/soldier.png" , 0.0f, false, 10 + randFloat() * 20, 250, 0, world_width, 100, 2);
         AddEnemy(infantry);
+    }
+}
+
+void Engine::GeneratePlanes(int num) {
+    for (int i = 0; i < num; i++) {
+        // x in [0, world_.GetWidth()], y in [-world_.GetHeight(), -0.2 * world_.GetHeight()]
+        sf::Vector2f random_pos(randFloat() * world_.GetWidth(), randFloat() * 0.8 * world_.GetHeight() - world_.GetHeight());
+
+        Plane* plane = new Plane(random_pos, sf::Vector2f(150.f, 0.f), ROOTDIR + "/res/enemy_plane_orange.png", 0.0f, false, 100, 0.0f, 100, 2, world_.GetWidth(), -world_.GetHeight());
+        plane->SetScale(sf::Vector2f(0.15f, 0.15f));
+        AddEnemyPlane(plane);
     }
 }
 
@@ -443,7 +452,6 @@ void Engine::CheckProjectileHits() {
             it++;
         }
     }
-
 }
 
 // Destroy planes that hit the ground;

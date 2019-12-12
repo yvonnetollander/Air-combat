@@ -9,39 +9,71 @@
 /* ****** Plane ****** */
 Plane::~Plane() { }
 
-Plane::Plane(const sf::Vector2f& p, const sf::Vector2f& v, const std::string spritepath, const float r, const bool d, const unsigned hp, float drag, unsigned ammo_left, int team)
-    : Troop(p, v, spritepath, r, d, hp, ammo_left, team), thrust_(false), inverted_(false), drag_(drag) {}
+Plane::Plane(const sf::Vector2f& p, const sf::Vector2f& v, const std::string spritepath, const float r, const bool d, const unsigned hp, float drag, unsigned ammo_left, int team, int max_x, int min_y)
+    : Troop(p, v, spritepath, r, d, hp, ammo_left, team), thrust_(false), inverted_(false), drag_(drag), destination_(0.f, 0.f), max_x_(max_x), min_y_(min_y) {}
 
 Projectile* Plane::Act(float dt, const sf::Vector2f& player_pos, const sf::Vector2f& player_velocity) {
-    /*TODO: Change the act method so that the enemy planes only chase the player sometimes and after chasing they continue to fly 
-    according to some patterns. */
-
     if (!dead_) {
         UpdateCooldowns(dt);
 
         sf::Vector2f diff = player_pos - pos_;
         // Cosine of the angle between the <diff> and <velocity_> vectors.
         float cosine = dotProduct(diff, velocity_) / (len(diff) * len(velocity_));
-        int random = rand() % 500;
         // If the angle is small enough, try to shoot the player.
-        // <random> variable is used to avoid enemies from shooting the player continuously.
-        if (cosine > 0.9 && ammo_left_ > 0 && random == 0) {
+        if (cosine > 0.9 && ammo_left_ > 0) {
             ShootMachineGun();
         }
 
-        if (time_for_new_estimation_ <= 0.f) {
-            time_for_new_estimation_ = time_between_estimations_;
-
-            // Estimate where the player is after time <time_between_estimations_>. Change velocity to point to that direction.
-            sf::Vector2f player_new_pos = player_pos + player_velocity * time_between_estimations_;
-
-            sf::Vector2f pos_diff = player_new_pos - pos_;
-            sf::Vector2f new_velocity = len(velocity_) * normalize(pos_diff);
-            velocity_ = new_velocity;
-            rotation_ = getVectorAngle(new_velocity);
+        time_for_changing_behaviour -= dt;
+        if (time_for_changing_behaviour <= 0.f) {
+            time_for_changing_behaviour = 5.0f;
+            is_chasing_player_ = !is_chasing_player_;
         }
-        else {
-            time_for_new_estimation_ -= dt;
+
+        if (is_chasing_player_) {
+            if (time_for_new_estimation_ <= 0.f) {
+                time_for_new_estimation_ = time_between_estimations_;
+
+                // Estimate where the player is after time <time_between_estimations_>.
+                destination_ = player_pos + player_velocity * time_between_estimations_;
+            }
+            else {
+                time_for_new_estimation_ -= dt;
+                sf::Vector2f diff(destination_ - pos_);
+
+                float diff_angle = getVectorAngle(diff) - getVectorAngle(velocity_);
+                float turning_mult = 70.f;
+                if (diff_angle > 0) {
+                    // Rotate velocity to point in the direction of <destination_>.
+                    Rotate(dt * turning_mult);
+                    velocity_ = rotate(velocity_, dt * turning_mult * PI / 180.f);
+                }
+                else {
+                    Rotate(-dt * turning_mult);
+                    velocity_ = rotate(velocity_, -dt * turning_mult * PI / 180.f);
+                }
+            }
+        }
+        else {   // If not chasing the player ...
+            // If the behaviour was just changed during the current method call, get a new destination_.
+            if (time_for_changing_behaviour == 5.0f) {
+                // x in [0, world_.GetWidth()], y in [-world_.GetHeight(), -0.2 * world_.GetHeight()]
+                destination_ = sf::Vector2f(randFloat() * max_x_, abs(randFloat() * 0.8 * min_y_) + min_y_);
+            }
+            else {
+                sf::Vector2f diff(destination_ - pos_);
+                float diff_angle = getVectorAngle(diff) - getVectorAngle(velocity_);
+                float turning_mult = 70.f;
+                if (diff_angle > 0) {
+                    // Rotate velocity to point in the direction of <destination_>.
+                    Rotate(dt * turning_mult);
+                    velocity_ = rotate(velocity_, dt * turning_mult * PI / 180.f);
+                }
+                else {
+                    Rotate(-dt * turning_mult);
+                    velocity_ = rotate(velocity_, -dt * turning_mult * PI / 180.f);
+                }
+            }
         }
 
         Projectile* projectiles = Fire();
@@ -120,8 +152,8 @@ void Plane::Flip() {
 }
 
 /* ****** PlayerPlane ****** */
-PlayerPlane::PlayerPlane(const sf::Vector2f& p, const float r, const bool d, const unsigned hp, float drag, int team) 
-    : Plane(p, sf::Vector2f(20, 0), ROOTDIR + "/res/biplane.png", r, d, hp, drag, 100, team) {}
+PlayerPlane::PlayerPlane(const sf::Vector2f& p, const float r, const bool d, const unsigned hp, float drag, int team, int max_x, int min_y) 
+    : Plane(p, sf::Vector2f(20, 0), ROOTDIR + "/res/biplane.png", r, d, hp, drag, 100, team, max_x, min_y) {}
 
 // Create custom behaviour for the player's plane by overriding the default logic in the Plane class's act method.
 Projectile* PlayerPlane::Act(float dt, Keys keys_pressed) {
