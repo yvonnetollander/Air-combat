@@ -1,5 +1,5 @@
 # source files to compile
-SRC = main.cpp Engine.cpp GameEntity.cpp Infantry.cpp MovingEntity.cpp Plane.cpp Troop.cpp util.cpp Background.cpp Projectile.cpp Menu.cpp InteractiveButton.cpp globals.cpp HUD.cpp Outcome.cpp World.cpp
+SRC = main.cpp Engine.cpp GameEntity.cpp Infantry.cpp MovingEntity.cpp Plane.cpp Troop.cpp util.cpp Background.cpp Projectile.cpp Menu.cpp InteractiveButton.cpp globals.cpp HUD.cpp Outcome.cpp World.cpp Explosion.cpp
 
 # build/binary dir
 BUILD_DIR = ../build

@@ -42,6 +42,8 @@ Engine::~Engine() {
         delete entity;
     for (auto entity : enemies_)
         delete entity;
+    for (auto explosion : explosions_)
+        delete explosion;
 }
 
 void Engine::ClearEntities() {
@@ -58,6 +60,9 @@ void Engine::ClearEntities() {
         delete entity;
     enemies_.clear();
     enemy_count_ = 0;
+    for (auto explosion : explosions_)
+        delete explosion;
+    explosions_.clear();
 }
 
 void Engine::Start() {
@@ -142,7 +147,6 @@ void Engine::AddPlayerPlane(PlayerPlane* entity) {
 void Engine::AddInfantry(int num) {
     // Add given number of infantry soldiers in x-axis range 0 - 200
     for (int i = 0; i < num; i++) {
-        // TODO: Change correct image
         int world_width = world_.GetWidth();
         Infantry *infantry = new Infantry(sf::Vector2f(world_width - randFloat() * world_width / 2, 0.0f), ROOTDIR + "/res/soldier.png" , 0.0f, false, 10 + randFloat() * 20, 250, 0, world_width, 100, 2);
         AddEnemy(infantry);
@@ -151,6 +155,10 @@ void Engine::AddInfantry(int num) {
 
 void Engine::AddProjectile(Projectile* entity) {
     projectiles_.push_back(entity);
+}
+
+void Engine::AddExplosion(Explosion* explosion) {
+    explosions_.push_back(explosion);
 }
 
 void Engine::Input(sf::Event& event) {
@@ -274,6 +282,11 @@ void Engine::UpdateGame(float dt) {
         p->Act(dt);
     }
 
+    // Update explosions
+    for (auto e : explosions_) {
+        e->Act(dt);
+    }
+
     // Update HUD
     hud_.UpdateValues(player_->GetHP(), enemy_count_, player_->GetAmmoLeft());
 
@@ -316,6 +329,9 @@ void Engine::DrawGame() {
         window_.draw(troop->getSprite(), troop->getTransform());
     for(auto& entity : projectiles_)
         window_.draw(entity->getSprite(), entity->getTransform());
+    for (auto& explosion : explosions_) {
+        window_.draw(explosion->getSprite(), explosion->getTransform());
+    }
     // HUD
     camera_.setCenter(window_.getSize().x / 2, window_.getSize().y / 2 + 2000);
     window_.setView(camera_);
@@ -473,7 +489,35 @@ void Engine::CheckBorders() {
     }
 }
 
+void Engine::RemoveDeadPlanes() {
+    auto it = planes_.begin();
+    while (it != planes_.end()) {
+        if ((*it)->isDead()) {
+            Explosion* explosion = (*it)->Explode();
+            AddExplosion(explosion);
+            it = planes_.erase(it); // Only removing reference, the object is removed below
+        } else {
+            it++;
+        }
+
+    }
+}
+
+void Engine::RemoveDeadExplosions() {
+    auto it = explosions_.begin();
+    while (it != explosions_.end()) {
+        if ((*it)->isDead()) {
+            delete *it;
+            it = explosions_.erase(it);
+        } else {
+            it++;
+        }
+    }
+}
+
 void Engine::RemoveDeadEnemies() {
+    RemoveDeadPlanes();
+    RemoveDeadExplosions();
     auto it = enemies_.begin();
     while (it != enemies_.end()) {
         if ((*it)->isDead()) {

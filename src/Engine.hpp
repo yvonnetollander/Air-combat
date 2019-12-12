@@ -13,6 +13,7 @@
 #include "Infantry.hpp"
 #include "Outcome.hpp"
 #include "World.hpp"
+#include "Explosion.hpp"
 
 /* A simple class for the game engine.
 *  Contains all the game entities and handles the refresh, draw and input loops.
@@ -30,6 +31,7 @@ public:
     void AddEnemyPlane(Plane* plane);
     void AddPlayerPlane(PlayerPlane* entity);
     void AddProjectile(Projectile* entity);
+    void AddExplosion(Explosion* explosion);
     void ClearEntities();
     void InitializeGame();
 private:
@@ -46,6 +48,7 @@ private:
     std::vector<Troop*> enemies_;
     std::vector<Projectile*> projectiles_;
     std::vector<Plane*> planes_;
+    std::vector<Explosion*> explosions_;
     PlayerPlane* player_;
 
     Keys keys_pressed_;
@@ -65,6 +68,8 @@ private:
 
     void CheckProjectileHits();
     void RemoveDeadEnemies();
+    void RemoveDeadPlanes();
+    void RemoveDeadExplosions();
     
     void CheckGroundHits();
     void CheckBorders();

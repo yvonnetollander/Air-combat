@@ -2,6 +2,7 @@
 
 #include "Troop.hpp"
 #include "Projectile.hpp"
+#include "Explosion.hpp"
 
 /* Plane is a class that represents a troop. 
    Plane takes parameters position, velocity, spritepath, rotation , status (dead or alive), health points and drag */
@@ -13,6 +14,7 @@ public:
     virtual Projectile* Act(float dt, const sf::Vector2f& player_pos, const sf::Vector2f& player_velocity);
     void ToggleThrust();
     void Flip();
+    Explosion* Explode();
 
 protected:
     bool thrust_;
