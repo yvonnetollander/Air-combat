@@ -67,8 +67,9 @@ private:
 
     // Create number of infantry soldiers
     void AddInfantry(int num);
-    // Generate enemy planes.
+    // Generate enemy planes / trees
     void GeneratePlanes(int num);
+    void GenerateTrees(int num);
 
     void CheckProjectileHits();
     void RemoveDeadEnemies();

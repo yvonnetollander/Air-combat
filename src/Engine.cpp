@@ -110,6 +110,9 @@ void Engine::InitializeGame() {
     // Generate enemy planes.
     GeneratePlanes(3);
 
+    // Generate enemy planes.
+    GenerateTrees(1000);
+
     // Add several infantry soldiers
     AddInfantry(10);
 
@@ -161,6 +164,16 @@ void Engine::GeneratePlanes(int num) {
         Plane* plane = new Plane(random_pos, sf::Vector2f(150.f, 0.f), ROOTDIR + "/res/enemy_plane_orange.png", 0.0f, false, 100, 0.0f, 100, 2, world_.GetWidth(), -world_.GetHeight());
         plane->SetScale(sf::Vector2f(0.15f, 0.15f));
         AddEnemyPlane(plane);
+    }
+}
+
+void Engine::GenerateTrees(int num) {
+    for (int i = 0; i < num; i++) {
+        auto& g = world_.GetGround();
+        sf::Vector2f randPos(randFloat() * world_.GetWidth(), randFloat() * -g.getSize().y + g.getSize().y);
+
+        GameEntity* tree = new GameEntity(randPos, ROOTDIR + "/res/pine.png", 0.0f, false);
+        AddStatic(tree);
     }
 }
 
