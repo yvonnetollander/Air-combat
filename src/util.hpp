@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <SFML/Graphics.hpp>
 
+#include "World.hpp"
+
 struct Keys {
     bool up = false;    // flip
     bool down = false;  // stop engine
@@ -50,3 +52,6 @@ sf::Vector2f ToFloatVec(const sf::Vector2u& v);
 
 // Lighten a color
 sf::Color Lighter(const sf::Color& c);
+
+// Cap an existing camera's center position to a given world
+void CapCameraToWorld(sf::View& camera, World w);

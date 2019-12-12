@@ -13,7 +13,7 @@ Engine::Engine() : state_(GameState::menu), mouse_clicked_this_frame_(false) {
     video.width = video.height * target_aspect_ratio_;
     window_.create(video, "Air Combat Game");
 
-    world_ = World(10000, 1000);
+    world_ = World(7000, 1500);
     // TODO: An actual game configuration
     Player p1 = { "Sakari", sf::Color(255, 10, 10) };
     config_ = { true, p1, p1 };
@@ -21,6 +21,8 @@ Engine::Engine() : state_(GameState::menu), mouse_clicked_this_frame_(false) {
     outcome_.Create(window_.getSize());
 
     hud_.Create(sf::Vector2f(window_.getSize().x, window_.getSize().y));
+    minimap_.Align(window_.getSize().x, window_.getSize().y);
+    minimap_.SetWorldSize(world_.GetWidth(), world_.GetHeight());
 
     // Add player and enemies
     InitializeGame();
@@ -185,6 +187,7 @@ void Engine::Input(sf::Event& event) {
                         ResizeCamera(event.size.width, event.size.height);
                         backgrounds_.Current().Resize(event.size.width, event.size.height);
                         hud_.Resize(event.size.width, event.size.height);
+                        minimap_.Align(event.size.width, event.size.height);
                         break;
                     case GameState::menu:
                         ResizeCamera(event.size.width, event.size.height);
@@ -263,6 +266,8 @@ void Engine::Input(sf::Event& event) {
 void Engine::UpdateGame(float dt) {
     // Refresh camera view
     camera_.setCenter(player_->getPos());
+    CapCameraToWorld(camera_, world_);
+    minimap_.SetCamera(camera_);
     window_.setView(camera_);
 
     // Update background state 
@@ -345,6 +350,7 @@ void Engine::DrawGame() {
     camera_.setCenter(window_.getSize().x / 2, window_.getSize().y / 2 + 2000);
     window_.setView(camera_);
     window_.draw(hud_.GetSprite(), hud_.GetTransform());
+    window_.draw(minimap_.GetSprite(moving_entities_, enemies_));
 
     window_.display();
 }

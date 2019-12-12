@@ -14,6 +14,7 @@
 #include "Outcome.hpp"
 #include "World.hpp"
 #include "Explosion.hpp"
+#include "Minimap.hpp"
 
 /* A simple class for the game engine.
 *  Contains all the game entities and handles the refresh, draw and input loops.
@@ -54,6 +55,7 @@ private:
     Keys keys_pressed_;
     BackgroundSet backgrounds_;
     Menu menu_;
+    Minimap minimap_;
     Outcome outcome_;
 
     unsigned enemy_count_ = 0;

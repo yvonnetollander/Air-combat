@@ -92,3 +92,16 @@ sf::Color Lighter(const sf::Color& c) {
     const float db = (255 - c.b) * factor;
     return sf::Color(c.r + dr, c.g  + dg, c.b + db);
 }
+
+void CapCameraToWorld(sf::View& camera, World w) {
+    sf::Vector2f c = camera.getCenter();
+    sf::Vector2f s = camera.getSize();
+    // Deltas for camera view and world borders
+    float dl = std::min(c.x - (s.x/2.f), 0.f);
+    float dr = std::max(c.x + (s.x/2.f) - w.GetWidth(), 0.f);
+    float dt = std::min(c.y - (s.y/2.f) + w.GetHeight(), 0.f);
+    float db = std::max(c.y + (s.y/2.f) - 0.1f * w.GetHeight(), 0.f);
+    // Move accordingly
+    camera.move(-dl-dr, -dt-db);
+}
+
