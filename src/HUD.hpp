@@ -1,18 +1,24 @@
 #pragma once
 
-#include <vector>
 #include <SFML/Graphics.hpp>
+
 #include "globals.hpp"
 
-/* Class head-up display alias HUD.
-*  Tracks players hitpoints, enemies, weapon and ammo count.
+/*  Class head-up display alias HUD.
+    A HUD displayes the state of the game and different variables.
+    The HUD displays:
+        players current health points and maximum health points
+        the amount of enemies left and the inital enemy count in the beginning of the game
+        the weapon player has
+        how many ammos the player has left and the maximum amount.
+    The HUD is updated during the game and displayes current state.
 */
 class HUD {
 public:
     HUD();
     ~HUD() {}
     HUD& operator=(const HUD& hud);
-    // Create backgroung
+    // Create backgroung for HUD
     void Create(const sf::Vector2f size);
     // Get sprite to be drawn
     const sf::Sprite GetSprite();
@@ -36,13 +42,21 @@ private:
     sf::RectangleShape background_;
     sf::Texture t_;
     sf::Sprite s_;
+    // Information showed in hud
     sf::Text text_[4];
     
+    // Players maximum hp
     unsigned max_hp_;
+    // Players current hp
     unsigned hp_;
+    // Total amount of enemies in the beginning of the game
     unsigned total_enemies_;
+    // Current amount of enemies left
     unsigned enemies_;
+    // Players mamimum ammo count
     unsigned total_ammo_;
+    // How many ammos player has left
     unsigned ammo_;
+    // Description/name of the weapon player uses
     std::string weapon_;
 };
