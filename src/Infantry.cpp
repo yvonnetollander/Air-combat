@@ -1,6 +1,8 @@
+#include "Infantry.hpp"
+
 #include <stdlib.h>
 #include <algorithm>
-#include "Infantry.hpp"
+
 #include "util.hpp"
 #include "globals.hpp"
 

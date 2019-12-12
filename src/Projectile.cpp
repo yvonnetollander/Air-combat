@@ -1,11 +1,9 @@
 #include "Projectile.hpp"
+
 #include "globals.hpp"
 #include "util.hpp"
-#include <iostream>
 
 Projectile::~Projectile() { }
-
-// Todo: collision check with template functions
 
 Projectile::Projectile()
     : MovingEntity(), damage_radius_(10), damage_(10) {

@@ -4,8 +4,20 @@
 #include "Projectile.hpp"
 #include "Explosion.hpp"
 
-/* Plane is a class that represents a troop. 
-   Plane takes parameters position, velocity, spritepath, rotation , status (dead or alive), health points and drag */
+/*  Plane is a class that represents a troop. 
+    Parameters for the constructor:
+    p: position
+    v: velocity
+    spritepath: illustration of the object
+    r: objects rotation in degrees as a float
+    d: boolean of the objects status. True: object is alive, false: objects is dead or destroyed.
+    hp: health points. If healt points decreases to zero the plane is set dead.
+    drag: 
+    ammo_left: the amount of ammos the troop has
+    team: team the plane belongs
+    max_x: maximum x-coordinate value for airplane's position
+    min_y: minimum y-coordinate value for airplane's position
+*/
 class Plane : public Troop {
 public:
     virtual ~Plane();
