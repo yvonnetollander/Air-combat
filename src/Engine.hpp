@@ -30,7 +30,8 @@ public:
     void AddEnemyPlane(Plane* plane);
     void AddPlayerPlane(PlayerPlane* entity);
     void AddProjectile(Projectile* entity);
-
+    void ClearEntities();
+    void InitializeGame();
 private:
     GameState state_;
     Config config_;

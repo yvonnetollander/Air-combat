@@ -6,7 +6,7 @@
 
 // Enumeration for game and menu views/statuses
 enum GameState { menu, ingame, outcome };
-enum MenuState { index, options, credits, play, quit };
+enum MenuState { index, options, credits, play, quit, none };
 
 // Global variable for project root directory
 extern std::string ROOTDIR;
