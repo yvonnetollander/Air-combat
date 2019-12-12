@@ -111,7 +111,7 @@ void Engine::InitializeGame() {
     GeneratePlanes(3);
 
     // Generate enemy planes.
-    GenerateTrees(1000);
+    GenerateTrees(100);
 
     // Add several infantry soldiers
     AddInfantry(10);
@@ -270,6 +270,9 @@ void Engine::Input(sf::Event& event) {
                 if(event.mouseButton.button == sf::Mouse::Button::Left) 
                     mouse_clicked_this_frame_= true;
                 break;
+            case sf::Event::MouseWheelMoved:
+                ZoomCamera(event.mouseWheel.delta);
+                break;
             default:
                 break;
         }
@@ -359,11 +362,22 @@ void Engine::DrawGame() {
     for (auto& explosion : explosions_) {
         window_.draw(explosion->getSprite(), explosion->getTransform());
     }
-    // HUD
+
+    /*** HUD & minimap ***/
+    // Save camera view size & background scale, reset to window size
+    sf::Vector2f camSize(camera_.getSize());
+    camera_.setSize(window_.getSize().x, window_.getSize().y);
+    backgrounds_.Current().Resize(window_.getSize().x, window_.getSize().y);
+
+    // Set up view and draw
     camera_.setCenter(window_.getSize().x / 2, window_.getSize().y / 2 + 2000);
     window_.setView(camera_);
     window_.draw(hud_.GetSprite(), hud_.GetTransform());
     window_.draw(minimap_.GetSprite(moving_entities_, enemies_));
+
+    // Revert view & background sizing
+    camera_.setSize(camSize.x, camSize.y);
+    backgrounds_.Current().Resize(camSize.x, camSize.y);
 
     window_.display();
 }
@@ -457,6 +471,17 @@ void Engine::ResizeCamera(const float w, const float h) {
 
 void Engine::CenterCamera() {
     camera_.setCenter(0, 0);
+}
+
+void Engine::ZoomCamera(int delta) {
+    if (delta > 0) {
+        zoom_ratio_ = std::max(0.96f * zoom_ratio_, min_zoom_);
+    } else {
+        zoom_ratio_ = std::min(1.04f * zoom_ratio_, max_zoom_);
+    }
+
+    std::cout << zoom_ratio_ << std::endl;
+    camera_.setSize(ToFloatVec(window_.getSize())*zoom_ratio_);
 }
 
 void Engine::CheckProjectileHits() {

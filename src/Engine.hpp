@@ -39,6 +39,9 @@ private:
     GameState state_;
     Config config_;
     const float target_aspect_ratio_ = 16.f / 9.f;
+    const float max_zoom_ = 1.8f;
+    const float min_zoom_ = 0.2f;
+    float zoom_ratio_ = 1.f;
     sf::RenderWindow window_;
     World world_;
     sf::View camera_;
@@ -98,4 +101,6 @@ private:
     // Centers camera to starting position (middle of window size)
     // Used centering the menu
     void CenterCamera();
+    // Zoom camera in/out with certain caps
+    void ZoomCamera(int delta);
 };
