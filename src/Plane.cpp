@@ -52,8 +52,7 @@ Projectile* Plane::Act(float dt, const sf::Vector2f& player_pos, const sf::Vecto
 }
 
 Explosion* Plane::Explode() {
-    std::cout << "BUM" << std::endl;
-    return new Explosion(pos_);
+    return new Explosion(pos_, 1.5);
 }
 
 void Plane::ShootMachineGun() {

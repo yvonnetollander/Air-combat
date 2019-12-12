@@ -1,16 +1,17 @@
 #include "Explosion.hpp"
+#include "SFML/Graphics.hpp"
 #include "globals.hpp"
 
 Explosion::Explosion()
     : MovingEntity(), phase_(0), timer_(0.f) {}
 
-Explosion::Explosion(sf::Vector2f position, sf::Vector2f scale) 
+Explosion::Explosion(sf::Vector2f position, float scale) 
     : MovingEntity(position, sf::Vector2f(0.f, 0.f), ROOTDIR + "/res/explosion.png", 0, false), phase_(0), timer_(0.15) {
+        SetScale(sf::Vector2f(scale, scale));
         sf::IntRect rect = sf::IntRect(0, 0, 96, 96);
         sf::Vector2f pos = getPos();
-        setPos(pos.x + getSize().x / 2, pos.y);
+        setPos(pos.x + scale * (getSize().x / 2 - getSize().y / 2), pos.y);
         setTextureRect(rect);
-        SetScale(scale);
     }
 
 Explosion::~Explosion() {}

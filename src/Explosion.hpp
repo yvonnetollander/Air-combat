@@ -1,13 +1,14 @@
 #pragma once
 
-#include "SFML/Graphics.hpp"
 #include "MovingEntity.hpp"
 #include "Projectile.hpp"
+
+// Class for animated explosions
 
 class Explosion : public MovingEntity {
 public:
     Explosion();
-    Explosion(sf::Vector2f position, sf::Vector2f scale = sf::Vector2f(1.f, 1.f));
+    Explosion(sf::Vector2f position, float scale = 1.f);
     ~Explosion();
     virtual Projectile* Act(float dt);
 private:
