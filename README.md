@@ -16,7 +16,7 @@ This project was buil for the Aalto University course ELEC-A7151 Object Oriented
 - *SFML lib and headers files are included in repo*
 
 #### Windows (WSL)
-- [Mingw-w64](http://mingw-w64.org) - *on debian systems: `sudo apt install mingw-w64`*
+- [Mingw-w64](http://mingw-w64.org) - the Windows version, make sure executables are in PATH
 - make - *on debian systems: `sudo apt install make`*
 - *SFML lib and headers files are included in repo*
 
