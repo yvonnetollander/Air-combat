@@ -29,4 +29,5 @@ public:
 private:
     const unsigned damage_radius_;
     const unsigned damage_;
+    float lifetime_;
 };

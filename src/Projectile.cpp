@@ -12,10 +12,15 @@ Projectile::Projectile()
 
 Projectile::Projectile(const sf::Vector2f& p, const sf::Vector2f& v, const std::string spritepath, const float r, const bool d, const unsigned damage_radius, 
     const unsigned damage, int team)
-    : MovingEntity(p, v, spritepath, r, d, team), damage_radius_(damage_radius), damage_(damage) {}
+    : MovingEntity(p, v, spritepath, r, d, team), damage_radius_(damage_radius), damage_(damage), lifetime_(10.f) {}
 
 Projectile* Projectile::Act(float dt) {
-    setPos(getPos() + (velocity_ * dt));
+    lifetime_ -= dt;
+    if (lifetime_ < 0.f) {
+        kill();
+    } else {
+        setPos(getPos() + (velocity_ * dt));
+    }
     return nullptr;
 }
 
