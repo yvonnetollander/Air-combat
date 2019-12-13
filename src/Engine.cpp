@@ -380,7 +380,7 @@ void Engine::DrawGame() {
     camera_.setCenter(window_.getSize().x / 2, window_.getSize().y / 2 + 2000);
     window_.setView(camera_);
     window_.draw(hud_.GetSprite(), hud_.GetTransform());
-    window_.draw(minimap_.GetSprite(moving_entities_, enemies_));
+    window_.draw(minimap_.GetSprite(moving_entities_, enemies_, projectiles_, explosions_));
 
     // Revert view & background sizing
     camera_.setSize(camSize.x, camSize.y);

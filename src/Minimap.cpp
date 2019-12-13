@@ -24,24 +24,28 @@ void Minimap::SetCamera(sf::View camera) {
     camera_ = camera;
 }
 
-void Minimap::DrawOnMap(sf::Vector2f pos, const float size) {
+void Minimap::DrawOnMap(sf::Vector2f pos, const float size, const sf::Color color) {
     pos = TransformWorldToMap(pos);
 
     sf::CircleShape dot(size);
-    dot.setFillColor(sf::Color::Red);
+    dot.setFillColor(color);
     dot.setPosition(pos);
     dot.setOrigin(dot.getRadius(), dot.getRadius());
     render_texture_.draw(dot);
 }
 
-const sf::Sprite Minimap::GetSprite(std::vector<MovingEntity*>& players, std::vector<Troop*>& enemies) {
+const sf::Sprite Minimap::GetSprite(std::vector<MovingEntity*>& players, std::vector<Troop*>& enemies, std::vector<Projectile*>& projectiles, std::vector<Explosion*>& explosions) {
     render_texture_.clear(sf::Color(0, 0, 0, 100));
 
     std::vector<sf::Vector2f> dots;
     for (auto& entity : players)
-        DrawOnMap(entity->getPos(), 7.f);
+        DrawOnMap(entity->getPos(), 7.f, sf::Color::Blue);
     for (auto& entity : enemies)
-        DrawOnMap(entity->getPos(), 4.f);
+        DrawOnMap(entity->getPos(), 4.f, sf::Color::Red);
+    for (auto& entity : projectiles)
+        DrawOnMap(entity->getPos(), 1.f, sf::Color::Yellow);
+    for (auto& entity : explosions)
+        DrawOnMap(entity->getPos() +sf::Vector2f(-96*5.5f*entity->GetScale(),0), 12.f, sf::Color(245, 230, 66, 200));
 
     sf::RectangleShape r;
     r.setSize(sf::Vector2f((camera_.getSize().x/worldsize_.x) * size_.x, (camera_.getSize().y/worldsize_.y) * size_.y));

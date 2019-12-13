@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include "MovingEntity.hpp"
 #include "Troop.hpp"
+#include "Explosion.hpp"
 /*
     Class Minimap represents a minimap UI element
 */
@@ -10,7 +11,7 @@ class Minimap {
 public:
     Minimap();
     // Get sprite to be drawn
-    const sf::Sprite GetSprite(std::vector<MovingEntity*>& entities, std::vector<Troop*>& enemies);
+    const sf::Sprite GetSprite(std::vector<MovingEntity*>& entities, std::vector<Troop*>& enemies, std::vector<Projectile*>& projectiles, std::vector<Explosion*>& explosions);
     // Align minimap to a given screen size
     void Align(unsigned x, unsigned y);
     // Align minimap scale to a given world size
@@ -18,7 +19,7 @@ public:
     // Transform world coordinates to local minimap coordinates
     sf::Vector2f TransformWorldToMap(sf::Vector2f vec);
     // Draw a dot on the minimap based on world coordinates
-    void DrawOnMap(sf::Vector2f pos, const float size);
+    void DrawOnMap(sf::Vector2f pos, const float size, const sf::Color color);
     // Update camera state
     void SetCamera(sf::View camera);
 private:

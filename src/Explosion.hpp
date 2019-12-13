@@ -20,9 +20,11 @@ public:
     ~Explosion();
     // Change explosion phase as time passes
     virtual Projectile* Act(float dt);
+    const float GetScale();
 private:
     // Counter for explosion phase
     int phase_;
     // Timer for changing texture
     float timer_;
+    float scale_;
 };
