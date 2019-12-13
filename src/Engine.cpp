@@ -392,7 +392,7 @@ void Engine::DrawGame() {
 void Engine::UpdateMenu(float dt) {
     // Update Background
     backgrounds_.Current().Recenter(camera_.getCenter());
-    backgrounds_.Current().Update( 50.f * sf::Vector2f(mouse_velocity_.x, mouse_velocity_.y), dt);
+    backgrounds_.Current().Update( 2.5f * sf::Vector2f(mouse_velocity_.x, mouse_velocity_.y), dt);
 
     // Update menu or options, reset mouse click status
     switch(menu_.GetState()) {

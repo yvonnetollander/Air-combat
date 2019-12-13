@@ -125,8 +125,14 @@ void Plane::ShootMachineGun() {
 Projectile* Plane::FireMachineGun() {
     if (machine_gun_fired_ && machine_gun_cooldown_left_ <= 0.f) {
         float damage_radius = 100.f;
-        sf::Vector2f bullet_velocity = lengthen(velocity_, 1000);
-        sf::Vector2f bullet_pos = pos_ + (normalize(velocity_) * 100.0f);
+        // sf::Vector2f bullet_velocity = lengthen(velocity_, 1000);
+        // sf::Vector2f bullet_pos = pos_ + (normalize(velocity_) * 100.0f);
+
+        sf::Vector2f bullet_velocity = rotate(sf::Vector2f(1000,0), (PI*rotation_)/180.f);
+        sf::Vector2f bullet_pos = pos_ + rotate(sf::Vector2f(100,0), (PI*rotation_)/180.f);
+
+
+
         Projectile* p = new Projectile(bullet_pos, bullet_velocity, ROOTDIR + "/res/bullet_small.png", 0.f, false, damage_radius, 10, team_);
         machine_gun_fired_ = false;
         machine_gun_cooldown_left_ = machine_gun_cooldown_;
@@ -163,7 +169,7 @@ PlayerPlane::PlayerPlane(const sf::Vector2f& p, const float r, const bool d, con
 Projectile* PlayerPlane::Act(float dt, Keys keys_pressed) {
     if (!dead_) {
         const float turning_mult = 70.f;
-        const float thrush_mult = 120.f;
+        const float thrush_mult = 170.f;
 
         UpdateCooldowns(dt);
 
@@ -193,7 +199,7 @@ Projectile* PlayerPlane::Act(float dt, Keys keys_pressed) {
 
         // Apply thrust & drag
         if (thrust_)
-            velocity_ = lengthen(velocity_, dt * thrush_mult);
+            velocity_ += rotate(sf::Vector2f(dt * thrush_mult, 0), (PI*rotation_)/180.f);
         if(len(velocity_) > 0.0001f) // Prevent direction loss on a zero vector
             velocity_ *= 1.f - (drag_ * dt);
 
