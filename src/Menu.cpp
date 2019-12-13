@@ -75,7 +75,7 @@ sf::Sprite Menu::GetOptionsSprite() {
     canvas_.draw(title);
 
     // Command text
-    std::string commands = "left - Move left\nright - Move right\nup - Flip the plane\ndown - Turn on/off the engine\nd  - Shoot\nb  - Change background\nScroll game view to zoom";
+    std::string commands = "left - Rotate counterclockwise\nright - Rotate clockwise\nup - Flip the plane\ndown - Turn on/off the engine\nd  - Shoot\nb  - Change background\nScroll game view to zoom";
     auto command = CreateCenteredText(commands, sf::Vector2f(0.5f * float(screen_size_.x), 0.65f * float(screen_size_.y)), 28, sf::Color::White);
     canvas_.draw(command);
 
