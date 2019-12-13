@@ -6,7 +6,7 @@
 
 Menu::Menu() : state_(MenuState::index) {
     buttons_.push_back(new InteractiveButton("Play", sf::Vector2f(350, 80), sf::Vector2f(0.5f, 0.4f), &state_, MenuState::play));
-    buttons_.push_back(new InteractiveButton("Settings", sf::Vector2f(350, 80), sf::Vector2f(0.5f, 0.4f), &state_, MenuState::options, sf::Vector2f(0, 100)));
+    buttons_.push_back(new InteractiveButton("Controls", sf::Vector2f(350, 80), sf::Vector2f(0.5f, 0.4f), &state_, MenuState::options, sf::Vector2f(0, 100)));
     buttons_.push_back(new InteractiveButton("Credits?", sf::Vector2f(350, 80), sf::Vector2f(0.5f, 0.4f), &state_, MenuState::index, sf::Vector2f(0, 200)));
     buttons_.push_back(new InteractiveButton("Exit", sf::Vector2f(350, 80), sf::Vector2f(0.5f, 0.4f), &state_, MenuState::quit, sf::Vector2f(0, 300)));
     menuButton_ = new InteractiveButton("Back to menu", sf::Vector2f(350, 80), sf::Vector2f(0.5f, 0.4f), &state_, MenuState::index);
@@ -75,7 +75,7 @@ sf::Sprite Menu::GetOptionsSprite() {
     canvas_.draw(title);
 
     // Command text
-    std::string commands = "<-  - Move left\n->  - Move right\nup - Flip the plane\ndown - Turn on/off the engine\nd  - Shoot\nb  - Change background";
+    std::string commands = "left - Move left\nright - Move right\nup - Flip the plane\ndown - Turn on/off the engine\nd  - Shoot\nb  - Change background\nScroll game view to zoom";
     auto command = CreateCenteredText(commands, sf::Vector2f(0.5f * float(screen_size_.x), 0.65f * float(screen_size_.y)), 28, sf::Color::White);
     canvas_.draw(command);
 
