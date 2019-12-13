@@ -328,18 +328,22 @@ void Engine::UpdateGame(float dt) {
     // End the game if the player has killed all enemies and won the game
     if (enemy_count_ == 0) {
         state_ = GameState::outcome;
-        outcome_.SetState(true, "Score: " + std::to_string(player_->GetHP() * player_->GetAmmoLeft()));
+        outcome_.SetState(
+            true, "\nScore:\nHP: " + std::to_string(player_->GetHP()) + " x 5 = " + std::to_string(player_->GetHP() * 5)
+            + "\nAmmo left: " + std::to_string(player_->GetAmmoLeft()) + " x 250 = " + std::to_string(player_->GetAmmoLeft() * 250)
+            + "\nTotal: " + std::to_string(player_->GetHP() * 5 + player_->GetAmmoLeft() * 250)
+        );
     }
     // End the game if the player has died
     else if (player_->isDead()) {
         state_ = GameState::outcome;
         // The player died because the plane hit the ground
         if (player_->GetHP() > 0) {
-            outcome_.SetState(false, "The plane hit the ground");
+            outcome_.SetState(false, "You crashed!\nScore: 0");
         }
         // Enemies killed the player
         else {
-            outcome_.SetState(false, "Score: 0");
+            outcome_.SetState(false, "You died!\nScore: 0");
         }
     }
 }
