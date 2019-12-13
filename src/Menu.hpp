@@ -5,6 +5,10 @@
 #include "InteractiveButton.hpp"
 #include "globals.hpp"
 
+/*
+    class Menu repsesents the main game menu.
+    Includes multiple submenus.
+*/
 class Menu {
 public:
     Menu();

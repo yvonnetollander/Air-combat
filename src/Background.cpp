@@ -153,30 +153,30 @@ const sf::Vector2u Background::GetBaseSize() {
 
 Background* MountainBackground() {
     Background* bg = new Background(sf::Vector2u(272,160));
-    bg->AddBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/mountains_0.png", 0, -5));
-    bg->AddBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/mountains_1.png", 0.20f));
-    bg->AddBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/mountains_2.png", 0.33f));
-    bg->AddBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/mountains_3.png", 0.50f));
-    bg->AddBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/mountains_4.png", 0.75f));
+    bg->AddBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/mountains_0.png", 0.f, -40.f));
+    bg->AddBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/mountains_1.png", 14.f));
+    bg->AddBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/mountains_2.png", 22.f));
+    bg->AddBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/mountains_3.png", 36.f));
+    bg->AddBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/mountains_4.png", 50.f));
     bg->SetBlendColor(sf::Color(171, 106, 140));
     return bg;
 }
 
 Background* IndustrialBackground() {
     Background* bg = new Background(sf::Vector2u(272,160));
-    bg->AddBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/industrial_0.png", 0.10f));
-    bg->AddBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/industrial_1.png", 0.20f));
-    bg->AddBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/industrial_2.png", 0.33f));
-    bg->AddBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/industrial_3.png", 0.50f));
+    bg->AddBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/industrial_0.png", 7.f));
+    bg->AddBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/industrial_1.png", 12.f));
+    bg->AddBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/industrial_2.png", 26.f));
+    bg->AddBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/industrial_3.png", 40.f));
     bg->SetBlendColor(sf::Color(25, 40, 31));
     return bg;
 }
 
 Background* UnderwaterBackground() {
     Background* bg = new Background(sf::Vector2u(512,192));
-    bg->AddBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/underwater_0.png", 0.10f));
-    bg->AddBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/underwater_1.png", 0.20f));
-    bg->AddBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/underwater_2.png", 0.33f));
+    bg->AddBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/underwater_0.png", 9.f));
+    bg->AddBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/underwater_1.png", 28.f));
+    bg->AddBackdrop(new ScrollingBackdrop(ROOTDIR + "/res/underwater_2.png", 40.f));
     bg->SetBlendColor(sf::Color(62, 121, 221));
     return bg;
 }

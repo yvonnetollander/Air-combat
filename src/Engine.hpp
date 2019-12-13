@@ -67,6 +67,8 @@ private:
     sf::Vector2i mouse_pos_;
     sf::Vector2i mouse_velocity_;
     bool mouse_clicked_this_frame_;
+    // Camera movement tracking for ingame parallax effect
+    sf::Vector2f camera_pos_;
 
     // Create number of infantry soldiers
     void AddInfantry(int num);
