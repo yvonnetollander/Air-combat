@@ -157,7 +157,7 @@ void Plane::Flip() {
 
 /* ****** PlayerPlane ****** */
 PlayerPlane::PlayerPlane(const sf::Vector2f& p, const float r, const bool d, const unsigned hp, float drag, int team, int max_x, int min_y) 
-    : Plane(p, sf::Vector2f(20, 0), ROOTDIR + "/res/biplane.png", r, d, hp, drag, 100, team, max_x, min_y) {}
+    : Plane(p, sf::Vector2f(100, 0), ROOTDIR + "/res/biplane.png", r, d, hp, drag, 100, team, max_x, min_y) {}
 
 // Create custom behaviour for the player's plane by overriding the default logic in the Plane class's act method.
 Projectile* PlayerPlane::Act(float dt, Keys keys_pressed) {
@@ -196,6 +196,10 @@ Projectile* PlayerPlane::Act(float dt, Keys keys_pressed) {
             velocity_ = lengthen(velocity_, dt * thrush_mult);
         if(len(velocity_) > 0.0001f) // Prevent direction loss on a zero vector
             velocity_ *= 1.f - (drag_ * dt);
+
+        if (len(velocity_) < 100) {
+            velocity_ += 0.002f * sf::Vector2f(0, 100 - len(velocity_));
+        }
 
         Projectile* projectiles = Fire();
         Move(dt);

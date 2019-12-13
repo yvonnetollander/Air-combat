@@ -287,8 +287,11 @@ void Engine::UpdateGame(float dt) {
     window_.setView(camera_);
 
     // Update background state 
-    backgrounds_.Current().Update(player_->getVelocity(), dt);
+    backgrounds_.Current().Update(camera_.getCenter() - camera_pos_, dt);
     backgrounds_.Current().Recenter(camera_.getCenter());
+
+    // Update camera tracking
+    camera_pos_ = camera_.getCenter();
 
     // Update the player's state.
     Projectile* p = player_->Act(dt, keys_pressed_);
